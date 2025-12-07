@@ -1,0 +1,491 @@
+---
+title: "Variables aléatoires réelles"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+  pdf_document:
+    toc: true
+date: "Semaine 2"
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=8, fig.height=4)
+```
+
+------------------------------------------------------------------------
+
+## Objectifs
+
+Les objectifs de la séance sont d'appliquer les définitions liées aux
+lois de probabilités, fonction de répartition, densité de probabilité,
+calcul d'espérance, théorème de transfert, fonction génératrice des
+moments.
+
+## Exercice 1. Loi exponentielle
+
+Soit $\lambda >0$. On considère la fonction de répartition de la loi
+exponentielle $\mathcal E(\lambda)$ définie de la manière suivante
+
+$$
+F(t) = \left\{
+\begin{array}{ll}
+1 - e^{-\lambda t}  & \text{si } t > 0 \, , \\
+0  & \text{sinon.} \\
+\end{array}
+\right.
+$$ la loi exponentielle modélise le temps d'attente d'un événement
+survenant au hasard avec une fréquence $\lambda$.
+
+### Question 1
+
+-   Vérifier que $F$ possède les propriétés de la fonction de
+    répartition d'une loi continue. Calculer la densité de probabilité
+    associée à cette loi.
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre.
+
+\$\$
+
+\$\$
+
+-   Effectuer $n = 1000$ tirages indépendants de la loi exponentielle de
+    paramètre $\lambda = 3$. Représenter un histogramme pour
+    l'échantillon correspondant. Superposer la courbe de la densité de
+    la loi exponentielle de paramètre $\lambda = 3$ à cet histogramme.
+
+**Solution.** Compléter le code suivant
+
+```{r}
+ # taille de l'échantillon 
+ n = 1000
+
+ # simulation : help(rexp)
+ x = rexp(n,rate=3)
+ 
+ # histogramme :  help(hist)
+ hist(x, col = "white", nclass = 20, las = 1, prob = TRUE)
+ curve(3*exp(-3*x), 0, 2, col = "green4", add = TRUE)
+```
+
+### Question 2
+
+Soit $X$ une variable aléatoire de loi exponentielle
+$\mathcal E(\lambda)$. Calculer la médiane de $X$, c'est à dire, le
+nombre $m$ tel que $\text{P}(X \leq m) =\frac12$. m = ln(2)/lamda, avec
+lambda = 3 on a m = 0.23
+
+Vérifier le résultat pour l'échantillon simulé dans la question
+précédente.
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre. La vérification utilise la fonction `median`. Utiliser `+c` pour
+créer un bout de code.
+
+```{r setup, include=FALSE}
+median(x)
+```
+
+### Question 3
+
+Soit $U$ une variable aléatoire de loi uniforme sur (0,1). Montrer que
+$X = F^{-1}(U) = -\ln(1-U)/\lambda$ suit la loi exponentielle de
+paramètre $\lambda$. Réciproquement, soit $X$ une variable aléatoire de
+loi exponentielle de paramètre $\lambda$. Montrer que $U = F(X)$ suit la
+loi uniforme sur (0,1).
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre.
+
+### Question 4
+
+-   Déduire de la question précédente une méthode de simulation d'une
+    loi exponentielle de paramètre $\lambda = 1$ à partir d'une variable
+    aléatoire de loi uniforme (simulée avec `runif`).
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre.
+
+On simule un échantillon de valeures suivant une loi uniforme. On
+applique à chaque élements de cet échantillon la fonction x -\>
+-ln(1-U)/lambda
+
+-   Pour un échantillon de loi uniforme de taille $n = 1000$, vérifier
+    que la méthode semble correcte par un test graphique.
+
+**Solution.** Compléter les codes et leurs commentaires ci-dessous.
+
+```{r}
+ n = 1000
+ # generation de 1000 tirages uniformes
+ u = runif(n)
+ 
+ # fonction de répartition de la loi Exp(1)
+ cdf <- function(x){
+   1-exp(-x)
+ }
+
+ # transformation 
+  x = sapply(u, function(x){-log(1-x)/1})
+ 
+ # quesaco
+ prob = sapply(x, FUN = function(a) mean(x < a)) 
+ 
+ # quoicoubé
+ plot(prob, cdf(x), cex = .3, pch = 19, col = "grey") 
+ abline(0,1, col = 2, lty = 2)
+```
+
+### Question 5
+
+-   Soit $X$ une variable aléatoire de loi exponentielle de paramètre
+    $\lambda$. Soit $t > 0$ et $S(t) = \text{P}(X > t)$. Montrer que
+
+$$
+- \ln S(t)   = \lambda t \, .
+$$
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre.
+
+-   En déduire une méthode graphique pour tester que la loi
+    exponentielle est acceptable pour un échantillon sans en connaître
+    le paramètre. Le graphique permet-il d'estimer la valeur inconnue ?
+
+**Solution.** Compléter les codes et leurs commentaires ci-dessous.
+
+```{r}
+ set.seed(2)
+ n=1000
+ # On simule une loi exponentielle de paramètre inconnu
+  x = rexp(n, sample(10, 1))
+ #il calcule l'image par la fonction S de l'ensemble des valeurs de notre échantillon
+ surv = sapply(x, FUN = function(a) mean(x > a)) 
+#On applique ensuite la fonction -log
+ surv = sapply(surv,FUN=function(a){-log(a)})
+ 
+
+ # Il affiche l'ensemble des valeurs de -log(S(t))
+ plot(x, surv, cex = .3, pch = 19, col = "grey") 
+ grid()
+```
+
+## Exercice 2
+
+Considérons la variable aléatoire suivante $$
+X = 1_{(U\leq 1/3)} V + 1_{(U>2/3)} (1+V),
+$$ pour $U,V$ deux variables indépendantes de loi uniforme
+$\mathcal{U}(0,1)$.
+
+### Question 1
+
+Déterminer la fonction de répartition de la loi de $X$.
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre. On ne reportera que le résultat.
+
+pour t = 0 : F(t) = 1/3
+
+pour t dans [0,2] : F(t) = (t+1)/3
+
+```{r}
+repartition <- function(x){
+  
+  ifelse(x==0,1/3,(x+1)/3)
+  
+}
+
+curve(repartition,from=0,to=2)
+```
+
+### Question 2
+
+Représenter graphiquement la fonction de répartition obtenue dans la
+question 1. La loi de la variable $X$ admet elle une densité de
+probabilité ? Non car P(X=0) != 0
+
+**Solution.** On peut utiliser la fonction `curve` ou la fonction
+`plot`.
+
+### Question 3
+
+On étudie l'algorithme suivant
+
+-   tirer $N$ dans $E=\{1,2,3\}$ de manière équiprobable,
+-   tirer $U$ de loi uniforme $\mathcal U(0,1)$,
+-   renvoyer $Y = 1_{(N=3)}+1_{(N\neq 1)}U$.
+
+En R, l'algorithme est implémenté (vectoriellement) par
+
+```{r}
+n <- 1000
+N <- sample(1:3, n, replace = TRUE)
+y <- (N == 3) + (N != 1)*runif(n)
+```
+
+Calculer la fonction de répartition de la variable aléatoire $Y$ obtenue
+par cet algorithme.
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre (formule des probabilités totales).
+
+### Question 4
+
+Vérifier empiriquement l'algorithme en comparant les fonctions de
+répartition théorique et empirique.
+
+**Solution.** Commenter les codes suivants
+
+```{r}
+#Fonction de répartition théorique
+FX <- function(x){
+  return((1/3+x/3)*(0 <= x & x < 2) + (x >= 2)) }
+
+#On affiche la fonction de répartition de notre échantillon
+plot(ecdf(y), do.points=TRUE, 
+     main = "Fonction de répartition", 
+     ylab = expression(F(x)), ylim = c(0,1))
+
+#On trace la fonction théorique
+curve(FX(x), add=TRUE, col="blue", n = 201, lwd=1.5)
+legend("bottomright", lty=1, 
+       col=c("black", "blue"), 
+       c("empirique", "théorique"), lwd=1.5)
+```
+
+### Question 5
+
+Vérifier empiriquement la validité de l'algorithme en réalisant un
+graphe de probabilité : valeurs de la fonction de répartition
+théoriquement attendue en fonction des valeurs de la fonction de
+répartition empirique)
+
+**Solution.** Compléter le code suivant. `ecdf` calcule la fonction de
+répartition empirique d'un échantillon, attention renvoie une fonction.
+
+```{r}
+plot(ecdf(y)(x), 
+     FX(x), 
+     main="Graphe de probabilité", 
+     xlab="proba. empirique", 
+     ylab="proba. théorique",
+     xlim=c(0,1),ylim=c(0,1))
+
+abline(0, 1, col="grey")
+```
+
+# Espérance, formule de transfert, variance, somme de variables aléatoires
+
+## Exercice 3. Loi exponentielle
+
+### Question 1
+
+Soit $X$ une variable aléatoire de loi exponentielle de paramètre
+$\lambda > 0$. Calculer l'espérance de la variable aléatoire $X$.
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre. On ne donnera que le résultat.
+
+1/lambda
+
+### Question 2
+
+Calculer la variance de la variable aléatoire $X$.
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre. On ne donnera que le résultat.
+
+1/lambda²
+
+### Question 3
+
+On suppose que la loi exponentielle représente le temps d'attente d'un
+événement de fréquence $\lambda = 1/10$, c'est à dire un événement
+toutes les 10 secondes. Vérifier empiriquement les résultats obtenus
+pour l'espérance et la variance à l'aide d'une simulation numérique.
+
+**Solution.** On effectue 10000 tirages aléatoires. Compléter et
+commenter les codes suivants
+
+```{r}
+n <- 10000
+lambda <- 0.1
+
+# On tire un échantillon aléatoire de la exponentielle
+x <- rexp(n, lambda)
+
+# comment 2
+c(mean(x), 1/lambda)
+
+# comment 3
+c(var(x), 1/(lambda*lambda))
+```
+
+### Question 4
+
+On suppose que $X$ et $Y$ sont deux variables aléatoires indépendantes
+de loi exponentielle de paramètre $\lambda = 1/10$. Déterminer la
+densité de la loi de la variable $Z = X + Y$. Vérifier empiriquement le
+résultat obtenu à l'aide d'une simulation numérique.
+
+**Solution.** On effectue 10000 tirages aléatoires. Compléter et
+commenter les codes suivants
+
+```{r}
+n <- 10000
+
+#On effectue 2 échantillons de 10 000 tirages aléatoires chacun selon la loi exponentielle de paramètre lambda
+lambda <- .1
+x <- rexp(n, lambda)
+y <- rexp(n, lambda)
+z <- x + y
+
+#On trace un histograme de la somme des deux variables
+hist(z, prob = TRUE, col = "lightblue", ylim = c(0, 0.04))
+
+# comment 3 : la densité de z est celle d'une loi gamma
+curve(dgamma(x, 2, lambda), 
+      add=TRUE, 
+      col="blue", lwd=2)
+
+legend("topright", lty=1, col=c("black", "blue"),
+       lwd=2, c("empirique", "théorique"))
+```
+
+### Question 5
+
+Calculer la fonction génératrice des moments de la loi exponentielle de
+paramètre $\lambda$.\
+Retrouver les résultats précédents concernant l'espérance et la variance
+à l'aide de cette fonction.
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre. On ne donnera que le résultat.
+
+### Question 6
+
+Soit $n$ variables $X_i$ indépendantes de loi exponentielle
+$\mathcal E(\lambda)$. Calculer la fonction génératrice des moments de
+la variable aléatoire $S_n = X_1+\dots+X_n$. Montrer que la loi de $S_n$
+est la loi Gamma$(n, \lambda)$ de densité
+
+$$
+f_{S_n}(s) = \frac{\lambda^n}{(n-1)!} s^{n-1} e^{-\lambda s} \,  1_{\mathbb{R}_+} (s) \, \quad s \in \mathbb{R}.
+$$
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre.
+
+### Question 7
+
+Déduire de la question précédente la loi de la variable aléatoire
+$\overline X_n = S_n/n$. Retrouver une loi connue.
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre. On ne donnera que le résultat.
+
+### Question 8
+
+Représenter graphiquement les densités des lois des variables
+$\overline X_5$, $\overline X_{10}$, $\dots$, $\overline X_{25}$.
+
+**Solution.** Commenter le code suivant. Que remarque-t-on ?
+
+```{r}
+lwd <- 2
+lambda <- 0.1
+
+# commentaire
+curve(dgamma(x, 5, 5*lambda), from=0, to= 3/lambda, ylim=c(0,2*lambda), lwd=lwd, ylab=expression(f[X](x)), lty = 2, col = "grey20")
+
+# commentaire
+for(i in 2:5)
+  curve(dgamma(x, 5*i, 5*i*lambda), lty=i, col=i, add=TRUE, lwd=lwd)
+
+# commentaire
+abline(v=1/lambda, col=6, lwd=lwd)
+legend("topright", lty=c(1:5, 1), col=1:6, c(paste("Gamma (", 1:5, ",", 5*(1:5), "lambda)"), "1/lambda"), lwd=lwd)
+```
+
+## Exercice 4. Loi Normale
+
+### Question 1
+
+Calculer la fonction génératrice des moments de la loi
+$\mathcal N(0,1)$. On rappelle que la densité de cette loi est donnée
+par la courbe de Gauss
+
+$$
+f(x) = \frac{1}{\sqrt{2\pi}} e^{-x^2/2} \, , \quad x \in \mathbb{R}
+$$ Indication : On utilise l'identité remarquable
+$x^2 - 2xt = (x-t)^2 - t^2$.
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre. On ne donnera que le résultat.
+
+### Question 2
+
+Déduire de la question précédente les quatre premiers moments de la loi
+$\mathcal N(0,1)$.
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre. On ne donnera que le résultat.
+
+### Question 3
+
+Soit $m\in \mathbb{R}$, $\sigma^2 \in \mathbb{R}_+$ et $Z$ une variable
+aléatoire de loi $\mathcal N(0,1)$. On appelle loi
+$\mathcal N(m,\sigma^2)$ la loi de la variable aléatoire
+$X = m + \sigma Z$ pour $\sigma>0$. Calculer la fonction génératrice des
+moments de la loi $\mathcal N(m,\sigma^2)$, puis déterminer sa densité.
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre. On ne donnera que le résultat.
+
+### Question 4
+
+Soit $X$ et $Y$ deux variables aléatoires indépendantes de loi normale
+$\mathcal N(m_X, \sigma^2_X)$ et $\mathcal N(m_Y, \sigma^2_Y)$
+respectivement et $a_1,a_2$ des scalaires. Démontrer que $a_1X+a_2Y$ est
+une variable aléatoire de loi normale de moyenne $a_1 m_X + a_2 m_Y$ et
+de variance $a_1^2 \sigma^2_X + a_2^2 \sigma^2_Y$.
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre. O
+
+### Question 5
+
+Soit $X$ et $Y$ deux variables aléatoires indépendantes de loi normale
+$\mathcal N( -2, 1)$ et $\mathcal N(1, 4)$ respectivement. Déterminer la
+loi de la variable $X + 2Y$. Vérifier le résultat de manière empirique à
+l'aide d'une expérience numérique utilisant 10000 tirages de la loi
+$\mathcal N(0,1)$ (`rnorm`).
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre. Compléter et commenter le code suivant
+
+```{r}
+n <- 10000
+
+# comment 1
+x <- rnorm(n, -2, 1)
+y <- rnorm(n, 1, 2)
+z <- x + 2*y
+
+# comment 2
+hist(z, prob = TRUE, col = "pink", 
+     ylim = c(0, .11), 
+     xlim = c(-10, 10))
+
+# comment 3 : la densité de z est celle d'une loi normale
+curve(dnorm(x, trouve_la_moyenne, et_l_ecart_type), 
+      add=TRUE, col="blue", lwd=2)
+
+legend("topright", lty=1, 
+       col=c("black", "blue"), 
+       lwd=2, c("empirique", "théorique"))
+```

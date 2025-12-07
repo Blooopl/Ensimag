@@ -1,0 +1,71 @@
+Question 1 :
+
+L'idée de cette double authenfication est de fournir des nombres aléatoires et des les chiffrer de façon à ce que seul le destinataire de notre message le connaissent, il permet donc de l'identifier de manière unique même si d'autres personnes peuvent lire sur le réseau.
+Si Na ou Nb n'est pas secret, il suffit à une tierce personne, Nicolas, d'envoyer les nonces en les chiffrants avec les clefs publiques de chacun selon à qui il veut parler.
+
+Question 2 : 
+
+Le protocole est sûr, AVISPA nous renvovie la valeur "SAFE"
+
+Question 3:
+
+Il n'est pas sûr :
+
+ATTACK TRACE
+i -> (a,6): start
+(a,6) -> i: {Na(1).a}_ki
+i -> (b,3): {Na(1).a}_kb
+(b,3) -> i: {Na(1).Nb(2)}_ka
+i -> (a,6): {Na(1).Nb(2)}_ka
+(a,6) -> i: {Nb(2)}_ki
+i -> (i,17): Nb(2)
+i -> (i,17): Nb(2)
+
+
+L'intrus a pour stratégie de faire croire à B que B parle à A, de sorte à ce qu'il chiffre sa nounce avec la clé de A et ensuite de faire déchiffrer cette nonce par A, qui sait qu'elle parle avec I.
+
+
+Question 4:
+
+ATTACK TRACE
+i -> (a,6): start
+(a,6) -> i: {Na(1).a}_ki
+i -> (b,3): {Na(1).a}_kb
+(b,3) -> i: {Na(1).Nb(2)}_ka
+i -> (a,6): {Na(1).Nb(2)}_ka
+(a,6) -> i: {Nb(2)}_ki
+i -> (b,3): {Nb(2)}_kb
+
+
+Question 5:
+A chaque message qu'on envoie on rajoute dans le coeur du message qui l'a envoyé de sorte à ce que l'intru ne puisse pas se faire passer pour l'un ou l'autre
+
+
+
+
+Exercice 2 :
+
+Question 1 :
+Au pas 2 , alice doit déchiffrer avec sa clé le message {Nb,Na xor B} pour vérifier Na en utilisant d'abord sa clé privé, puis enlevant la concaténation puis en appliqué un nouveau xor b , car (m xor b)xor b = m
+
+Question 2 :
+Le protocole n'est pas sûr
+
+i -> (a,6): start
+(a,6) -> i: {Na(1).a}_ki
+i -> (b,3): {Na(1) XOR i XOR b.a}_kb
+(b,3) -> i: {Nb(2).Na(1) XOR i}_ka
+i -> (a,6): {Nb(2).Na(1) XOR i}_ka
+(a,6) -> i: {Nb(2)}_ki
+i -> (i,17): Nb(2)
+i -> (i,17): Nb(2)
+
+Question 3:
+Pas sur
+
+Question 4:
+SAFE
+
+
+Exercice 3 :
+

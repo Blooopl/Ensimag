@@ -1,0 +1,501 @@
+---
+title: "Loi des grands nombres et tendance vers la loi normale"
+lang: "fr"
+output:
+  html_document: 
+    toc: true
+    toc_float: true
+date: "Semaine 3"
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=8, fig.height=4)
+```
+
+## Objectifs
+
+Les objectifs de cette séance sont de vérifier certains résultats
+asymptotiques du calcul des probabilités : loi des grands nombres,
+tendance vers la loi normale. On mettra ces résultats en oeuvre pour
+estimer une grandeur caractéristique ($\pi$) par la méthode de
+Monte-Carlo afin de préparer le TP 2.
+
+# Loi des grands nombres
+
+## Exercice 1
+
+On considère un échantillon i.i.d. de $n$ variables aléatoires
+$X_1,\dots,X_n$ de même loi. On suppose que ${\rm Var}(X_1) < \infty$.
+On définit la moyenne empirique de la manière suivante
+
+$$
+\overline X_n = \frac1n \sum_{i=1}^n X_i \, .
+$$
+
+### Question 0
+
+Calculer l'espérance et la variance de la variable aléatoire
+$\overline X_n$.
+
+**Solution.** La solution peut être rédigée sur une feuille libre. On ne
+reportera que le résultat.
+
+E(Sn/n) = E(X_1)
+
+Var(Sn/n) = Var(X_1)/n
+
+### Question 1
+
+On pose $m = \mathbb{E}[X_1]$. Soit $\epsilon >0$. En utilisant
+l'inégalité de Chebyshev, déterminer un majorant pour la probabilité
+${\rm P}(|\overline X_n - m| > \epsilon)$.
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre. On ne reportera que le résultat.
+
+\<= Var²(X_1) / (n\*epsilon)²
+
+### Question 2
+
+En déduire une preuve de l'énoncé de la loi faible des grands nombres.
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre. On ne reportera que les arguments principaux.
+
+### Question 3
+
+On suppose que $X_i$ est de loi uniforme sur $(0,1)$ (loi
+$\mathcal{U}(0,1)$ pour tout $i$. Utiliser l'inégalité de Chebyshev afin
+de proposer une valeur $n$ (la plus petite possible) telle que
+
+$$
+\mathbb{P}( | \overline{X_n}  - \frac12 | > 0.1) < 0.05 \, .
+$$
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre. On ne reportera que le résultat. 9
+
+### Question 4
+
+Simuler 100000 fois la moyenne empirique d'un échantillon de loi
+uniforme de taille $n = 167$ à l'aide du code suivant.
+
+**Solution.** Code à commenter et à compléter.
+
+```{r}
+#
+  rmoy_unif <- function(n_simulations, n_sample){
+    replicate(n_simulations, mean(runif(n_sample,0,1)))
+    }
+
+# moyennes empiriques d'échantillons U(0,1)  
+  x_bar <-  rmoy_unif(100000, n_sample = 167)
+x_bar
+```
+
+### Question 5
+
+Vérifier de manière empirique que la probabilité de l'encadrement
+$( 0.4 < \overline{X_n} < 0.6 )$ est supérieur à 95% :
+
+$$
+\mathbb{P}( 0.4 < \overline{X_n} < 0.6 ) > 0.95 \, .
+$$
+
+La valeur $n$ vous paraît-elle être la plus petite possible ? Quelle est
+cette valeur dans la simulation ? Non pas la plus petite, il semblerait
+que la plus petite possible soit entre 30 et 40
+
+**Solution.** Code à commenter et à compléter.
+
+```{r}
+# commenter le code
+mean(abs(x_bar-0.5) < 0.1 ) > 0.95
+```
+
+quelque_chose_a_verifier
+
+```{r}
+# Tester d'autres valeurs n = 10, 20, 30, 40, etc
+  x_bar <-  rmoy_unif(10000, n_sample = 40)
+
+# Evaluer si la condition est vérifiée
+mean(abs(x_bar-0.5) < 0.1 ) > 0.95
+```
+
+### Question 6
+
+On réplique 10000 fois l'expérience précédente pour des échantillons de
+taille $n = 32$. Commenter le code suivant et le résultat produit
+(expliquer d'où provient la valeur 0.05103103).
+
+**Solution.** Code à commenter et à compléter.
+
+```{r}
+#On effectue 10 000 échantillon de taille n= 32
+ x_bar <-  rmoy_unif(10000, n_sample = 32)
+
+#On trace l'histograme des moyennes empiriques des 10 000 échantillons
+ hist(x_bar, col="white", prob = TRUE)
+
+#On trace la courbe d'un loi normal de moyenne 0.5 et d'écart type 0.05103103 = sqrt(Var(X1)/n) avec n = 32
+ curve(dnorm(x, m = 0.5, sd = 0.05103103), 
+       from = 0.3, to = 0.7, lwd = 2, 
+       add = TRUE, col = "green4")
+```
+
+# Méthode de Monte-Carlo
+
+## Exercice 2 - Estimation de $\pi$ par tirage aléatoire.
+
+Soient $(U_n)$ et $(V_n)$ deux suites de variables indépendantes de loi
+uniforme $\mathcal U(0,1)$. On suppose que $U_n$ et $V_n$ sont
+indépendantes pour tout $n$.
+
+On pose
+
+$$
+X_n = 
+\left
+\{ 
+\begin{array}{ll}
+1 & \text{si }  U_n^2+V_n^2 < 1 \\
+0 & \text{sinon.} \\
+\end{array}\right.
+$$
+
+Pour tout $n\geq 1$, on pose $Y_n = 4 \overline{X_n}$ .
+
+### Question 1
+
+Déterminer la loi de variable $X_n$.
+
+Indication (admis) : Calculer $\mathbb P(X_n = 1)$ revient à calculer
+l'aire correspondant à la condition $(U_n^2+V_n^2 < 1)$, car les tirages
+sont de loi uniforme dans le carré unité.
+
+**Solution.** On ne reportera que le résultat.
+
+### Question 2
+
+Calculer l'espérance et la variance de $Y_n$. En déduire que la suite
+$(Y_n)$ converge vers $\pi$.
+
+E(Y_n) = Pi
+
+Var(Y_n) = 4/n
+
+**Solution.** La solution peut être rédigée sur une feuille libre. On ne
+reportera que le résultat.
+
+### Question 3
+
+Vérifier à l'aide de la simulation d'un échantillon de taille
+$n = 10000$ que la valeur empirique $Y_n$ est proche de $\pi$. À combien
+de décimale près peut-on prévoir que l'estimation est précise ? 2
+décimales près
+
+**Indication** : on peut augmenter $n$ pour répondre à cette question.
+
+**Solution.** Commenter les codes ci-dessous.
+
+```{r}
+#Nombre d'échantillons
+  n = 10000
+
+#On tire deux échantillons de taille n suivant une loi uniforme sur (0,1)
+  u <- runif(n)
+  v <- runif(n)
+  
+#On calcule la valeur de x vectoriellement
+  x <- (u^2 + v^2 < 1)
+  
+#On calcule la moyenne empirique de x, donc de y et on affiche y
+  y = 4*mean(x)
+  y
+```
+
+```{r, fig.width=4}
+  par(mar=c(4,4,2,1))
+  plot(u, v, col = 1 +  (u^2 + v^2 > 1), pch = 19)
+  curve(sqrt(1-x^2), add=TRUE, col="grey", lwd=2, n=501)
+```
+
+### Question 4
+
+Soit $\alpha > 0$. À l'aide de l'inégalité de Chebyshev, chercher un
+entier $n_0$ tel que
+
+$$
+{\rm P}(|Y_n-\pi| \leq \epsilon) \geq 1 - \alpha \, .
+$$
+
+**Solution.** Démontrer sur le papier que la valeur suivante convient
+
+$$
+n_0 = \frac{\pi(4-\pi)}{\alpha \times \epsilon^2} \, .
+$$
+
+### Question 5
+
+Pour $\alpha=0.05$ et pour $\epsilon=10^{-3}$, vérifier à l'aide d'une
+expérience si la valeur trouvée satisfait $|Y_{n_0} - \pi| < \epsilon$.
+
+**Solution.**
+
+```{r}
+# On definit les variables 
+epsilon = 1e-3
+alpha = 0.05
+pi = 3.1415926535
+n0 <- pi * (4 - pi) / (alpha * epsilon * epsilon)
+
+# On effectue une fois la simulation
+ u <- runif(n0)
+ v <- runif(n0)
+ z <- 4*mean(u^2 + v^2 < 1) 
+ z
+ 
+# verification
+abs(z-pi) < epsilon
+```
+
+### Question 6
+
+On s'intéresse à la variable aléatoire
+
+$$
+Z_n = \sqrt{n} (Y_n-\pi) / \sqrt{\pi(4-\pi)} \,.
+$$
+
+Calculer la variance de $Z_n$. Converge-t-elle vers 0 ? non . On suppose
+$n = 100$. Est-ce que la loi de $Z_n$ se rapproche d'une loi connue ?
+
+**Solution.** Après avoir calculé la variance, commenter et compléter le
+code suivant.
+
+```{r, eval=TRUE}
+#On met en paramètre le nombre de simulations et  la taille de chaque échantillon
+ry <- function(nsimu, nsample)
+{
+  ygen <- function()
+  {
+    u <- runif(nsample)
+    v <- runif(nsample)
+    4*mean(u^2 + v^2 < 1)
+  }
+  #On renvoie une vecteur avec l'ensembles des simulations, générer par ygen
+  return(replicate(nsimu, ygen()))
+}
+
+#
+z <- (ry(10000, 100) - pi)* sqrt(100) / sqrt(pi*(4-pi))
+
+# commenter 
+# help(dnorm)
+hist(z, prob = TRUE, col = "lightblue")
+curve(dnorm(x,0,1), add=TRUE, col="blue", lwd=2)
+```
+
+# Tendance vers la loi Normale
+
+## Exercice 3. Convergence vers la loi normale
+
+### Question 1
+
+Soit $m \in \mathbb{R}$ et $\sigma \in \mathbb{R}_+$. Soit $X$ une
+variable aléatoire de loi $N(m, \sigma^2)$. Montrer que la variable
+aléatoire
+
+$$
+Z  = \frac{X - m}{\sigma}
+$$
+
+suit la loi normale $N(0,1)$.
+
+**Solution.** La solution peut être rédigée sur une feuille de papier
+libre. On reportera les arguments principaux.
+
+### Question 2
+
+À l'aide de simulations, vérifier graphiquement que la transformation
+obéit à la loi attendue dans la question précédente.
+
+**Solution.** Compléter le code suivant utilisant un graphe
+quantile-quantile. Pour une probabilité donnée, un quantile correspond à
+l'inverse de la fonction de répartition. Comparer les quantiles de deux
+lois revient à comparer leurs fonctions de répartition. La fonction
+`qqnorm` compare les quantiles empiriques d'un échantillon aux quantiles
+de la loi normale.
+
+```{r}
+ n_rep = 1000
+ m = 10
+ sigma = 2
+ # simulation de la loi normale
+ x = rnorm(n_rep, m = m, sd = sigma)
+ 
+ # definition de z
+z = (x - m)/sigma
+ 
+ # adequation graphique des quantiles empiriques et theoriques N(0,1) 
+ # help(qqnorm)
+ qqnorm(z, cex = .4, col = "red4")
+ abline(0,1, col = "grey", lty = 2)
+```
+
+### Question 3
+
+Soit $X_1, \dots, X_n$ des variables aléatoires indépendantes de loi
+normale $N(m, \sigma^2)$. Déterminer la loi de la variable
+
+$$
+Z_n = \sqrt{n} \frac{\overline{X}_n - m}{\sigma} \, .
+$$
+
+Vérifier le résultat à l'aide de 1000 répétitions de la simulation d'un
+échantillon contenant $n = 20$ variables de moyenne $m = 10$ et
+d'écart-type $\sigma = 2$.
+
+**Solution.** On rappelle que la somme de variables aléatoires
+indépendantes de loi normale suit une loi normale.
+
+La vérification expérimentale est la suivante (à compléter).
+
+```{r, eval=TRUE}
+ n_rep = 1000
+ n = 20
+ m = 10
+ sigma = 2
+ 
+ # simulation de n_rep echantillon de taille n
+ # commentaire : dimension de la matrice
+ X = matrix(rnorm(n*n_rep, m = m, sd = sigma), nrow = n_rep)
+ 
+ # definition de Z
+ z = (apply(X, MARGIN = 1, mean) - m)* sqrt(n) / sigma
+ 
+ # adequation graphique des quantiles N(0,1)
+ qqnorm(z, cex = .4, col = "red4")
+ abline(0,1, col = "grey", lty = 2)
+```
+
+### Question 4
+
+On observe l'échantillon ${\bf x}$ généré par le code suivant.
+
+```{r}
+ set.seed(12412)
+ n = 40
+ m = 10
+ sigma = 2
+ 
+ # simulation de la loi normale
+ x = rnorm(n, m = m, sd = sigma)
+```
+
+On suppose que les paramètres de simulation $m$ et $\sigma$ sont
+inconnus (bien que visibles dans le code).
+
+Proposer des estimations des paramètres $m$ et $\sigma$, c'est à dire
+une manière d'estimer $m$ et $\sigma$ à partir de l'échantillon
+${\bf x}$. Calculer ces valeurs pour les observations.
+
+**Solution.**
+
+```{r, eval=TRUE}
+# estimateur m
+complete_moi
+# estimateur sigma
+complete_me
+```
+
+# Intervalle de confiance
+
+## Exercice 3 -- suite. Convergence vers la loi normale
+
+### Question 5
+
+À partir des observations ${\bf x}$, définir un intervalle
+$[I_{\inf}({\bf x}), I_{\sup}({\bf x})]$ tel que
+
+$$
+{\rm P}( m \in [I_{\inf}({\bf x}), I_{\sup}({\bf x})] ) = 0.95.
+$$
+
+Cet intervalle est appelé *intervalle de confiance* au seuil 95% pour
+$m$. Calculer un intervalle de confiance approché pour la moyenne des
+observations simulées.
+
+**Solution.** Soit
+
+$$
+Z_n = \sqrt{n} \frac{\overline{X}_n - m}{\sigma} \, .
+$$
+
+Pour trouver l'intervalle demandé, on part l'égalité suivante issue du
+Théorème Central Limite
+
+$$
+{\rm P}(\Phi^{-1}(0.05/2) \leq Z_n \leq \Phi^{-1}(1-0.05/2) ) = 0.95 \, .
+$$
+
+où $\Phi^{-1}$ est la fonction quantile de la loi normale centrée
+réduite (`qnorm`).
+
+Le code à compléter est donné par
+
+```{r, eval=TRUE}
+# calcul de l'intervalle
+I_inf = mean(x) - quelque_chose
+I_sup = mean(x) + quelque_chose
+
+IC = c(I_inf, I_sup)
+names(IC) = c("borne inf.", "borne sup.")
+round(IC, 2)
+```
+
+### Question 6
+
+Répéter 10000 fois l'expérience de simulation précédente. Vérifier que
+le paramètre $m$ se trouve dans l'intervalle proposé dans environ 95%
+des simulations.
+
+**Solution.** Commenter et compléter le code suivant.
+
+```{r}
+n = 40
+m = 10
+sigma = 2
+
+# initialisation du test booléen 
+boo_ic = rep(0, 10000)
+
+for (i in 1:10000){
+ 
+ # simulation d'un échantillon N(m, sigma) de taille n 
+ x = complete_moi
+ 
+ # calcul de l'intervalle
+ I_inf = mean(x) - quelque_chose
+ I_sup = mean(x) + quelque_chose
+ 
+ # test d'appartenance de m à l'intervalle
+ boo = (I_inf < m) & (m < I_sup)
+ 
+ boo_ic[i] = boo
+}
+```
+
+La proportion des simulations où paramètre $m$ se trouve dans
+l'intervalle proposé est
+
+```{r}
+round(mean(boo_ic), 3)
+```
+
+**Remarque.** Que se passe-t-il lorsqu'on remplace la valeur de sigma
+par son estimation empirique `sd(x)` ?

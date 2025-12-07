@@ -1,0 +1,314 @@
+---
+title: "Intervalles de confiance et tests statistiques"
+lang: "fr"
+output:
+  html_document: 
+    toc: true
+    toc_float: true
+date: "Semaine 5"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=8, fig.height=4)
+```
+
+## Objectifs
+
+Les objectifs sont de comprendre les concepts d'intervalles de confiance et de tests d'hypothèse. Pour quelques jeux de données correspondant à des applications spécifiques, on construira un test et on interprétera les résultats. Les travaux dirigés introduiront la notion de niveau de confiance, de significativité d'un test, de p-valeur et le calcul de p-valeur.
+
+## Exercice 1
+
+On considère un échantillon de taille $n$ de loi normale de moyenne inconnue $\theta$ et de variance supposée connue $\sigma^2 = 1$.
+
+### Question 1. Vraisemblance
+
+Calculer la fonction de vraisemblance du paramètre $\theta$. Montrer que l'estimateur du maximum de vraisemblance de $\theta$ est la moyenne empirique.
+
+**Solution.** La solution peut être rédigée sur une feuille libre. On ne reportera que le résultat.
+
+### Question 2.
+
+On suppose que $n = 20$ et que l'échantillon provient du tirage aléatoire suivant
+
+```{r}
+set.seed(42)
+x <- rnorm(n = 20, mean = 2.4)
+```
+
+Réécrire la log-vraisemblance à l'aide de la moyenne empirique $\bar x_n$ et la variance empirique $s_n^2$.
+
+Indication : faire apparaitre $\bar{x}_n$ dans la somme des carrés en l'ajoutant et le retranchant.
+
+Tracer la log-vraisemblance pour des valeurs de $\theta$ entre 0 et 5.
+
+**Solution.** Compléter et commenter le code suivant.
+
+```{r}
+
+m = 2.4
+# commentaire
+n = length(x)
+
+# commentaire
+x.bar = mean(x)
+sn.2 = mean((x-x.bar)^2)
+
+# commentaire
+log.likehood = function(theta){
+  -n/2 * (log(2*pi)+sn.2+ (x.bar - theta)*(x.bar-theta))
+}
+
+# commentaire
+curve(log.likehood, xname = "theta", 
+      col = "green4", lwd = 2,
+      from = 0, to = 5, las = 1)
+
+abline(v = m, 
+       col = "red3", lwd = 2, lty = 2)
+```
+
+### Question 3. Pivot
+
+On note $\overline{X}_n$ la moyenne empirique de l'échantillon. Démontrer que la loi de la variable aléatoire $$
+Z = \sqrt{n} (\overline{X}_n - \theta ) 
+$$ est la loi normale $N(0,1)$. En déduire un pivot pour le paramètre $\theta$.
+
+TCL
+
+La statistique de student de degré n-1 est un pivot
+
+**Solution.** La solution peut être rédigée sur une feuille libre (se souvenir de la loi de variables aléatoires gaussiennes indépendantes). On ne reportera que les arguments principaux.
+
+### Question 4. Intervalle de confiance.
+
+À l'aide de la fonction `qnorm`, calculer les quantiles correspondant aux probabilités $\alpha/2 = 2.5\%$ et $1 - \alpha/2 = 97.5\%$. En déduire un intervalle $(a,b)$ tel que
+
+$$
+\mathbb{P}( a < Z < b) = 1 - \alpha \, .
+$$
+
+**Solution.**
+
+```{r}
+c(a = qnorm(0.025), b = qnorm(0.975))
+```
+
+### Question 5. Intervalle de confiance
+
+Montrer que l'intervalle
+
+$$
+{\rm IC} = \left( \overline{X}_n - \frac{1.96}{\sqrt{n}} ,   \overline{X}_n + \frac{1.96}{\sqrt{n}} \right)
+$$
+
+est un intervalle de confiance au seuil $1 - \alpha  = 95 \%$ pour $\theta$. Existe-il d'autres intervalles de confiance de même seuil ?
+
+Oui il en existe une infinité d'autres, mais il ne seront pas forcément symétrique par apport à XN
+
+**Solution.** Calculer ${\rm P}(\theta \in {\rm IC})$. Note: 1.96 est une valeur approchée du quantile correspondant à 2.5 %.
+
+### Question 6. Couverture de l'IC.
+
+On répète 10000 fois l'échantillonnage de la population effectué dans la question 2. Vérifier que la vraie valeur, $\theta = 2.4$, se trouve dans l'IC pour environ 95% des echantillons ainsi créés.
+
+**Solution.** Il s'agit d'une expérience de type Monte Carlo. Compléter le code suivant.
+
+```{r, eval=TRUE}
+theta = 2.4
+n = 20
+
+## commentaire
+intervalle_IC <- function()
+{
+  x.rep <- rnorm(n, mean = theta)
+  x_barre <- (1/n) * sum(x.rep)
+  inf <- x_barre - 1.96/sqrt(n)
+  sup <- x_barre + 1.96/sqrt(n)
+  (inf < theta && theta < sup)
+}
+
+## commentaire
+m = 10000
+couverture.ic <- replicate(m, intervalle_IC())
+## commentaire
+round(mean(couverture.ic), 3)
+```
+
+### Question 7. Test
+
+Pour un échantillon de taille $n = 20$ dont la variance théorique est supposée égale à 1, on observe que $\overline{x}_n = 2.9$. A-t-on suffisamment de données pour affirmer avec un risque d'erreur inférieur à 5% que cet échantillon n'est pas issu de la loi normale $N(m = 2.4, 1)$ ?
+
+**Solution.** Calculer l'IC au niveau de confiance 95% en admettant que la variance est égale à 1. Conclure.
+
+L'intervalle de confiance à 95% est [2.461, 3,339], donc on peut assurer à un risque d'erreur inférieur à 5%.
+
+### Question 8. Valeur $p$ (ou $p$-valeur)
+
+En supposant que les échantillons sont issus de la loi $N(2.4, 1)$, calculer
+
+$$
+p = \mathbb{P}( | \overline{X}_n  - 2.4 | \geq 0.5 ) 
+$$
+
+Comment interpréter cette valeur ? Rappel : on observe que $\overline{x}_n = 2.9 = 2.4 + 0.5$.
+
+**Solution.** Le calcul nécessite un code R (commande +c). Ne pas oublier d'interpréter cette valeur ?
+
+On a trouvé un intervale de confiance à 97.5 % pour la loi $\mathcal{N}(2.4,1)$
+
+```{r, eval = TRUE}
+theta = 2.4
+n = 20
+
+## commentaire
+intervalle_IC <- function()
+{
+  x.rep <- rnorm(n, mean = theta)
+  x_barre <- (1/n) * sum(x.rep)
+
+  (1.9 < x_barre && x_barre < 2.9)
+}
+
+## commentaire
+m = 10000
+couverture.ic <- replicate(m, intervalle_IC())
+## commentaire
+round(mean(couverture.ic), 3)
+
+
+
+
+
+```
+
+## Problème
+
+On considère un échantillon de taille $n = 30$ représentant le temps d'attente en minutes du premier but dans un match de football du championnat de France, saison 2021-2022 (données réelles).
+
+```{r}
+x <- c(42, 99, 30 , 28,  69,  39,  17,   9,  21,  39,  49,  28,  46,  26,  27,   2,  19, 50, 117,   9,  24, 27,  23,   5,  22,  50,  23,  26,  17,  23)
+```
+
+On suppose que les données sont issues de variables aléatoires indépendantes $(X_1, \dots, X_n)$ de loi exponentielle de taux inconnu $\theta > 0$.
+
+### Question 1
+
+Que représente $1/\theta$ ?
+
+L'esperance de la loi exponentielle de taux theta
+
+Proposer une estimation du paramètre $\theta$ par la méthode des moments, puis par maximum de vraisemblance.\
+
+**Solution.** Rechercher la réponse sur le papier, puis calculer la valeur des estimations à l'aide d'un code R (créer un bout de code avec le bouton +c).
+
+```{r}
+n = length(x)
+theta = n/sum(x)
+theta
+```
+
+### Question 2
+
+Soit $n$ variables aléatoires indépendantes, $(X_1, \dots, X_n)$, issues de la loi exponentielle de paramètre $\theta$. On pose
+
+$$
+S_n = \sum_{i = 1}^n X_i \, .
+$$
+
+Montrer que la loi de la variable $Z_n = \theta S_n$ est la loi Gamma$(n,1)$.
+
+**Solution.** Rappel : la loi de la variable aléatoire $S_n$ est la loi Gamma$(n,\theta)$.
+
+### Question 3
+
+En déduire un pivot et un intervalle de confiance de niveau $1 - \alpha = 95\%$ pour le paramètre $\theta$
+
+$$
+{\rm IC} = \left( \frac{q_{\alpha/2}}{S_n} ,   \frac{q_{1 - \alpha/2}}{S_n}  \right)
+$$
+
+Calculer l'intervalle de confiance pour l'échantillon de données {\bf x}.
+
+**Solution.** Compléter le code suivant.
+
+Un pivot peut être la valeur de Z_n qui ne dépend donc pas de $\theta$
+
+```{r, eval=TRUE}
+# commentaire 
+sn = sum(x)
+n =length(x)
+
+# commentaire 
+CI = c(qgamma(0.025,shape = n, scale=1)/sn,qgamma(0.975,shape = n, scale=1)/sn)
+names(CI) <- c("inf", "sup")
+round(CI, 3)
+```
+
+### Question 4
+
+Calculer un intervalle de confiance de niveau $1 - \alpha = 95\%$ pour le paramètre $\theta$ en effectuant une approximation gaussienne de la somme des observations.
+
+**Solution.** Calculer l'intervalle de confiance à l'aide d'un code R (créer un bout de code avec le bouton +c).
+
+```{r}
+
+```
+
+### Question 5. Méthode de bootstrap.
+
+Cette question suggère de calculer un intervalle de confiance sans supposer connus les résultats sur la loi gamma, à l'aide d'une méthode de Monte Carlo (bootstrap).
+
+Le [bootstrap](https://fr.wikipedia.org/wiki/Bootstrap_(statistiques)) consiste à tirer avec remise $n$ observations dans l'échantillon de départ (de taille $n$) pour obtenir $m$ sous-échantillons sur lesquels on estime le paramètre d'intérêt. Comme dans une méthode de Monte Carlo, on peut calculer l'intervalle de confiance à partir de la loi empirique de l'estimateur.
+
+Commmenter le code et proposer un intervalle de confiance (bilatéral) de niveau 95% à l'aide de ce code.
+
+**Solution.**
+
+```{r}
+# algorithme de bootstrap
+bootestim <- function()
+{
+  # commentaire
+  x.rep <- x[sample(n, replace = TRUE)]
+
+  # commentaire  
+  1/mean(x.rep)
+}
+
+# commentaire 
+theta.boot <- replicate(10000, bootestim())
+```
+
+Utiliser la fonction quantile pour calculer l'intervalle de confiance à partir de l'échantillon simulé par l'algorithme de bootstrap.
+
+```{r}
+CI = utiliser_quantile
+round(CI, 3)
+```
+
+### Question 6
+
+Un passionné de football affirme qu'en moyenne dans un match de championnat de France, le premier but est observé après la 25eme minute.
+
+À quelle hypothèse alternative cette affirmation correspond-elle ? Quelle hypothèse nulle choisir ? Tester l'hypothèse nulle et donner la $p$-valeur du test. Que conclure : avec les observations, l'hypothèse nulle est-elle rejetée au seuil 5 % ?
+
+**Solution.**\
+On peut calculer la $p$-valeur à partir de la loi Gamma et de l'observation $s_n$. On notera qu'une fonction pivot n'est pas nécessaire. Expliquer les choix effectués.
+
+```{r, eval=TRUE}
+## H1 : theta < 1/25 ou theta > 1/25 ? 
+## H0 : ?
+## a toi de choisir
+
+pgamma(sn, n, rate = complete_moi, lower = complete_me)
+```
+
+### Question 7. Intervalle de confiance et test sur l'espérance de la loi exponentielle.
+
+On note $m$ l'espérance de la loi exponentielle. On considère désormais que $m$ est le paramètre inconnu à estimer. Reprendre les questions précédentes (3-6) afin de
+
+-   proposer une estimation de $m$,
+-   proposer un intervalle de confiance à 95% pour $m$ ; on pourra comparer deux méthodes : IC exact, méthode de bootstrap,
+-   tester l'hypothèse nulle $H_0 : m = 25$ (décider de la nature du test : unilatéral ou bilatéral, calculer une valeur $p$ pour le test, est elle différente de celle obtenue question 6).
+
+**Solution.** Réutiliser les codes précédents.

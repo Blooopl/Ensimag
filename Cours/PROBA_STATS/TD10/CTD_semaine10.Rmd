@@ -1,0 +1,607 @@
+---
+title: "Régression linéaire multiple (suite)"
+lang: fr
+date: "Semaine 10"
+output:
+  pdf_document:
+    toc: false
+  html_document:
+    toc: true
+    toc_float: true
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Recommandation
+
+Compilez régulièrement votre travail au format PDF pour détecter
+d'éventuelles erreurs. Pour cela, modifiez les options de compilation
+des bouts de code R en `eval = TRUE` dès qu'une réponse est complète.
+
+## Objectifs
+
+L’objectif de cette séance est de se familiariser avec la **régression
+linéaire multiple** comportant **deux variables explicatives**. On
+étudiera le cas où les prédicteurs sont indépendants et celui où ils
+sont corrélés.
+
+Cette séance introduira également la notion de **facteur de confusion**,
+essentielle pour une interprétation correcte des coefficients estimés
+dans un modèle de régression.
+
+**Avertissement et conseils.** Si vous n’avez pas encore terminé les
+exercices du **CTD de la semaine 9**, il est vivement recommandé de le
+faire avant de commencer ce CTD.
+
+## Exercice 1. Facteur de confusion et biais sur les tailles d'effet
+
+### Introduction
+
+Lorsque l’on cherche à modéliser la relation entre une variable réponse
+et une ou plusieurs variables explicatives, il arrive que certains
+**facteurs causaux pertinents** soient omis. Dans ce cas, le modèle
+ajusté ne représente qu’imparfaitement la réalité, et **les effets
+estimés peuvent être biaisés**.
+
+Par exemple, si l’on étudie l’effet de la dose alimentaire sur le poids
+corporel d’un animal domestique, il serait nécessaire de prendre en
+compte d’autres facteurs tels que l’âge, le sexe, les caractéristiques
+génétiques (par exemple la race) ou encore des facteurs environnementaux
+(chat vivant en intérieur ou à l’extérieur). Ignorer de telles variables
+revient à simplifier excessivement le modèle, ce qui conduit souvent à
+une surestimation ou une sous-estimation des effets.
+
+Un **facteur de confusion** est une variable **corrélée à la fois à la
+variable réponse et au prédicteur d’intérêt**. Lorsqu’un tel facteur
+existe, il doit idéalement être inclus dans le modèle afin d’éviter un
+**biais d’estimation** des coefficients de régression.
+
+On considère ici une variable aléatoire $Y$ définie par le modèle de
+régression linéaire multiple suivant :
+
+$$
+Y = b_0 + b_1 X_1 + b_2 X_2 + \epsilon,
+$$
+
+où les prédicteurs $X_1$ et $X_2$ sont des variables aléatoires
+indépendantes du terme d’erreur $\epsilon$ et de variance égale à 1 :
+
+$$
+\text{Var}(X_1) = \text{Var}(X_2) = 1.
+$$
+
+On note $\rho_X = \text{Cor}(X_1, X_2)$ leur corrélation linéaire,
+supposée strictement inférieure à 1 en valeur absolue.
+
+Dans tout cet exercice, on suppose que ce modèle est **correctement
+spécifié**, c’est-à-dire que les observations disponibles proviennent
+bien de ce processus générateur. L’objectif de l'exercice est alors
+d'analyser **le biais introduit** lorsqu’un modélisateur ajuste un
+**modèle incomplet ou incorrect**, par exemple en omettant une variable
+explicative importante.
+
+### Question 1
+
+Sous les hypothèses du modèle (notamment
+$\text{Var}(X_1)=\text{Var}(X_2)=1$ et
+$\text{Cov}(X_1,\epsilon) = \text{Cov}(X_2,\epsilon)=0$, montrer que
+
+$$
+b_{1}=\text{Cov}(X_{1},Y)-b_{2} \,\rho_{X}.
+$$
+
+**Solution.** Développer la covariance $\text{Cov}(X_1, Y)$.
+
+### Question 2
+
+On ajuste un **modèle de régression linéaire incomplet** de la forme
+
+$$
+Y = a_0 + a_1 X_1 + \epsilon',
+$$
+
+à partir de $n$ observations issues du **modèle complet** présenté dans
+l'introduction.
+
+On appelle **biais sur la taille d’effet du prédicteur** $X_1$ la
+différence entre la valeur théorique $a_1$ que l'on pourrait estimer à
+partir du modèle incomplet et la vraie valeur $b_1$ du modèle complet :
+
+$$
+\text{biais} = a_1 - b_1 \, .
+$$
+
+1.  Sous les hypothèses du modèle de régression linéaire simple, montrer
+    que $a_1 = \text{Cov}(X_1, Y)$.
+
+2.  Montrer que le biais sur la taille d’effet de $X_1$ s’écrit
+
+$$
+   \text{biais} = b_2 \, \rho_X \, .
+$$
+
+3.  Donner une interprétation succincte de ce biais : expliquer pourquoi
+    la formule obtenue est intuitive compte tenu du rôle de la
+    corrélation entre $X_1$ et $X_2$.
+
+**Solution.** Pas d'indication. Répondre aux trois questions.
+
+### Question 3
+
+On considère un échantillon simulé de la manière suivante ($n = 1000$).
+
+```{r, eval = TRUE}
+# Graine du générateur aléatoire 
+set.seed(1962)
+
+# Taille d'echantillon et paramètre de simulation
+n <- 1000
+theta <-  0.9
+
+# Simulation des variables X1 et X2 corrélées
+x_1 <- rnorm(n, m = 0, sd = 1)
+x_2 <- theta *  x_1 + rnorm(n, m = 0, sd = sqrt(1-theta^2))
+
+# Simulation de la réponse Y
+y = 1.2 + 0.5*x_1 + 3*x_2 + rnorm(n, m = 0, sd = .5)
+
+cov(x_1,x_2)
+theta_empirique = mean(x_2)/mean(x_1)
+theta_empirique
+```
+
+1.  Montrer que les variables $X_1$ et $X_2$ sont de variance 1.
+
+2.  Montrer que la valeur `theta` choisie dans la simulation est la
+    corrélation théorique entre les variables aléatoires $X_1$ et $X_2$.
+
+3.  Calculez la corrélation empirique entre les vecteurs simulés `x_1`
+    et `x_2` et comparez-la à la valeur théorique `theta`. Valeur
+    théorique de 0.9, valeur empirique de 0.83
+
+**Solution.** Pas d'indication. Répondre aux trois questions.
+
+### Question 4
+
+Ajuster un modèle de regression linéaire incomplet à la variable `y` en
+utilisant le uniquement la variable $x_1$.
+
+```{r}
+mod_incomplet = lm(y ~ x_1)
+coef(mod_incomplet)
+
+mod_complet = lm(y~x_1+x_2)
+coef(mod_complet)
+
+biais_empirique = coef(mod_incomplet) - coef(mod_complet)
+biais_empirique[2]
+
+b_2foistheta = theta_empirique * coef(mod_complet)[3]
+b_2foistheta
+
+
+```
+
+1.  Quelle est la valeur (théorique) du biais sur la taille d'effet
+    $b_1$ ? C'est theta \* b_2
+
+2.  Quelle est l'estimation de ce biais (calculer
+    $\hat{a}_1 - \hat{b}_1$ et $\hat{b}_2 \times \hat{\theta}$) ?
+
+$\hat{a}_1 - \hat{b}_1= 2.619$
+
+\$\hat{b}\_2 \times \hat{\theta} = 2.7579 \$ 3. Commenter les résultats
+et conclure.
+
+Ils sont relativement proches
+
+**Solution.** Pas d'indication.
+
+## Exercice 2 : Application
+
+### Introduction
+
+L’Institut de Recherche en Glaciologie Balnéaire d’Apualculco a conduit
+une étude statistique afin d’examiner les effets de l’exposition au
+rayonnement solaire (`solar_exposure`) sur deux variables :
+
+-   la consommation de desserts glacés (`icecream_consumption`), mesurée
+    en centilitres par personne,
+
+-   et le degré de brûlure superficielle de la peau (`sunburn_grade`).
+
+Les données issues de cette étude ont été préalablement préparées et
+peuvent être chargées en mémoire avec la commande suivante :
+
+```{r, eval = TRUE}
+load("donnees_exercice_2.rda")
+```
+
+### Question 1
+
+Représenter le nuage de points illustrant la relation entre la
+consommation de crème glacée (`icecream_consumption`) et le degré de
+brûlures superficielles de la peau (`sunburn_grade`).
+
+Ajuster ensuite un modèle de régression linéaire simple de la forme :
+
+$$
+\text{sunburn grade} = a_0 + a_1 \times \text{icecream consumption} \, +  \epsilon \, .
+$$
+
+Superposer au graphique la droite de régression ajustée et ajouter un
+encadré indiquant le coefficient de détermination, exprimé en
+pourcentage et arrondi à l’unité.
+
+**Solution.** Compléter le code R suivant.
+
+```{r, eval = TRUE}
+# Remplacer eval = FALSE par eval = TRUE
+
+# Commentaire
+plot(icecream_consumption, sunburn_grade, 
+     las = 1, pch = 19,
+     col = "darkblue", 
+     xlab = "Nom de l'abscisse",
+     ylab = "Nom de l'ordonnée")
+
+# Ajuster un modèle linéaire simple
+mod_sunburn_simple <- lm(sunburn_grade ~ icecream_consumption)
+
+# Calculer le cofficient de détermination
+R_2 = summary(mod_sunburn_simple)$r.squared
+
+# Commentaire
+legend(x = "topleft", legend = R_2) 
+       
+# Tracer la droite de régression ajustée en orange avec des pointillés
+abline(mod_sunburn_simple, col = "orange", lty = 2, lwd = 2)
+```
+
+### Question 2
+
+Pour le modèle de la question 1, décrire de manière scientifiquement
+rigoureuse la relation entre le degré de brûlures superficielles de
+l’épiderme et la consommation de crème glacée.
+
+Pour cela, on procèdera en trois étapes :
+
+1.  Estimer le coefficient de corrélation entre les deux variables, en
+    précisant son intervalle de confiance à 95 % (`cor.test`).
+
+```{r}
+cor.test(sunburn_grade,icecream_consumption)
+
+```
+
+2.  Tester la significativité de ce coefficient (hypothèse nulle :
+    absence de corrélation) en indiquant la valeur de la statistique de
+    test, le nom exact du test utilisé (y compris les degrés de
+    liberté), ainsi que la p-valeur obtenue (ou son logarithme décimal).
+
+    C'est un test de Pearson, la valeur de la statistique de test est de
+    33.535 et la p-valeur obtenu est 2.2e⁻16
+
+3.  Résumer les résultats en deux phrases, en présentant des valeurs
+    numériques arrondies.
+
+    L'analyse de la correlation met en évidence une association positive
+    entre la consomation de crème glacée et des brulures superficielles
+    sur l'épiderme. (R = 0.9598, intervalle de confiance à 95% [0.941,
+    0.973])
+
+    Cette relation est significativement au seuil 2.2e⁻16, correspond à
+    une valeur de statistique de 33.535 ; test de Pearson.
+
+4.  Répondre aux items précédents en remplaçant le terme *coefficient de
+    corrélation* par le terme *coefficient de régression*. Utiliser
+    uniquement `lm` pour déterminer l'intervalle de confiance et le
+    test. Qu'est-ce qui est identique ou différent dans les deux
+    analyses ?
+
+```{r}
+summary(mod_sunburn_simple)
+```
+
+**Réponse.** Pour savoir comment présenter correctement un résultat
+d’estimation statistique dans un rapport scientifique, vous pouvez poser
+la question suivante à un moteur de recherche ou à un modèle de langage
+:
+
+"Comment reporter un résultat statistique dans un article scientifique
+?"
+
+Les éléments de réponse que vous trouverez seront utiles pour l’ensemble
+de vos travaux futurs.
+
+**Attention** : le point 3 de la question est le plus important - c’est
+celui qui sera lu, compris et évalué. Il détermine la qualité de la
+communication scientifique de vos résultats.
+
+**Exemple de rédaction attendue** : L’analyse de corrélation met en
+évidence une association **la décrire comme positive/negative
+forte/modérée/faible** entre la consommation de crème glacée et des
+brûlures superficielles de l’épiderme (r = **compléter** ; IC à 95 % :
+**compléter**). Cette relation est statistiquement significative
+(-log10(p) = **compléter**, correspondant à **statistique** =
+**compléter** ; test **nom du test**).
+
+### Question 3
+
+Peut-on conclure, à partir de cette relation, que la consommation de
+crème glacée cause des brûlures superficielles de l’épiderme ? Si non,
+quelle explication alternative ou quel facteur de confusion pourrait
+expliquer l’association observée ?
+
+**Réponse.** Facile ? Encore faudra-il prouver ce que l'on dit dans la
+suite.
+
+Non, il existe effectivement un lien de correlation entre les deux mais
+pas un lien de causalité. Un facteur de confusion pouvant être
+l'intensité du soleil qui pousse à la consomation de glaces et causes
+des brulures.
+
+### Question 4
+
+Justifier pourquoi l’exposition au soleil (`solar_exposure`) peut être
+considérée comme un facteur de confusion dans la relation entre la
+consommation de crème glacée (`icecream_consumption`) et le degré de
+brûlures superficielles de l’épiderme (`sunburn_grade`).
+
+1.  Vérifier s’il existe une association entre la consommation de crème
+    glacée et l’exposition au soleil.
+
+2.  Vérifier s’il existe une association entre l’exposition au soleil et
+    le degré de brûlures superficielles.
+
+3.  Rédiger une brève conclusion : ces résultats suggèrent-ils un biais
+    d’estimation de l’effet de la consommation de crème glacée sur le
+    degré de brûlures superficielles ?
+
+4.  Il existe un lien d'association positive entre la consomation de
+    crème glacée et l'exposition au soleil.
+
+5.  Il existe un lien d'association postiive entre l'exposition au
+    soleil et le degré de brulures superficielles.
+
+6.  Ces résultats suggèrent donc un biais d'estimation de l'effet de la
+    consomation de crème glacée sur le degré de brulures superficielles,
+    l'exposition au soleil apparaisaant comme un facteur de confusion.
+
+**Réponse.**
+
+```{r}
+
+lm(icecream_consumption~solar_exposure)
+lm(sunburn_grade~solar_exposure)
+
+```
+
+### Question 5
+
+Ajuster un modèle de régression linéaire multiple expliquant le degré de
+brûlures superficielles de l’épiderme (`sunburn_grade`) à partir de deux
+variables explicatives : la consommation de crème glacée
+(`icecream_consumption`) et l’exposition au soleil (`solar_exposure`).
+
+1.  Estimer l’effet de la consommation de crème glacée, après ajustement
+    pour l’exposition au soleil, et tester la significativité de cet
+    effet.
+
+2.  Présenter une conclusion synthétique de l’ensemble des résultats
+    obtenus dans cet exercice, en précisant ce qu’ils suggèrent sur la
+    nature des relations entre les variables étudiées.
+
+**Réponse.** On peut utiliser le code suivant.
+
+```{r, eval = FALSE}
+# Remplacer eval = FALSE par eval = TRUE
+mod_complet <- lm(formula = sunburn_grade ~ icecream_consumption + solar_exposure)
+summary(mod_complet)
+```
+
+1.  L'effet de la consomation de glace après ajustement de l'exposition
+    au soleil, n'est significativement qu'à 20%, on ne peut pas donc
+    exclure l'hypothèse que b_1 = 0
+
+## 2.L'ensemble de résultats de l'exercice indique un lien de correlation entre consomation de glaces, brulures et exposition au soleil. Mais la variable exposition au soleil semblent agire comme un facteur de confusion.
+
+## Exercice 3
+
+### Introduction
+
+On considère le modèle de régression linéaire multiple suivant :
+
+$$
+Y = b_0 + b_1 X_1 + b_2 X_2 + \epsilon \, ,
+$$
+
+où les prédicteurs $X_1$ et $X_2$ sont des variables aléatoires
+indépendantes du terme d'erreur $\epsilon$.
+
+On suppose en outre que les variables aléatoires $X_1$ et $X_2$ **sont
+non-corrélées**.
+
+### Question 1
+
+Démontrer que la part de variance de $Y$ expliquée par $X = (X_1, X_2)$,
+définie par
+
+$$
+  \rho^2  = \frac{\text{Var}(\mathbb{E}[Y \mid X])}{\text{Var}(Y)}
+$$ s’écrit, sous les hypothèses du modèle précédent
+
+$$
+ \rho^2 =  \rho_1^2 + \rho_2^2   \, , 
+$$ où $\rho_1 = \text{Cor}(X_1, Y)$ désigne le coefficient de
+corrélation linéaire entre $X_1$ et $Y$, et
+$\rho_2 = \text{Cor}(X_2, Y)$ le coefficient de corrélation linéaire
+entre $X_2$ et $Y$.
+
+**Solution.** Commencer par exprimer l’espérance conditionnelle sous la
+forme suivante
+
+$$
+\mathbb{E}[Y \mid X] = b_0 + b_1 X_1 + b_2 X_2 \, .
+$$ Remplacer ensuite les coefficients $b_1$ et $b_2$ par leurs valeurs
+théoriques déterminées lors de la semaine 9 (CM et CTD), puis simplifier
+l’expression obtenue.
+
+### Question 2
+
+On considère un échantillon de taille $n=1000$, contenant les variables
+`y`, x_1`et`x_2\`, chargées en mémoire de la manière suivante :
+
+```{r, eval = TRUE}
+load("donnees_exercice_3.rda")
+```
+
+Ajuster un modèle linéaire aux données de l'exercice, en considérant `y`
+comme variable réponse et x_1`et`x_2\` comme variables explicatives :
+
+1.  Vérifier si les variables explicatives sont corrélées.
+
+2.  Calculer le coefficient de détermination empirique, d’abord à partir
+    de la formule de la question 1, puis selon sa définition à partir
+    des sommes RSS et TSS.
+
+3.  Expliquer pourquoi les résultats peuvent légèrement différer.
+
+4.  Vérifier vos calculs à l’aide du résumé du modèle (`summary`).
+
+**Solution.** Ajuster un modèle linéaire aux données de l'exercice de la
+manière suivante
+
+```{r, eval = TRUE}
+# Remplacer eval = FALSE par eval = TRUE
+# Ajuster un modèle linéaire aux données
+mod = lm(formula = y ~ x_1 + x_2)
+summary(mod)
+
+a_0 = coef(summary(mod))[1]
+a_1 = coef(summary(mod))[2]
+a_2 = coef(summary(mod))[3]
+
+RSS = sum((y-a_0-a_1*x_1-a_2*x_2))
+TSS = sum(mean(y)-y)
+
+1 - (RSS/TSS) 
+```
+
+Répondre à l'ensemble des questions posées. 1. P-value pour les
+coefficients \< 2e\^-16 2. R\^2 = 0.9325
+
+------------------------------------------------------------------------
+
+## Exercice 4
+
+### Introduction
+
+Cet exercice est **facultatif** : il demande un peu plus de réflexion
+que l’exercice précédent dont il est la suite. Il peut être traité par
+les élèves qui le souhaitent une fois les autres exercices achevés.
+
+On reprend le modèle de régression linéaire multiple définit dans
+l'exercice 1.
+
+On reprend le modèle de régression linéaire multiple introduit dans
+l’exercice 1, mais on suppose désormais que les prédicteurs $X_1$ et
+$X_2$ **sont corrélés**. On fixe, sans perte de généralité, leurs
+variances à 1 :
+
+$$
+\text{Var}(X_1) = \text{Var}(X_2)  = 1 \, .
+$$
+
+On note
+
+$$
+\theta = \text{Cor}(X_1, X_2)  \, ,
+$$ et on rappelle que $\theta^2 < 1$.
+
+### Question 1
+
+Montrer que, sous les hypothèses du modèle, la part de variance de $Y$
+expliquée par $X = (X_1, X_2)$ s’écrit
+
+$$
+ \rho^2 =  \frac{\rho_1^2 + \rho_2^2   -  2 \theta \rho_1\rho_2 }{ 1 - \theta^2 } \, ,
+$$ où $\rho_1 = \text{Cor}(X_1, Y)$ et $\rho_2 = \text{Cor}(X_2, Y)$.
+
+**Solution.** Adopter une démarche analogue à celle proposée pour
+l’exercice 1 : commencer par exprimer l'espérance conditionnelle de $Y$
+sachant $X = (X_1, X_2)$, puis calculer sa variance en tenant compte de
+la corrélation $\theta$ entre $X_1$ et $X_2$.
+
+### Question 2
+
+On suppose que les données contenues dans la variable `x_1` de
+l’exercice 1 suivent une **loi normale** N$(0,1)$.
+
+À l’aide d’une simulation en R, générer un échantillon artificiel de
+taille $n = 1000$ vérifiant les hypothèses du modèle de l’exercice
+précédent.
+
+Pour cette simulation, on fixera :
+
+-   la graine du générateur aléatoire à `1492`,
+-   les paramètres $b_0 = 0$, $b_1 = b_2 = 1$,
+-   le coefficient de corrélation : $\theta = 0.8$,
+-   et l’écart-type du terme d’erreur : $\sigma = 0.8$.
+
+**Solution.** Compléter le code R suivant
+
+```{r, eval = FALSE}
+# Remplacer eval = FALSE par eval = TRUE
+# Variable réponse : y, prédicteurs : x_1 et x_2
+
+# commentaire
+set.seed(1492)
+
+# Variables utilisées pour la simulation
+n = 1000
+theta = 0.8
+sigma = 0.8
+
+# Simulation de x2 conditionnelle à x1
+completer_en_utilisant_rnorm
+
+# Simulation de y conditionnelle à x1 et x2
+completer_en_utilisant_rnorm_aussi
+
+#----------------------------------------
+# Vérification de la simulation
+#mod <- lm(formula = y ~ x_1 + x_2)
+
+#if(round(summary(mod)$r.sq, 5) !=  0.85435)
+#  {cat("La simulation est incorrecte. \n")} 
+#else
+#  {cat("Ok, ca marche. \n")}
+```
+
+### Question 3
+
+1.  Ajuster en R un modèle de régression linéaire multiple sur les
+    données simulées à la question 2, avec `y` comme variable réponse et
+    `x_1`, `x_2` comme variables explicatives.
+
+2.  Extraire du résumé du modèle (`summary`) la valeur du **coefficient
+    de détermination** (`Multiple R-squared`).
+
+3.  Calculer ensuite un **estimateur de la part de variance expliquée**
+    en remplaçant dans la formule théorique $\rho_1,\rho_2,\theta$ leurs
+    estimations empiriques (corrélations calculées sur l’échantillon
+    simulé).
+
+4.  Comparer la valeur empirique de $R^2$ (point 2) et l’estimateur
+    obtenu au point 3, puis commentez brièvement la cohérence des deux
+    résultats.
+
+**Solution.** Inclure les commandes R correspondat à l'ajustement du
+modèle, extraction de `Multiple R-squared`, calcul des corrélations
+empiriques, calcul de l’estimateur.

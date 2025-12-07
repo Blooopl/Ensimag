@@ -1,0 +1,276 @@
+---
+title: "TP 2 - Méthodes de Monte-Carlo"
+output:
+  pdf_document: default
+  html_document: default
+date: "Semaine 3 : À rendre semaine 5"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+------------------------------------------------------------------------
+
+## Partie 1
+
+Les réponses attendues ne dépassent pas quelques lignes. Résumer les
+calculs faits sur papier et être parcimonieux dans l'utilisation de
+formules mathématiques.
+
+### Question 1
+
+Soit $U_1, U_2, \dots, U_n$ une suite de variables aléatoires
+indépendantes et identiquement distribuées de loi uniforme sur $(0,1)$.
+On pose $X_i=\sqrt{1 - U_i^2}$ pour tout $i = 1, \dots, n$.
+
+Montrer que la moyenne empirique définie par 
+
+$$
+\overline{X}_n = \frac{1}{n} \sum_{i=1}^n X_i 
+$$ 
+
+converge en probabilité vers $\pi/4$.
+
+**Solution :** Prendre soin de vérifier les hypothèses lorsqu'on utilise
+un théorème. Justifier le calcul de l'intégrale ($\pi/4$) par un
+argument géométrique.
+
+### Question 2
+
+Calculer la variance de la moyenne empirique $\overline{X}_n$. Quel est
+l'ordre de grandeur de la précision de l'estimation de $\frac{\pi}4$ par
+$\overline{X}_n$ pour $n$ fixé ?
+
+**Solution :** La précision de l'estimation correspond à l'écart-type.
+
+### Question 3
+
+Vérifier numériquement que l'on peut approcher la valeur
+$\pi/4 =  0.7853982$ en effectuant des tirages de loi uniforme.
+Illustrer graphiquement l'approximation en fonction du nombre de
+tirages, compris entre 10 et 10000.
+
+**Solution :** Pour cela, modifier le code suivant.
+
+```{r}
+# nombre maximum de tirages 
+set.seed(314159)
+n <- 10000
+
+# tirages de loi uniforme
+# u <- to_change
+
+# Definition de la moyenne empirique X_barre pour k tirages (k = 10,...,n)
+# ligne à modifier (utiliser sapply)
+x_barre <- rep(pi/4, length(10:n)) 
+
+# plot des valeurs estimées pour tout k
+
+plot(10:n, x_barre, pch = 19, 
+     cex = .3, col = "green4",
+     xlab = "Nombre de tirages (n)",
+     ylab = "Estimation de pi/4", 
+     las = 1)
+
+legend(x = "topright", pch = 19, 
+       col = c("green4"),
+       legend = c("Estimateur X_barre"))
+
+# valeur pi/4 en rouge
+abline(h = pi/4, col = "red2", lwd = 3)
+```
+
+------------------------------------------------------------------------
+
+## Partie 2
+
+On cherche à approcher $\pi/4$ en réduisant la variance de l'estimateur
+considéré précédemment. Pour cela, on utilise une loi instrumentale
+non-uniforme de densité
+
+$$
+g(v) = \frac{3}{2} \sqrt{ 1 - v } \, , \quad v \in (0,1) \, .
+$$
+
+### Question 1
+
+Montrer que la loi de densité $g(v)$ peut être simulée simplement à
+l'aide de la loi uniforme. Vérifier numériquement que la simulation est
+correcte.
+
+**Solution :** On utilise une méthode consistant à "inverser" la
+fonction de répartition, $G(t)$, de la loi de densité $g(v)$, c'est à
+dire à résoudre l'équation $u = G(t)$ pour tout $u \in (0,1)$. On
+considère alors \$ G\^{-1}(U)\$ où $U$ est de loi uniforme dans $(0,1)$.
+La vérification consiste à superposer la densité à l'histogramme de
+valeurs simulées.
+
+```{r}
+ # on simule la loi de Y à l'aide de tirage uniforme : y_star
+ n = 10000
+ v = runif(n)
+ y_star = calcule_inv_G_aux_points_v
+
+# histogramme et densité théorique 
+ hist(y_star, prob = TRUE, col = "pink")
+ curve(3 * sqrt( 1 - x )/2, from = 0, to = 1, col = "darkblue", add = TRUE, lwd = 3) 
+```
+
+### Question 2
+
+Estimer l'intégrale
+
+$$
+{\cal I} = \int_0^1 \sqrt{1 - u^2} du 
+$$
+
+à l'aide d'une méthode de Monte Carlo par échantillonnage préférentiel
+utilisant la loi instrumentale de densité $g$. On pourra considérer les
+variables aléatoires définies par
+
+$$
+Z_i=\frac{2}{3}\sqrt{ 2 - U_i^{2/3} } \, , \quad i = 1, \dots,n \, .
+$$ 
+
+Montrer que l'échantillonnage préférentiel revient à considérer
+l'estimateur 
+
+$$
+\overline{Z_n} = \frac{1}{n} \sum_{i = 1}^n Z_i.
+$$ 
+Justifier la convergence en probabilité vers $\pi/4$.
+
+**Solution** 
+Utiliser l'astuce suivante 
+
+$$
+ \int_0^1 \sqrt{1 - v^2} dv  = \int_0^1  \sqrt{ 1 + v } \,  \sqrt{1 - v} \, dv  = \frac{2}{3} \int_0^1  \sqrt{ 1 + v } \,  g(v) dv .
+$$
+
+### Question 3
+
+Calculer la variance de l'estimateur de ${\cal I} = \pi/4$ obtenu par la
+méthode d'échantillonnage préférentiel.
+
+**Solution.** Donner une valeur théorique (calculer numériquement la
+constante obtenue pour $n = 1$).
+
+### Question 4
+
+Vérifier numériquement que l'estimateur $\overline{Z_n}$ est plus précis
+que l'estimateur $\overline{X_n}$. Illustrer la qualité de
+l'approximation en fonction du nombre de tirages. Superposer la
+simulation des deux estimateurs en fonction du nombre de tirages.
+
+**Solution :** L'estimateur est d'autant plus précis que sa variance est
+petite. Commenter et compléter le code suivant.
+
+```{r}
+n = 10000
+
+## Commenter 
+plot(10:n, x_barre, pch = 19, 
+     cex = .3, col = "grey",
+     xlab = "Nombre de tirages (n)",
+     ylab = "Estimation de pi/4", 
+     las = 1)
+
+
+## les valeurs uniformes u[i] ont été calculées précédemment
+
+## calculer \bar{Z}_k pour k = 10...n 
+moyenne_partielle <- function(k) {
+  (2/3)*mean(sqrt(2 - quelque_chose_a_remplacer^(2/3)))
+}
+
+z_barre <-  sapply(10:n, 
+                   FUN = moyenne_partielle)
+
+points(10:n, z_barre, pch = 19, 
+     cex = .3, col = "red4",
+     las = 1)
+
+legend(x = "topright", pch = 19, 
+       col = c("grey80", "red4"),
+       legend = c("X_barre", "Z_barre"))
+
+# valeur pi/4 en rouge
+abline(h = pi/4, col = "red2", lwd = 1)
+```
+
+------------------------------------------------------------------------
+
+## Partie 3 - Intervalle de confiance
+
+On souhaite décrire l'incertitude sur la valeur estimée à partir d'un
+échantillon de taille $n$ à l'aide d'un intervalle de confiance. Plutôt
+qu'une valeur unique, il s'agit de donner une plage de valeurs.
+
+On dispose de l'échantillon de taille $n = 1000$ et de l'estimation
+ci-dessous.
+
+```{r}
+set.seed(314159)
+z = (2/3)*sqrt(2 - runif(n = 1000)^(2/3))
+estimation = mean(z)
+
+# pi/4 = 0.7853982
+estimation
+```
+
+On cherche donc un intervalle $[a,b]$ tel que 
+
+$$
+{\rm P}( a \leq {\cal I} \leq b) = 1 - \alpha \, .  
+$$ 
+
+L'aléatoire porte alors sur les bornes, $a$ et $b$, de l'intervalle.
+
+### Question 1
+
+Utiliser le théorème central limite pour donner une approximation de la
+loi de la variable aléatoire
+
+$$
+\overline{Z_n}  = \frac{1}n \sum_{i = 1}^n Z_i \, .
+$$
+
+**Solution :** Deux lignes pour décrire et justifier l'approximation.
+
+### Question 2
+
+Utiliser le théorème central limite pour déterminer des bornes $a$ et
+$b$ pour un intervalle de confiance de niveau 95% sur l'estimation de
+$\pi/4$.
+
+**Solution :** Montrer que l'on peut choisir un intervalle centré sur la
+valeur de l'intégrale de la forme suivante
+
+$$
+\overline{Z_n} + z_{\alpha/2} \frac{0.0732935}{\sqrt{n}}  \leq {\cal I} \leq \overline{Z_n} + z_{1 -\alpha/2} \frac{0.0732935}{\sqrt{n}}
+$$ 
+
+où $z_{\alpha/2}$ et $z_{1 - \alpha/2}$ les quantiles de la loi
+N$(0,1)$ correspondant aux proportions $\alpha/2$ et $1 - \alpha/2$.
+
+### Question 3
+
+Calculer une valeur numérique de l'intervalle de confiance de niveau 95%
+proposé.
+
+**Solution :**
+
+```{r}
+n = 1000
+
+# utiliser qnorm pour obtenir les quantiles de la loi normale 
+a = estimation + quelque_chose
+b = estimation + autre_chose
+
+IC = c(a,b)
+names(IC) = c("lower", "upper")
+
+cat("Intervalle de confiance à 95% \n")
+IC
+```
