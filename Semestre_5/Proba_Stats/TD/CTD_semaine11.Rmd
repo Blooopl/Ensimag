@@ -1,0 +1,427 @@
+---
+title: "Odds ratio et régression logistique"
+output:
+  pdf_document: default
+  html_document: default
+date: "Semaine 11 - Bonus"
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Recommandation
+
+Cette séance de TD est destinée aux élèves les plus avancés, ayant terminé les exercices obligatoires du CTD précédent et rédigé en partie leur compte-rendu de TP4. Aucune solution collective ne sera proposée.
+
+Toutefois, les enseignants resteront disponibles pour vous répondre et vous aider individuellement sur ce travail, dont la difficulté est comparable à celle des exercices précédents.
+
+
+## Odds, chances et cotes
+
+Dans les jeux de hasard comme en statistique, la cote (ou odds en
+anglais) d’un événement correspond au rapport entre la probabilité que
+l’événement se produise et la probabilité qu’il ne se produise pas.
+
+
+Autrement dit, si la probabilité d’un événement est $p$, sa cote est
+définie par
+
+$$
+\textit{odds} = \frac{p}{1 - p} \, .
+$$ 
+
+Par exemple, si un événement a une probabilité de $2/5$ de se
+produire, la cote est de 2 contre 3 en sa faveur, ou de 3 contre 2 en sa
+défaveur.
+
+Pour toute probabilité $p$ telle que $0 < p < 1$, on définit la fonction
+logistique (logit) par :
+
+$$
+\text{logit}(p) =  \ln(\textit{odds}) = \ln \left( \frac{p}{1 - p}  \right) \, , \quad 0<p<1 .
+$$ 
+
+
+Cette fonction est bijective, et sa réciproque est la fonction sigmoïde, donnée par :
+
+$$
+ \text{sigmoid}(t) = s(t)  = \frac{1}{1 + e^{-t}} \, , \quad t \in \mathbb{R}.
+$$
+
+------------------------------------------------------------------------
+
+## Partie 1 - L’odds ratio (OR) : rapport de cotes
+
+L’odds ratio (OR) mesure le rapport entre deux cotes : celle de la
+survenue d’un événement dans un groupe A, et celle du même événement
+dans un groupe B.
+
+### Contexte
+
+Une étude cas-témoins est menée afin d’évaluer l’association entre le
+tabagisme et le cancer du poumon.
+
+Dans ce type d’étude :
+
+-   les cas sont les personnes atteintes de la maladie,
+
+-   les témoins sont des personnes non malades.
+
+Le protocole de recrutement a été conçu pour limiter les biais de
+confusion liés à l’âge, au genre, à la parenté ou à la zone
+géographique.
+
+Les effectifs de fumeurs et de non-fumeurs dans les deux groupes sont
+représentatifs de ceux observés dans la population générale.
+
+Cependant, le cancer du poumon restant une maladie rare dans la
+population, les cas ont été surreprésentés dans l’échantillon afin
+d’obtenir un nombre d’observations suffisant pour l’analyse statistique.
+
+Les résultats sont résumés dans le tableau de contingence suivant :
+
+|                 | **Cancer du poumon** | **Pas de cancer** | **Total** |
+|-----------------|----------------------|-------------------|-----------|
+| **Fumeurs**     | $a = 90$             | $b = 60$          | $150$     |
+| **Non-fumeurs** | $c = 30$             | $d = 120$         | $150$     |
+| **Total**       | $120$                | $180$             | $300$     |
+
+
+Remarque : Ces données sont fictives et ont été créées à des fins
+pédagogiques. Elles ne correspondent pas à une étude réelle ni à des
+valeurs observées dans une population particulière.
+
+### Question 1
+
+On note :
+
+-   $X$ la variable indicatrice du tabagisme ($X = 1$ pour un fumeur,
+    $X = 0$ pour un non-fumeur),
+
+-   $Y$ la variable indicatrice de la présence de la maladie ($Y = 1$
+    pour un individu atteint d’un cancer du poumon, $Y = 0$ sinon).
+
+La cote de l’événement "être malade" sachant le statut tabagique d’un
+individu est définie par :
+
+$$
+\textit{odds}(x) =  \frac{\text{P}(Y = 1 | X = x)}{\text{P}(Y = 0 | X = x)} \, , \quad x \in \{ 0,1\} \, .
+$$
+
+1.  À partir des effectifs $a$, $b$, $c$, et $d$ du tableau de
+    contingence, estimer les cotes pour les fumeurs et pour les
+    non-fumeurs.
+
+2.  En déduire la valeur de l’odds ratio (OR), et vérifier qu’elle est
+    égale à :
+
+$$
+\text{OR}  = 6 \, .
+$$
+
+**Solution :** Pour le point 1, on note odds$(1)$ l'estimation de la cote pour les fumeurs et odds$(0)$ l'estimation de la cote pour les non fumeurs. Pour le point 2, l’odds ratio (OR) est estimé par 
+
+
+$$
+\text{OR} = \frac{\text{odds}(1)}{\text{odds}(0)} \, .
+$$
+
+
+
+### Question 2
+
+Interpréter la valeur de l’odds ratio (OR) obtenue à la question
+précédente en termes de risque pour un fumeur.
+
+Les données suggèrent-elles l’existence d’une association statistique
+entre le tabagisme et le cancer du poumon ?
+
+Remarque : Dans la suite de l’exercice, nous verrons comment obtenir un
+intervalle de confiance à 95 % pour l’odds ratio.
+
+**Solution :** 
+
+
+### Question 3. Risque relatif ou OR
+
+Il semble naturel d’évaluer l’effet du tabagisme en comparant les
+probabilités plutôt que les cotes. On définit ainsi le risque relatif :
+
+$$
+r =  \frac{\text{P}(Y = 1 | X = 1)}{\text{P}(Y = 1 | X = 0)} \, .
+$$ 
+
+Ce rapport compare la probabilité d’être malade chez les fumeurs à
+celle d’être malade chez les non-fumeurs. Le risque relatif $r$ est
+généralement plus intuitif à interpréter que l’odds ratio (OR), mais il
+peut être plus sensible aux conditions d’échantillonnage.
+
+1.  Estimer le risque relatif (valeur RR) à l’aide des effectifs $a$, $b$, $c$ et
+    $d$ du tableau de contingence.
+
+2.  Certains participants ont-ils été surreprésentés dans l’étude ?
+    (Indication : le recrutement n’a pas été réalisé par tirage
+    aléatoire dans la population.)
+
+3.  Justifier que cette surreprésentation se traduit par un facteur
+    multiplicatif $\alpha$ appliqué aux effectifs de la colonne **Cancer
+    du poumon** du tableau de contingence :
+
+|                 | **Cancer du poumon** | **Pas de cancer** |
+|-----------------|----------------------|-------------------|
+| **Fumeurs**     | $a = \alpha a_0$     | $b$               |
+| **Non-fumeurs** | $b = \alpha c_0$     | $d$               |
+
+où $a_0$ et $c_0$ désignent les effectifs correspondant à ceux observés
+dans la population générale.
+
+4.  Le risque relatif (RR) est-il biaisé dans cette étude ?
+
+5.  L’odds ratio (OR) est-il biaisé ?
+
+Conclure en précisant quel indicateur est le plus approprié dans un
+contexte d’étude cas-témoins.
+
+**Solution :**
+
+
+
+
+------------------------------------------------------------------------
+
+## Partie 2. Régression logistique.
+
+### Introduction
+
+On s’intéresse à la relation entre deux variables binaires $X$ et $Y$,
+et plus précisément à la manière dont la variable explicative $X$
+influence la probabilité que $Y$ prenne la valeur 1.
+
+On suppose que ces deux variables sont reliées par le modèle suivant :
+
+$$
+\textit{odd}(x) =   \frac{\text{P}(Y = 1 | X = x)}{\text{P}(Y = 0 | X = x)} = \exp(b_0 + b_1 x) \, ,
+$$ où $b_0$ et $b_1$ sont deux paramètres réels.
+
+En appliquant la fonction logarithme aux deux côtés, on obtient :
+
+$$
+\text{logit}(\text{P}(Y = 1| X = x)) = b_0 + b_1 x \, ,
+$$
+
+ce qui justifie le nom de *modèle de régression logistique* : il relie
+le logit de la probabilité à une combinaison linéaire des variables
+explicatives.
+
+On dispose de $n$ observations indépendantes $(x_i, y_i)$ issues de ce
+modèle, où :
+
+-   $x_i$ correspond à la valeur observée du prédicteur (les $x_i$ valent 0 ou 1),
+
+-   conditionnellement à $x_i$, $y_i$ est issue d'une loi de Bernoulli de paramètre
+    $p_i = \text{P}(Y = 1 \mid X = x_i)$.
+
+Conditionnellement aux $x_i$, les variables $y_i$ sont supposées indépendantes et suivent toutes la régression logistique définie ci-dessus.
+
+### Question 1
+
+À partir des effectifs du tableau de contingence de la **Partie 1** :
+
+1.  Proposer une estimation des paramètres $b_0$ et $b_1$ du modèle
+    logistique.
+
+2.  Calculez les estimations numériques $\hat b_0$ et $\hat b_1$.
+
+**Solution :**  On cherchera tout d'abord la relation entre les paramètres $(b_0, b_1)$ du modèle probabiliste  et les valeurs (théoriques) du logarithme de la cote ($\textit{odd}(0)$) et de l'odds ration ($\textit{odd}(1)/\textit{odd}(1)$).
+
+
+
+
+### Question 2
+
+En supposant que les variables $x_i$ sont fixées, montrer que la
+log-vraisemblance du modèle logistique, en fonction des paramètres
+$(b_0, b_1)$, s’écrit :
+
+$$
+\ln L(b_0, b_1) = \sum_{i = 1}^n \ln \left(  \frac{e^{(b_0 + b_1x_i)y_i}}{1 + e^{b_0 + b_1x_i}} \right) \, .
+$$
+
+*Indication* : Exprimer la vraisemblance comme le produit des lois
+conditionnelles P$(Y_i = y_i \mid X_i = x_i)$, puis appliquer le
+logarithmique.
+
+**Solution :** .
+
+
+
+### Question 3
+
+Montrer que les estimateurs
+
+$$
+\hat{b}_0 =  \ln \text{odd}(0)
+$$ et\
+$$
+\hat{b}_1 =  \ln \text{OR} \, ,
+$$
+
+sont des estimateurs du maximum de vraisemblance pour les paramètres
+$(b_0, b_1)$ du modèle de régression logistique. On admet qu’il s’agit
+bien d’un maximum.
+
+
+### Question 4
+
+Écrire un code R permettant de transformer les informations résumées
+dans le tableau de contingence de la partie 1 en un échantillon
+$(x_i, y_i)$ de taille $n$ composé de variables binaires.
+
+Ensuite, vérifiez que l’échantillon obtenu correspond bien au tableau
+initial en utilisant la fonction `table()`.
+
+**Solution :** C'est un peu technique. 
+
+
+
+### Question 5
+
+Ajuster un modèle de régression logistique à l’échantillon créé à partir
+du tableau de contingence en utilisant la commande :
+
+```{r, eval = FALSE}
+# Remplacer eval = FALSE par eval TRUE
+mod <- glm(y ~ x, family = binomial)
+coefficients(mod)
+```
+
+On admet que la commande `glm()` calcule numériquement les estimateurs
+du maximum de vraisemblance des paramètres du modèle.
+
+Ensuite, vérifier les résultats précédemment obtenus à l’aide des
+coefficients du modèle ajusté :
+
+1.  Estimation du risque chez les non-fumeurs
+
+$$
+\text{odd}(0) = \exp(\hat b_0)
+$$ 
+
+2. Résultat important pour l'estimation du risque en santé publique
+
+$$
+\text{OR} = \exp(\hat b_1)  \, .
+$$
+
+**Solution :** On a trouvé précédemment que
+
+$$
+\text{odd}(0) = 1/4  \quad \text{et} \quad \text{OR} = 6 \, . 
+$$
+
+
+
+
+### Question 6
+
+Calculer un intervalle de confiance à 95% pour le risque *OR* à l'aide de la fonction `confint()` en R (arrondir à deux décimales).
+
+**Solution :**
+
+
+------------------------------------------------------------------------
+
+## Partie 3. Régression logistique avec deux facteurs explicatifs binaires
+
+On suppose maintenant que la variable binaire $Y$ dépend de deux facteurs explicatifs qualitatifs binaires, $X_1$ et $X_2$ selon le modèle suivant :
+
+
+$$
+\textit{odds}(x_1,x_2) =
+\frac{ \text{P}(Y = 1 \mid X_1 = x_1, X_2 = x_2) }{ \text{P}(Y = 0 \mid X_1 = x_1, X_2 = x_2) }
+= \exp(b_0 + b_1 x_1 + b_2 x_2 + b_3 x_1 x_2),
+$$
+
+où $b_0, b_1, b_2, b_3$ sont des paramètres réels.
+
+Cette relation peut également s’écrire sous forme **logit** :
+
+$$
+\text{logit}\big(\text{P}(Y = 1 \mid X_1 = x_1, X_2 = x_2)\big) = b_0 + b_1 x_1 + b_2 x_2 + b_3 x_1 x_2 \,.
+$$
+
+### Question 1
+
+Démontrer que toute fonction $f(x_1, x_2)$ définie sur  $\{ 0,1 \}^2$ et à valeurs réelles peut s'écrire sous la forme suivante : 
+
+$$
+f(x_1, x_2) = b_0 + b_1 x_1 + b_2 x_2 + b_3 x_1 x_2 \, ,
+$$
+
+où $b_0, b_1,b_2, b_3$ sont des paramètres réels.
+
+**Solution :** On peut voir cet énoncé comme un problème d'algèbre linéaire. 
+
+
+### Question 2
+
+En vous inspirant de la démarche d'une partie précédente, proposez des estimateurs pour les quatre paramètres  $b_0, b_1,b_2, b_3$ du modèle de régression logistique : 
+
+$$
+\hat b_0 = \ln(\text{odd}(0,0)) \\
+\hat b_1 = \ln(\text{odd}(1,0)/\text{odd}(0,0)) \\
+\hat b_2 = \ln(\text{odd}(0,1)/\text{odd}(0,0)) \\
+\hat b_3 = \ln \left( \frac{\text{odd}(1,1)\text{odd}(0,0)}{\text{odd}(0,1)\text{odd}(1,0)} \right)  \, .
+$$
+
+**Solution :** Utiliser la question 1.
+
+
+
+### Question 3
+
+On effectue la simulation suivante en R :
+
+```{r, eval = FALSE}
+# Remplacer eval = FALSE par eval TRUE
+sigmoid <- function(x){ 1/(1 + exp(-x))}
+
+set.seed(42)
+
+# Taille de l'échantillon
+n = 1000
+
+# Variables explicatives binaires
+x1 <-  rbinom(n, 1, prob = 0.5)
+x2 <-  rbinom(n, 1, prob = 0.5)
+
+# Variable réponse binaire simulée
+y  <-  rbinom(n, 1, prob = sigmoid(1.5 - 1.8*x1 + 2.6*x2 - 1.7*x1*x2) )
+```
+
+En utilisant les formules de la question 2, calculer les estimations des paramètres $b_0, b_1,b_2, b_3$ du modèle de régression logistique correspondant à cette simulation.
+
+**Solution :** On utilise donc les formules obtenues dans la question précédente.
+
+
+### Question 4
+
+Pour vérifier les résultats de la question précédente, ajuster le modèle de régression logistique suivant à l’échantillon simulé :
+
+```{r, eval = FALSE}
+# Remplacer eval = FALSE par eval TRUE
+mod <-  glm(y ~ x1 + x2 + x1*x2, family = binomial)
+```
+
+
+1.  Comparer les coefficients ajustés du modèle avec les estimations empiriques obtenues précédemment.
+
+2. Analyser ce qui se passe si le terme d’interaction $x_1x_2$ n'est pas
+    inclus dans le modèle ?
+
+**Solution :**
+

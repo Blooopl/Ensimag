@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap1">Chapitre 1</a> : <a href="index.html#Chap1Seance03">Séance 03</a> : <a href="s03_2.html">Fichiers</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s03_2.go">s03_2.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<p>Dans cet exercice, on va apprendre à manipuler des fichiers textes
+dans un programme Go, ce qui est en fait très similaire à ce qu’on a
+déjà fait lorsqu’on faisait des lectures au clavier et des affichages à
+l’écran.</p>
+<p>Définir une constante <code>nomFichier</code> initialisée avec un nom
+de fichier qui n’existe pas dans le répertoire courant (sinon, il sera
+écrasé !). Par exemple, <code>victor.txt</code>.</p>
+<h3 id="création-dun-fichier">Création d’un fichier</h3>
+<p>Écrire une fonction <code>creationFichier()</code> qui va créer le
+fichier texte dont on a choisi le nom ci-dessus et écrire dedans les
+lignes suivantes :</p>
+<pre class="text"><code>Demain, dès l&#39;aube, à l&#39;heure où blanchit la campagne,
+Je partirai. Vois-tu, je sais que tu m&#39;attends.</code></pre>
+<p>Pour cela, on aura besoin de la fonction <code>os.Create</code> (<a
+href="https://pkg.go.dev/os#Create">documentation</a>) qui permet
+justement de créer un fichier dont on passe le nom en paramètre. Il
+faudra bien sûr gérer correctement les erreurs potentiellement renvoyées
+par cette fonction.</p>
+<p>Cette fonction renvoie notamment un objet (qu’on stockera par exemple
+dans une variable <code>fich</code>) appelé un descripteur de fichier
+(de type <code>*FILE</code> dans la documentation, on comprendra plus
+tard ce que cela veut dire exactement), et qui représente une
+description abstraite de la notion de fichier en Go.</p>
+<p>On a déjà manipulé ce type d’objets sans le savoir : les flux
+d’entrée-sortie <code>stdin</code>, <code>stdout</code> et
+<code>stderr</code> sont aussi modélisés en Go comme des descripteurs de
+fichiers.</p>
+<p>Pour écrire dans un fichier texte, il suffit d’utiliser la fonction
+<code>fmt.Fprintln</code> (<a
+href="https://pkg.go.dev/fmt#Fprintln">documentation</a>) qu’on avait
+déjà vu dans le TP sur les entrées-sorties, en passant <code>fich</code>
+comme premier paramètre au lieu de <code>stdout</code> ou
+<code>stderr</code>.</p>
+<p>Enfin, il est important de penser à fermer le fichier une fois qu’on
+a fini d’écrire dedans : pour cela, il faut utiliser la méthode
+<code>Close</code> (<a
+href="https://pkg.go.dev/os#File.Close">documentation</a>) qui, étant
+une méthode et pas une fonction, doit être appelée directement sur le
+descripteur de fichier : <code>fich.Close()</code>.</p>
+<p>La fonction <code>creationFichier()</code> peut être appelée
+directement depuis la fonction <code>main</code> pour la tester.</p>
+<p>Lancer le programme puis vérifier que le fichier
+<code>victor.txt</code> a bien été créé, et qu’il contient le texte
+attendu (<code>cat victor.txt</code>).</p>
+<h3 id="lecture-dun-fichier">Lecture d’un fichier</h3>
+<p>Écrire maintenant une fonction <code>lectureFichier</code> qui va
+ouvrir le même fichier en lecture-seule et afficher son contenu à
+l’écran.</p>
+<p>On aura besoin de la fonction <code>os.Open</code> (<a
+href="https://pkg.go.dev/os#Open">documentation</a>) qui sert justement
+à ouvrir un fichier en lecture-seule et renvoie un descripteur de
+fichier (et une erreur qu’on devra gérer proprement bien sûr).</p>
+<p>Pour parcourir le fichier ligne par ligne, on utilisera un
+<code>Scanner</code> (<a
+href="https://pkg.go.dev/bufio#Scanner">documentation</a>) comme on a vu
+pendant le TP sur les entrées-sorties. La fonction
+<code>bufio.NewScanner</code> (<a
+href="https://pkg.go.dev/bufio#NewScanner">documentation</a>) peut être
+appelée avec un descripteur de fichier en paramètre (on l’avait
+précédemment utilisé sur <code>stdin</code>), et on peut ensuite appeler
+en boucle <code>Scan</code> tant qu’elle renvoie <code>True</code> :
+elle renverra <code>False</code> quand on arrivera à la fin du fichier.
+Mais comme on ne sait pas encore écrire des boucles, on lira simplement
+les deux lignes que contient le fichier une par une, en appelant donc
+deux fois <code>Scan</code> au total. Noter que la chaîne récupérée via
+l’appel à <code>Text</code> ne contiendra pas le retour à la ligne
+final.</p>
+<p>Là encore, il faut penser à fermer proprement le fichier : on le
+répète, car il est très fréquent qu’on oublie et les problèmes que cela
+peut poser ne se manifesteront vraisemblablement pas dans les petits
+exercices que l’on traite dans ce cours.</p>
+<p>Go fournit un mécanisme intéressant qu’on peut utiliser pour éviter
+de risquer d’oublier de fermer le fichier, via le mot clé
+<code>defer</code> dont le fonctionnement apparaît de façon évidente
+grâce à un exemple :</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">defer</span> fmt<span class="op">.</span>Println<span class="op">(</span><span class="st">&quot;1&quot;</span><span class="op">)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span><span class="st">&quot;2&quot;</span><span class="op">)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span><span class="st">&quot;3&quot;</span><span class="op">)</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>produit l’affichage :</p>
+<pre class="text"><code>2
+3
+1</code></pre>
+<p>Les lignes commençant par <code>defer</code> ne sont donc pas
+exécutées immédiatement, mais le seront à la fin de la fonction.</p>
+<p>Utiliser ce mécanisme pour modifier le code de vos deux fonctions
+précédentes en positionnant l’appel à <code>Close</code> après la
+création ou l’ouverture du fichier.</p>
+<p>Attention : il faut tester si l’appel à <code>Open</code> renvoie une
+erreur <strong>avant</strong> d’écrire le <code>defer</code>, car s’il y
+a eu une erreur, le fichier n’a pas été ouvert, donc on ne peut pas le
+fermer.</p>
+<h3 id="ajout-à-la-fin-dun-fichier">Ajout à la fin d’un fichier</h3>
+<p>Écrire enfin une fonction <code>ajoutFichier</code> qui va ouvrir le
+fichier en écriture-seule, pour ajouter les lignes suivantes après les
+deux qu’il contient déjà :</p>
+<pre class="text"><code>J&#39;irai par la forêt, j&#39;irai par la montagne.
+Je ne puis demeurer loin de toi plus longtemps.</code></pre>
+<p>Vous aurez besoin de la fonction <code>os.OpenFile</code> (<a
+href="https://pkg.go.dev/os#OpenFile">documentation</a>) qui est en fait
+la fonction générale pour créer ou ouvrir un fichier
+(<code>Create</code> et <code>Open</code> ne font qu’appeler cette
+fonction avec les bons paramètres). Cette fonction prend donc en
+paramètres :</p>
+<ul>
+<li>le nom du fichier ;</li>
+<li>un <code>flag</code> qui indique le mode d’ouverture, dans notre cas
+il faudra utiliser <code>os.O_WRONLY|os.O_APPEND</code> pour ouvrir le
+fichier en écriture-seule et en mode concaténation (on rappelle que
+l’opérateur <code>|</code> effectue un « ou-binaire » entre ses
+opérandes) ;</li>
+<li>un <code>perm</code> (équivalent à la commande <code>chmod</code>
+sous Unix), qui n’est important qu’en cas de création de fichier, ce qui
+n’est pas le cas ici : on peut donc simplement passer 0.</li>
+</ul>
+<p>Après l’exécution du programme, vérifier que le fichier
+<code>victor.txt</code> contient le texte étendu
+(<code>cat victor.txt</code>).</p>
+
+</main>
+<div><br></div>
+</body>
+</html>

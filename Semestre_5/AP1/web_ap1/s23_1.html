@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap4">Chapitre 4</a> : <a href="index.html#Chap4Seance23">Séance 23</a> : <a href="s23_1.html">Listes chaînées en C</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="listes_chainees.c">listes_chainees.c</a> <a href="tab_listes.c">tab_listes.c</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<p>Dans ce dernier TP de C, on va travailler sur des listes chaînées de
+façon très similaire à ce qu’on a déjà fait en Go : vous pouvez
+reprendre les TP 16 et 17 qui vous seront utiles ici.</p>
+<h3 id="listes-chaînées-simples">Listes chaînées simples</h3>
+<p>Créer un fichier <code>listes_chainees.c</code> commençant comme
+ci-dessous :</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;time.h&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdbool.h&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="pp">#define VAL_SUP </span><span class="dv">10</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="pp">#define TAILLE_MAX </span><span class="dv">6</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> _cell_t <span class="op">{</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> val<span class="op">;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">struct</span> _cell_t <span class="op">*</span>suiv<span class="op">;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> cellule_t<span class="op">;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> cellule_t <span class="op">*</span>liste_t<span class="op">;</span></span></code></pre></div>
+<p>On voit qu’on définit ici un type <code>cellule_t</code> pour
+représenter une cellule de nos listes chaînées. On doit d’abord définir
+un type temporaire <code>_cell_t</code> qui ne sert qu’à permettre la
+définition du champ <code>suiv</code>, avant de pouvoir définir le type
+<code>cellule_t</code> qu’on utilisera toujours dans la suite du
+programme.</p>
+<p>On définit ensuite un type <code>liste_t</code> qui est simplement un
+pointeur vers une cellule de la liste, en l’occurrence la première : une
+liste vide sera donc simplement représentée par un pointeur
+<code>NULL</code>.</p>
+<p>Écrivez une fonction <code>void afficher(liste_t lsc)</code> qui
+affiche le contenu de la liste passée en paramètre sous le format
+<code>1 -&gt; 5 -&gt; 0 -&gt; 6 -&gt; FIN</code>.</p>
+<p>Écrivez une fonction
+<code>liste_t inserer_tete(liste_t lsc, int val)</code> qui alloue une
+nouvelle cellule grâce à la fonction <code>malloc</code>
+(<code>man 3 malloc</code>), initialise ses champs et renvoie un
+pointeur vers cette cellule.</p>
+<p>Écrivez une fonction
+<code>bool supprimer_premiere_occurrence(liste_t *lsc, int val)</code>
+qui doit supprimer la première occurrence de <code>val</code> dans la
+liste passée en paramètre et renvoyer un booléen indiquant ssi la valeur
+était bien dans la liste. On recommence d’utiliser la technique de
+l’élément fictif en tête pour simplifier le code à écrire.</p>
+<p>On note qu’ici <code>lsc</code> est de type <code>liste_t *lsc</code>
+(c’est-à-dire <code>cellule_t **lsc</code>) et pas simplement
+<code>liste_t lsc</code> comme précédemment. En effet, il est possible
+qu’on ait besoin de modifier la liste, c’est-à-dire le pointeur vers la
+première cellule, si c’est cette première cellule qui contient la valeur
+à supprimer. Or on sait qu’en C, les paramètres sont passés par copie :
+on doit donc passer un pointeur vers un pointeur vers la première
+cellule pour pouvoir la modifier si besoin dans la fonction.</p>
+<p>Notez bien qu’on doit explicitement désallouer la cellule contenant
+la valeur à supprimer (si on la trouve), en utilisant la fonction
+<code>free</code> (<code>man 3 free</code>) et qu’on n’a plus le droit
+d’utiliser une cellule une fois qu’elle est désallouée.</p>
+<p>Implantez une fonction de test qui effectue quelques insertions et
+suppressions et affiche les listes pour vous convaincre que vos
+fonctions sont correctes.</p>
+<p>N’oubliez pas d’utiliser Valgrind (commande
+<code>valgrind --track-origins=yes --leak-check=full ./listes_chainees</code>)
+pour détecter d’éventuelles erreurs de pointeurs.</p>
+<p>Écrivez une fonction <code>liste_t creer(unsigned taille)</code> qui
+crée une liste de <code>taille</code> entiers signés pseudo-aléatoires
+(vous aurez besoin de la fonction <code>random</code>
+(<code>man 3 random</code>) pour ça, sans oublier d’appeler
+<code>srandom(time(NULL))</code> dans votre fonction <code>main</code>
+pour initialiser le générateur de nombres pseudo-aléatoires).</p>
+<p>Écrivez une fonction <code>void detruire(liste_t lsc)</code> qui doit
+désallouer chaque cellule de la liste passée en paramètre.</p>
+<p>Écrivez une fonction <code>liste_t inverser(liste_t lsc)</code> qui
+doit inverser les cellules de la liste : par exemple, la liste
+<code>1 -&gt; 2 -&gt; 3 -&gt; 4 -&gt; FIN</code> deviendra
+<code>4 -&gt; 3 -&gt; 2 -&gt; 1 -&gt; FIN</code>. Cette fonction doit
+procéder uniquement par modification des chaînages, sans toucher aux
+valeurs des cellules.</p>
+<p>Écrivez une fonction <code>liste_t trier_max(liste_t lsc)</code> qui
+trie la liste passée en paramètre selon l’algorithme du tri par
+recherche du maximum et renvoie la nouvelle liste triée par ordre
+croissant.</p>
+<p>Écrivez une fonction
+<code>liste_t trier_insertion(liste_t lsc)</code> qui trie la liste
+passée en paramètre selon l’algorithme du tri par insertion et renvoie
+la nouvelle liste triée par ordre décroissant.</p>
+<p>Vous pourrez tester les fonctions ci-dessus grâce au bout de code
+ci-dessous :</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> tester_reorganisation<span class="op">(</span><span class="dt">char</span> <span class="op">*</span>texte<span class="op">,</span> liste_t <span class="op">(*</span>reorganiser<span class="op">)(</span>liste_t<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;--- Test </span><span class="sc">%s</span><span class="st"> --</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> texte<span class="op">);</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">unsigned</span> taille <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> taille <span class="op">&lt;=</span> TAILLE_MAX<span class="op">;</span> taille<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        liste_t lsc <span class="op">=</span> creer<span class="op">(</span>taille<span class="op">);</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;lsc originale    = &quot;</span><span class="op">);</span> fflush<span class="op">(</span>stdout<span class="op">);</span> afficher<span class="op">(</span>lsc<span class="op">);</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        lsc <span class="op">=</span> reorganiser<span class="op">(</span>lsc<span class="op">);</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;lsc réorganisée  = &quot;</span><span class="op">);</span> fflush<span class="op">(</span>stdout<span class="op">);</span> afficher<span class="op">(</span>lsc<span class="op">);</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        detruire<span class="op">(</span>lsc<span class="op">);</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    puts<span class="op">(</span><span class="st">&quot;&quot;</span><span class="op">);</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    srandom<span class="op">(</span>time<span class="op">(</span>NULL<span class="op">));</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    tester_reorganisation<span class="op">(</span><span class="st">&quot;de l&#39;inversion&quot;</span><span class="op">,</span> inverser<span class="op">);</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    tester_reorganisation<span class="op">(</span><span class="st">&quot;du tri par sélection du maximum (ordre croissant)&quot;</span><span class="op">,</span> trier_max<span class="op">);</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    tester_reorganisation<span class="op">(</span><span class="st">&quot;du tri par insertion (ordre décroissant)&quot;</span><span class="op">,</span> trier_insertion<span class="op">);</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>La fonction <code>tester_reorganisation</code> est une fonction de
+test générique qui est capable de tester l’inversion et les deux tris.
+Pour cela, elle prend en paramètre une chaîne de caractères qui permet
+de produire une trace lisible, ainsi que la fonction
+<code>reorganiser</code> que l’on veut tester. La syntaxe un peu
+ésotérique du paramètre <code>reorganiser</code> signifie qu’il s’agit
+d’un pointeur de fonction et plus précisément d’une fonction prenant en
+paramètre et renvoyant une liste.</p>
+<p>On utilise cette fonction générique comme détaillée dans la fonction
+<code>main</code> fournie. Notez bien que lorsqu’on passe par exemple la
+fonction <code>inverser</code> en paramètre de
+<code>tester_reorganisation</code>, on ne met pas de parenthèses après
+le nom de la fonction passée : <code>fct()</code> veut dire « appeler la
+fonction <code>fct</code> », c’est-à-dire l’exécuter, alors que
+<code>fct</code> est simplement une constante qui contient l’adresse de
+la fonction.</p>
+<h3 id="tableaux-de-listes">Tableaux de listes</h3>
+<p>On va maintenant travailler sur des tableaux de listes chaînées, une
+implantation naïve de la structure de données connue en général sous le
+nom de « table de hachage ».</p>
+<p>Créer un fichier <code>tab_listes.c</code> qui commence par :</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;ctype.h&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdbool.h&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="pp">#define TAILLE_TABLE </span><span class="dv">4</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> _cell_t <span class="op">{</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> val<span class="op">;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">struct</span> _cell_t <span class="op">*</span>suiv<span class="op">;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> cell_t<span class="op">;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    cell_t tete<span class="op">;</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> liste_t<span class="op">;</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> nbr_elem<span class="op">;</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    liste_t table<span class="op">[</span>TAILLE_TABLE<span class="op">];</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> tablehash_t<span class="op">;</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="dt">unsigned</span> hash<span class="op">(</span><span class="dt">char</span> c<span class="op">)</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> c <span class="op">%</span> TAILLE_TABLE<span class="op">;</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>On note qu’on commence à définir un type pour les cellules, qui
+contiendront ici des caractères, de façon similaire à l’exercice
+précédent.</p>
+<p>Par contre, le type <code>liste_t</code> est différent : il ne s’agit
+pas d’un pointeur vers la première cellule significative (c’est-à-dire
+contenant une valeur) de la liste, mais vers un élément fictif en tête.
+Notez bien que <code>tête</code> est définie comme une cellule, et pas
+un pointeur vers une cellule.</p>
+<p>Ensuite, on déclare le type <code>tablehash_t</code> qui définit
+notre implantation d’une table de hachage, sous la forme d’une
+<code>struct</code> contenant le nombre total d’éléments significatifs
+dans la table ainsi qu’un tableau de <code>TAILLE_TABLE</code> listes
+chaînées.</p>
+<p>Enfin, on fournit la fonction de hachage qui va permettre de répartir
+les éléments dans les différentes listes, en fonction ici d’un critère
+très simple : en C, un caractère est tout simplement un entier sur 7
+bits contenant le code ASCII (<a
+href="https://fr.wikipedia.org/wiki/American_Standard_Code_for_Information_Interchange">page
+Wikipédia</a>) du caractère, auquel on va appliquer l’opération « modulo
+la taille de la table ».</p>
+<p>On donne ci-dessous le schéma d’un tableau de listes contenant les
+lettres du mot <code>TRULULU</code> insérées dans l’ordre du mot :</p>
+<figure>
+<img src="s23_1_tab_listes.svg" title="Tableau de listes"
+alt="Tableau de listes" />
+<figcaption aria-hidden="true">Tableau de listes</figcaption>
+</figure>
+<p>Écrire une fonction <code>tablehash_t *creer(void)</code> qui alloue
+une <code>tablehash_t</code>, initialise ses champs à zéro (pour le
+nombre d’éléments) et <code>NULL</code> (pour le champ <code>suiv</code>
+des éléments fictifs dans le tableau), et renvoie un pointeur vers la
+structure de données. En utilisant la fonction <code>calloc</code>
+(<code>man 3 calloc</code>), cela devrait vous demander une ligne de
+code. Plus précisément : le contenu de chaque case du tableau tient lieu
+de fictif : il n’y a donc pas besoin d’allouer les cellules fictives
+avec <code>malloc</code>.</p>
+<p>Écrire une fonction
+<code>void inserer(char val, tablehash_t *th)</code> qui insère une
+valeur à sa place (c’est-à-dire dans la bonne liste) dans la table. Il
+faut bien sûr allouer la cellule qui va contenir la valeur. Comme on ne
+précise pas que les listes doivent être triées, vous pouvez simplement
+insérer l’élément en tête de la liste.</p>
+<p>Écrire une fonction <code>void afficher(tablehash_t *th)</code> qui
+affiche le contenu de la table sous le format ci-dessous :</p>
+<pre class="text"><code>Nombre d&#39;elements : 11
+[0] : H -&gt; FIN
+[1] : U -&gt; U -&gt; E -&gt; U -&gt; Q -&gt; A -&gt; FIN
+[2] : FIN
+[3] : O -&gt; C -&gt; O -&gt; C -&gt; FIN</code></pre>
+<p>Écrire une fonction <code>void detruire(tablehash_t *th)</code> qui
+doit désallouer toutes les cellules des listes de la table, ainsi que la
+table elle-même.</p>
+<p>Vous pouvez à ce stade implanter une fonction de test pour vous
+convaincre que les fonctions ci-dessus sont correctes. N’oubliez pas
+d’utiliser Valgrind pour vérifier notamment qu’il n’y a pas de fuite
+mémoire.</p>
+<p>On va maintenant utiliser une table de hachage pour analyser des
+petits textes que l’on lira dans des fichiers en utilisant un
+<em>scanner</em>, comme on l’avait fait en Go. Comme ce type n’existe
+pas en C de base, on va l’inventer.</p>
+<p>Commencez par ajouter la déclaration suivante dans votre code :</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">FILE</span> <span class="op">*</span>fichier<span class="op">;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> car<span class="op">;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> scanner_t<span class="op">;</span></span></code></pre></div>
+<p>On définit ici le type <code>scanner_t</code> contenant un
+<code>FILE *</code>, c’est-à-dire un pointeur de fichier, qui est le
+type standard en C pour manipuler des fichiers. On utilise aussi un
+caractère pour stocker le caractère courant lors de la lecture des
+fichiers.</p>
+<p>Écrire une fonction
+<code>scanner_t *demarrer(bool clavier, char *nom_fichier)</code> qui
+prend en paramètre un booléen indiquant ssi on lit les données au
+clavier (et non dans un vrai fichier) et le nom du fichier (cette chaîne
+n’a de sens que ssi <code>clavier</code> est <code>false</code> et
+vaudra n’importe-quoi dans le cas contraire), et qui renvoie en résultat
+un pointeur sur le <code>scanner_t</code> correspondant.</p>
+<p>Plus précisément, elle doit :</p>
+<ul>
+<li><p>allouer une variable de type <code>scanner_t</code> avec
+<code>malloc</code> ;</p></li>
+<li><p>affecter son champ <code>fichier</code> avec :</p>
+<ul>
+<li><code>stdin</code> ssi on lit au clavier ;</li>
+<li>le pointeur du fichier qu’on lit sinon : la fonction
+<code>fopen</code> (<code>man 3 fopen</code>) sert justement à ouvrir un
+fichier (ici en lecture : mode <code>"r"</code>) et renvoie son pointeur
+de fichier ; on devra bien sûr vérifier qu’il n’y a pas eu d’erreur à
+l’ouverture et dans le cas contraire afficher un message approprié
+(grâce à la fonction <code>perror</code> (<code>man 3 perror</code>) et
+tuer le programme (en appelant la fonction <code>exit</code>
+(<code>man 3 exit</code>) ;</li>
+</ul></li>
+<li><p>et renvoyer le <em>scanner</em> à la fin.</p></li>
+</ul>
+<p>Écrire la fonction <code>bool avancer(scanner_t *scanner)</code> qui
+lit un caractère dans le fichier dont le <em>scanner</em> est passé en
+paramètre et renvoie <code>true</code> ssi on a bien réussi à lire le
+caractère (c’est-à-dire si le fichier d’était pas fini). Les fonctions
+<code>fgetc</code> (<code>man 3 fgetc</code>) et <code>feof</code>
+(<code>man 3 feof</code>) vous serons sûrement utiles.</p>
+<p>Écrire la fonction <code>char courant(scanner_t *scanner)</code> qui
+renvoie le caractère qu’on a lu lors du dernier appel à
+<code>avancer</code> et qui est normalement stocké dans le
+<em>scanner</em>.</p>
+<p>Écrire la fonction <code>void terminer(scanner_t *scanner)</code> qui
+ferme proprement le fichier manipulé par le <em>scanner</em> ssi on ne
+lisait pas au clavier (la fonction <code>fclose</code>
+(<code>man 3 fclose</code>) sert justement à ça) et désalloue avec
+<code>free</code> le <code>scanner_t</code> passé en paramètre.</p>
+<p>Écrire enfin une fonction
+<code>void lire(bool clavier, char *nom_fichier, tablehash_t *th)</code>
+qui va utiliser toutes les fonctions précédentes pour lire les
+caractères d’un fichier (ou au clavier) et les stocker dans la table de
+hachage passée en paramètre.</p>
+<p>On rappelle qu’un <em>scanner</em> tel qu’on l’a utilisé en Go est
+une machine séquentielle de type 2, qui s’utilise selon le schéma
+suivant :</p>
+<pre class="text"><code>Demarrer
+tant que non Fini faire
+    Avancer
+    traiter(Courant)
+Terminer</code></pre>
+<p>On voit immédiatement qu’ici les opérations <code>Fini</code> et
+<code>Avancer</code> sont fusionnées, comme c’était le cas en Go avec la
+méthode <code>Scan()</code>.</p>
+<p>Notre fonction de lecture doit filtrer les caractères à la volée en
+:</p>
+<ul>
+<li>ne gardant que les lettres ;</li>
+<li>les convertissant en majuscules pour ne pas faire la différence avec
+les minuscules.</li>
+</ul>
+<p>On rappelle qu’en C, un caractère est simplement un entier sur 7 bits
+dont la valeur est le code ASCII du caractère : on peut donc comparer
+des caractères directement, par exemple :
+<code>if (car &gt;= 'A')</code>.</p>
+<p>Notez bien au passage la différence entre :</p>
+<ul>
+<li>‘a’ qui représente un caractère unique ;</li>
+<li>et “a” qui représente une chaîne de caractères, qui se trouve ici
+n’en contenir qu’un.</li>
+</ul>
+<p>La fonction <code>toupper</code> (<code>man 3 toupper</code>)
+convertit une lettre minuscule en majuscule (et ne fait rien si le
+paramètre n’est pas une lettre minuscule)</p>
+<p>Vous pourrez tester vos fonctions grâce au programme principal
+ci-dessous :</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span> <span class="op">*</span>argv<span class="op">[])</span> <span class="op">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>argc <span class="op">&gt;</span> <span class="dv">2</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        fprintf<span class="op">(</span>stderr<span class="op">,</span> <span class="st">&quot;usage : </span><span class="sc">%s</span><span class="st"> [fichier]</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> argv<span class="op">[</span><span class="dv">0</span><span class="op">]);</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        exit<span class="op">(</span><span class="dv">1</span><span class="op">);</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    tablehash_t <span class="op">*</span>th <span class="op">=</span> creer<span class="op">();</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    lire<span class="op">(</span>argc <span class="op">==</span> <span class="dv">1</span><span class="op">,</span> argc <span class="op">==</span> <span class="dv">1</span> <span class="op">?</span> NULL <span class="op">:</span> argv<span class="op">[</span><span class="dv">1</span><span class="op">],</span> th<span class="op">);</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    afficher<span class="op">(</span>th<span class="op">);</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    detruire<span class="op">(</span>th<span class="op">);</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>La syntaxe <code>argc == 1 ? NULL : argv[1]</code> est une forme de
+<code>if</code> condensée qui signifie simplement que la valeur de
+l’expression sera <code>NULL</code> ssi <code>argc == 1</code> et
+<code>argv[1]</code> sinon.</p>
+<p>On voit qu’ici la fonction <code>main</code> a des paramètres, ce qui
+n’était pas le cas dans les exercices précédents : ils servent à
+récupérer les arguments de la ligne de commande qui a servi à appeler le
+programme, exactement comme la variable <code>os.Argv</code> qu’on a
+déjà utilisée en Go :</p>
+<ul>
+<li><p><code>argc</code> est un entier qui contient le nombre
+d’arguments passés sur la ligne de commande, en y incluant le programme
+lui-même ;</p></li>
+<li><p><code>argv</code> est un tableau de chaînes de caractères qui
+contient les paramètres.</p></li>
+</ul>
+<p>Par exemple, si on tape <code>cp src dst</code> :</p>
+<ul>
+<li><code>argc</code> vaudra 3 ;</li>
+<li><code>argv[0]</code> vaudra <code>cp</code>, <code>argv[1]</code>
+vaudra <code>src</code> et <code>argv[2]</code> vaudra
+<code>dst</code>.</li>
+</ul>
+<p>On vous encourage à tester votre code d’abord en tapant des tous
+petits textes au clavier, puis en utilisant les fichiers fournis
+ci-dessous.</p>
+<p>Le texte de Johnny (<a href="s23_1_johnny.txt">télécharger le
+fichier</a>).</p>
+<p>Le texte de Charles (<a href="s23_1_charles.txt">télécharger le
+fichier</a>).</p>
+<p>Le texte de Victor (<a href="s23_1_victor.txt">télécharger le
+fichier</a>).</p>
+
+</main>
+<div><br></div>
+</body>
+</html>

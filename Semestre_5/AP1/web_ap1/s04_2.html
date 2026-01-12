@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap1">Chapitre 1</a> : <a href="index.html#Chap1Seance04">Séance 04</a> : <a href="s04_2.html">Chiffre de César</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s04_2.go">s04_2.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<p>Dans cet exercice, on va travailler sur des caractères et un
+algorithme de chiffrement datant littéralement de l’époque des
+Romains.</p>
+<h3 id="précisions-concernant-les-types-en-go">Précisions concernant les
+types en Go</h3>
+<p>Avant de parler de chiffrement, nous devons préciser quelques notions
+de typage en Go.</p>
+<h4 id="types-entiers">Types entiers</h4>
+<p>Dans les exercices précédents, on a souvent utilisé le type
+<code>int</code> comme le type standard pour les entiers signés codés en
+complément à deux (<a
+href="https://fr.wikipedia.org/wiki/Complément_à_deux">page
+Wikipédia</a>). Ce type est en pratique dépendant de la machine : les
+<code>int</code> seront codés sur 32 bits (c’est-à-dire que les valeurs
+seront comprises entre
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><msup><mn>2</mn><mn>31</mn></msup></mrow><annotation encoding="application/x-tex">−2^{31}</annotation></semantics></math>
+et
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>31</mn></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2^{31} − 1</annotation></semantics></math>)
+sur une architecture 32 bits et sur 64 bits (entre
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><msup><mn>2</mn><mn>63</mn></msup></mrow><annotation encoding="application/x-tex">−2^{63}</annotation></semantics></math>
+et
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>63</mn></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2^{63} − 1</annotation></semantics></math>)
+sur une architecture 64 bits. Pour information, les machines dans les
+salles informatiques de l’Ensimag ainsi que la plupart de vos machines
+personnelles ont des processeurs 64 bits.</p>
+<p>Il est parfois important de contrôler précisément la taille de
+l’entier qu’on veut utiliser : dans ce cas, on pourra déclarer des
+variables de types <code>int8</code>, <code>int16</code>,
+<code>int32</code> ou <code>int64</code>. Il existe également des
+versions non signées de tous ces types entiers qu’on pourra utiliser
+pour représenter des entiers naturels : <code>uint</code>,
+<code>uint8</code>, <code>uint16</code>, <code>uint32</code> et
+<code>uint64</code>.</p>
+<p>Notez bien qu’en Go il n’y a pas de conversion automatique de types.
+Cela implique que certaines opérations appliquées sur des valeurs de
+types différents sont illégales, sauf si on écrit une conversion de type
+explicite. Par exemple, toutes les opérations dans le
+<code>Println</code> ci-dessous sont illégales :</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> x <span class="dt">int32</span> <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> y <span class="dt">int64</span> <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> z <span class="dt">uint32</span> <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> t <span class="dt">int</span> <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>fmt<span class="op">.</span>Println<span class="op">(</span>x<span class="op">+</span>y<span class="op">,</span> x<span class="op">+</span>z<span class="op">,</span> x<span class="op">+</span>t<span class="op">,</span> y<span class="op">+</span>z<span class="op">,</span> y<span class="op">+</span>t<span class="op">,</span> z<span class="op">+</span>t<span class="op">)</span></span></code></pre></div>
+<p>Notre ami le compilateur nous l’indique d’ailleurs clairement :</p>
+<pre class="text"><code>&gt; go run mon_prog.go 
+# command-line-arguments
+./mon_prog.go:10:14: invalid operation: x + y (mismatched types int32 and int64)
+./mon_prog.go:10:19: invalid operation: x + z (mismatched types int32 and uint32)
+./mon_prog.go:10:24: invalid operation: x + t (mismatched types int32 and int)
+./mon_prog.go:10:29: invalid operation: y + z (mismatched types int64 and uint32)
+./mon_prog.go:10:34: invalid operation: y + t (mismatched types int64 and int)
+./mon_prog.go:10:39: invalid operation: z + t (mismatched types uint32 and int)</code></pre>
+<p>Par contre, si on écrit par exemple le code suivant avec des
+conversions explicites :</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fmt<span class="op">.</span>Println<span class="op">(</span><span class="dt">int64</span><span class="op">(</span>x<span class="op">)+</span>y<span class="op">,</span> <span class="dt">uint32</span><span class="op">(</span>x<span class="op">)+</span>z<span class="op">,</span> <span class="dt">int</span><span class="op">(</span>x<span class="op">)+</span>t<span class="op">,</span> <span class="dt">uint32</span><span class="op">(</span>y<span class="op">)+</span>z<span class="op">,</span> <span class="dt">int</span><span class="op">(</span>y<span class="op">)+</span>t<span class="op">,</span> <span class="dt">int</span><span class="op">(</span>z<span class="op">)+</span>t<span class="op">)</span></span></code></pre></div>
+<p>il n’y aura pas d’erreur et on obtiendra bien le résultat attendu :
+<code>3 4 5 5 6 7</code>.</p>
+<h4 id="caractères">Caractères</h4>
+<p>Dans cet exercice, on va manipuler des caractères, et en particulier
+les lettres de l’alphabet latin. En Go, le type représentant les
+caractères s’appelle <code>rune</code> et correspond en pratique à un
+entier signé sur 32 bits. Une <code>rune</code> représente un code
+numérique tel que décrit par le standard Unicode (<a
+href="https://fr.wikipedia.org/wiki/Unicode">page Wikipédia</a>). Go
+utilise une implantation de ce standard appelée UTF-8 (<a
+href="https://fr.wikipedia.org/wiki/UTF-8">page Wikipédia</a>) et
+inventée par <a href="https://fr.wikipedia.org/wiki/Ken_Thompson">Ken
+Thompson</a>.</p>
+<p>Plus simplement, il faut retenir que le type caractère s’appelle
+<code>rune</code> en Go, et que les variables de type <code>rune</code>
+sont en pratique des entiers (comme en C d’ailleurs, mais pas de la même
+taille).</p>
+<p>Par exemple, le bout de programme :</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> car <span class="dt">rune</span> <span class="op">=</span> <span class="ch">&#39;A&#39;</span> <span class="co">// Attention de bien utiliser des apostrophes et pas des guillemets.</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>fmt<span class="op">.</span>Println<span class="op">(</span>car<span class="op">)</span></span></code></pre></div>
+<p>produira l’affichage <code>65</code> : en effet, 65 est le code
+Unicode de la lettre A en majuscule. C’est aussi son code ASCII (<a
+href="https://fr.wikipedia.org/wiki/American_Standard_Code_for_Information_Interchange">page
+Wikipédia</a>), car les 127 premiers caractères Unicode sont codés
+exactement comme en ASCII, ce qu’on peut vérifier en exécutant
+<code>man ascii</code> dans le terminal. Donc dans le cas particulier
+des caractères de la table ASCII, le code Unicode d’un caractère est en
+fait codé sur un seul <em>byte</em>.</p>
+<p>Si on veut afficher le caractère plutôt que son code, il suffit de le
+convertir en chaîne de caractères :
+<code>fmt.Println(string(car))</code>. On peut également utiliser le
+verbe <code>%c</code> avec la fonction <code>fmt.Printf</code> :
+<code>fmt.Printf("%c", car)</code>.</p>
+<h3 id="le-chiffre-de-césar">Le chiffre de César</h3>
+<p>Jules César, soucieux de préserver la confidentialité de ses
+communications et d’éviter de se retrouver abonné à des
+<em>mailing-lists</em> gauloises, inventa un algorithme de chiffrement
+basique souvent appelé le chiffre de César (<a
+href="https://fr.wikipedia.org/wiki/Chiffrement_par_décalage">page
+Wikipédia</a>).</p>
+<p>Le principe est simple comme l’illustre le schéma ci-dessous. Une
+lettre est transformée par un décalage d’une certaine quantité (3 sur le
+schéma) vers la droite dans l’ordre alphabétique. Lorsque l’on arrive à
+la fin de l’alphabet, c’est-à-dire sur Z, on recommence au début,
+c’est-à-dire sur A. Les minuscules restent des minuscules et les
+majuscules restent des majuscules.</p>
+<figure>
+<img src="s04_2_chiffre.svg" title="Chiffre de César"
+alt="Chiffre de César" />
+<figcaption aria-hidden="true">Chiffre de César</figcaption>
+</figure>
+<p>Écrire une fonction
+<code>func rot(lettre rune, decalage int32) (rune, error)</code> qui
+doit :</p>
+<ul>
+<li>vérifier que le décalage passé en paramètre est bien positif (ou
+nul) ;</li>
+<li>vérifier que le caractère passé en paramètre est bien une lettre
+(majuscule ou minuscule) ;</li>
+<li>calculer et renvoyer la lettre obtenue en appliquant le décalage sur
+la lettre passé en paramètre.</li>
+</ul>
+<p>On renverra des erreurs appropriées si les préconditions ci-dessus ne
+sont pas respectées.</p>
+<p>Écrire une fonction
+<code>func testRot(lettre rune, decalage int32, verbeux bool)</code> qui
+doit appeler <code>rot</code> avec les paramètres passés pour vérifier
+qu’elle fonctionne bien. Cette fonction :</p>
+<ul>
+<li>produira un affichage sur le modèle <code>rot1(a) = b</code> suivi
+d’un retour à la ligne s’il n’y a pas d’erreur et si
+<code>verbeux</code> ;</li>
+<li>affichera uniquement la lettre renvoyée par <code>rot</code> sans
+espace ni retour à ligne s’il n’y a pas d’erreur et si non
+<code>verbeux</code> ;</li>
+<li>affichera l’erreur et terminera le programme sinon.</li>
+</ul>
+<p>Écrire une fonction <code>main</code> qui appelle
+<code>testRot</code> avec des paramètres <code>lettre</code>,
+<code>decalage</code> et <code>verbeux</code> pertinents. Autrement dit,
+<strong>à vous d’écrire suffisamment de tests pour vous convaincre que
+votre fonction est correcte !</strong></p>
+<p>Compléter enfin la fonction <code>main</code> pour appeler 8 fois
+<code>testRot</code> avec chacune des lettres n, i, r, P, r, f, n et e,
+un décalage de 13 et non <code>verbeux</code>, pour saluer Jules comme
+il se doit.</p>
+<figure>
+<img src="s04_2_cesar.jpg"
+title="Franchement, la jupette avec les lattes, c&#39;est super classe"
+alt="Jules César" />
+<figcaption aria-hidden="true">Jules César</figcaption>
+</figure>
+
+</main>
+<div><br></div>
+</body>
+</html>

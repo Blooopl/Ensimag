@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap3">Chapitre 3</a> : <a href="index.html#Chap3Seance14">Séance 14</a> : <a href="s14_4.html">Piles et files non-bornées</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s14_4.go">s14_4.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<p>Dans cet exercice, on va implanter à nouveau les structures de
+données pile (<a
+href="https://fr.wikipedia.org/wiki/Pile_(informatique)">page
+Wikipédia</a>) et file (<a
+href="https://fr.wikipedia.org/wiki/File_(structure_de_données)">page
+Wikipédia</a>) qu’on a déjà vu dans le TP sur les bases des
+tableaux.</p>
+<p>Mais cette fois-ci, on va utiliser des <em>slices</em> pour stocker
+les données, ce qui nous permettra d’implanter des piles et files non
+bornées, c’est-à-dire de capacité « infinie » (dans la limite de la
+mémoire disponible évidemment).</p>
+<p>On impose les types de données suivants :</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> valSup <span class="op">=</span> <span class="dv">10</span> <span class="co">// les structures de données stockent des entiers dans [0..9]</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> pile <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    tab        <span class="op">[]</span><span class="dt">int</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> file <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    ixPlusAncien <span class="dt">int</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    nbrElem      <span class="dt">int</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    tab          <span class="op">[]</span><span class="dt">int</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Vous devez implanter les fonctions suivantes dans le cas d’une pile
+:</p>
+<ul>
+<li><code>creerPile() *pile</code> : alloue une nouvelle pile, crée le
+<em>slice</em> qu’elle contient avec une capacité de base de 0 et
+renvoie un pointeur vers cette pile ;</li>
+<li><code>afficherPile(lifo *pile)</code> : affiche la capacité du
+<em>slice</em> (en utilisant la fonction <code>cap</code> (<a
+href="https://pkg.go.dev/builtin#cap">documentation</a>)), sa taille et
+son contenu ;</li>
+<li><code>empiler(val int, lifo *pile)</code> : empile une nouvelle
+valeur dans la pile, c’est-à-dire l’ajoute à la fin du <em>slice</em> en
+utilisant la fonction <code>append</code> (<a
+href="https://pkg.go.dev/builtin#append">documentation</a>) ;</li>
+<li><code>depiler(lifo *pile) (int, error)</code> : dépile la valeur la
+plus récente si la pile n’est pas vide, ou renvoie une valeur non
+significative et une erreur non <code>nil</code> si elle l’est.</li>
+</ul>
+<p>Vous aurez tout de suite remarqué qu’on n’a pas besoin de gérer
+l’indice du sommet de pile dans cette implantation. En effet, la
+fonction <code>len</code> nous dispense de cette variable si on est
+capable d’effacer effectivement une valeur du <em>slice</em>. C’est le
+but de la fonction <code>slices.Delete</code> (<a
+href="https://pkg.go.dev/slices#Delete">documentation</a>) qu’on n’a pas
+présenté jusque-là, car son utilisation peut poser un problème
+d’efficacité. En supposant qu’on l’utilise pour effacer l’élément
+d’indice
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>,
+son coût indiqué dans la documentation est
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(n - i)</annotation></semantics></math>
+si
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+est la taille du <em>slice</em>. Calculez son coût si on essaie
+d’effacer le premier élément du <em>slice</em> (pire cas) et si on
+essaie d’effacer le dernier élément du <em>slice</em> (meilleur cas et
+celui qui nous intéresse ici). Lisez bien la documentation pour
+comprendre quelle valeur utiliser pour le paramètre <code>j</code>.</p>
+<p>Et les fonctions suivantes dans le cas d’une file :</p>
+<ul>
+<li><code>creerFile() *file</code> : alloue une nouvelle file,
+initialise ses champs et renvoie un pointeur vers cette file ;</li>
+<li><code>afficherFile(fifo *file)</code> : affiche la capacité du
+<em>slice</em> (en utilisant la fonction <code>cap</code> (<a
+href="https://pkg.go.dev/builtin#cap">documentation</a>)), l’indice de
+l’élément le plus ancien, le nombre d’éléments et le contenu du
+<em>slice</em> ;</li>
+<li><code>inserer(val int, fifo *file)</code> : insère une nouvelle
+valeur dans la file, en utilisant la fonction <code>append</code> (<a
+href="https://pkg.go.dev/builtin#append">documentation</a>) ;</li>
+<li><code>retirer(fifo *file) (int, error)</code> : retire la valeur la
+plus ancienne si la file n’est pas vide, ou renvoie une valeur non
+significative et une erreur non <code>nil</code>.</li>
+</ul>
+<p>Dans le cas d’une file, on ne peut pas utiliser <code>Delete</code>
+et se dispenser des indices, car il faudrait sinon retasser
+systématiquement le <em>slice</em> après chaque suppression, ce qui
+serait très inefficace (voir le coût calculé ci-dessus dans le pire
+cas).</p>
+<p>Par contre, si la file est vide après le retrait de la valeur, on
+peut en profiter pour « retasser virtuellement » notre file,
+c’est-à-dire :</p>
+<ul>
+<li><p>mettre l’indice de l’élément le plus ancien à 0 ;</p></li>
+<li><p>forcer la taille (<code>len</code>) du <em>slice</em> également à
+0, ce qu’on peut faire en « resliçant » (retranchant en français ?) le
+<em>slice</em>.</p></li>
+</ul>
+<p>Pour reslicer un <em>slice</em> <code>slc</code>, il suffit d’écrire
+<code>slc = slc[:0]</code> : cette opération a un coût constant, car
+elle ne déplace aucun élément du tableau, elle se contente de dire que
+la fenêtre des valeurs significatives est désormais vide.</p>
+<p>Cela permettra de limiter la croissance de la capacité de la file, ce
+qu’on pourra observer en affichant les valeurs de <code>len</code> et
+<code>cap</code>.</p>
+<p>Vous implanterez aussi une fonction de test affichant une interface
+permettant à l’utilisateur d’ajouter ou supprimer des éléments dans les
+deux structures de données (vous pouvez reprendre le modèle suggéré dans
+l’exercice sur les bases des tableaux).</p>
+<p>Votre programme devra gérer des paramètres sur la ligne de commande
+permettant de préciser si on utilise une file ou une pile et afficher un
+message d’erreur du genre
+<code>usage : pile_file ( --pile | --file )</code> si on ne passe pas un
+paramètre correct.</p>
+
+</main>
+<div><br></div>
+</body>
+</html>

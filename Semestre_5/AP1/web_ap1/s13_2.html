@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap3">Chapitre 3</a> : <a href="index.html#Chap3Seance13">Séance 13</a> : <a href="s13_2.html">Bases sur les pointeurs</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s13_2.go">s13_2.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<p>Dans cet exercice d’introduction, on va effectuer des petites
+manipulations sur les pointeurs : ces notions sont <strong>très</strong>
+importantes, on vous recommande de prendre le temps nécessaire pour tout
+comprendre et de ne pas hésiter à poser des questions si nécessaire.</p>
+<p>Vous pouvez recopier les bouts de code de l’énoncé dans une fonction
+<code>main</code> pour tester au fur et à mesure.</p>
+<h3 id="pointeurs-sur-des-types-primitifs">Pointeurs sur des types
+primitifs</h3>
+<p>On commence par déclarer une variable entière et afficher sa valeur
+et son adresse, c’est-à-dire l’adresse de la case mémoire contenant la
+valeur entière, qu’on récupère grâce à l’opérateur
+<code>&amp;</code>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>entier <span class="op">:=</span> <span class="dv">5</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>fmt<span class="op">.</span>Printf<span class="op">(</span><span class="st">&quot;Valeur de l&#39;entier = %v, adresse de l&#39;entier = %p</span><span class="ch">\n</span><span class="st">&quot;</span><span class="op">,</span> entier<span class="op">,</span> <span class="op">&amp;</span>entier<span class="op">)</span></span></code></pre></div>
+<p>On déclare maintenant une variable de type « pointeur sur un entier »
+: <code>*int</code> en Go, que l’on initialise avec l’adresse de
+l’entier.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> pointeur <span class="op">*</span><span class="dt">int</span> <span class="op">=</span> <span class="op">&amp;</span>entier</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>fmt<span class="op">.</span>Printf<span class="op">(</span><span class="st">&quot;Valeur du pointeur = %v, adresse du pointeur = %p</span><span class="ch">\n</span><span class="st">&quot;</span><span class="op">,</span> pointeur<span class="op">,</span> <span class="op">&amp;</span>pointeur<span class="op">)</span></span></code></pre></div>
+<p>On voit que la valeur du pointeur est logiquement égale à l’adresse
+de l’entier, mais qu’une variable pointeur est elle-même une case
+mémoire avec sa propre adresse : un pointeur est une case mémoire
+contenant l’adresse d’une autre case mémoire.</p>
+<p>Si on n’initialise pas un pointeur quand on le déclare, il sera par
+défaut égal au « pointeur nul » que l’on a déjà utilisé sans le savoir
+et qui s’appelle <code>nil</code> en Go (<code>NULL</code> en C,
+<code>None</code> en Python, etc. pour ceux qui connaissent).</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> pointeurNul <span class="op">*</span><span class="dt">int</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fmt<span class="op">.</span>Printf<span class="op">(</span><span class="st">&quot;Valeur du pointeur = %v, adresse du pointeur = %p</span><span class="ch">\n</span><span class="st">&quot;</span><span class="op">,</span> pointeurNul<span class="op">,</span> <span class="op">&amp;</span>pointeurNul<span class="op">)</span></span></code></pre></div>
+<p>Maintenant, on va changer la valeur de l’entier en passant par le
+pointeur, en utilisant l’opérateur de déréférencement <code>*</code>.
+<strong>Attention</strong> à ne pas confondre cet opérateur avec
+l’étoile qu’on a placée devant <code>*int</code> pour déclarer une
+variable de type « pointeur sur un entier » : c’est le même symbole,
+mais ça ne veut pas dire du tout la même chose !</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">*</span>pointeur <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>fmt<span class="op">.</span>Printf<span class="op">(</span><span class="st">&quot;Valeur de l&#39;entier = %v, adresse de l&#39;entier = %p</span><span class="ch">\n</span><span class="st">&quot;</span><span class="op">,</span> entier<span class="op">,</span> <span class="op">&amp;</span>entier<span class="op">)</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>fmt<span class="op">.</span>Printf<span class="op">(</span><span class="st">&quot;Valeur du pointeur = %v, adresse du pointeur = %p</span><span class="ch">\n</span><span class="st">&quot;</span><span class="op">,</span> pointeur<span class="op">,</span> <span class="op">&amp;</span>pointeur<span class="op">)</span></span></code></pre></div>
+<p>On voit que la valeur de l’entier a changé, mais pas la valeur du
+pointeur, ni les adresses des deux variables.</p>
+<h3 id="pointeurs-sur-des-structures">Pointeurs sur des structures</h3>
+<p>Comme on a déjà vu le cas particulier des pointeurs de tableaux et
+des <em>slices</em>, on va étudier le cas des pointeurs vers des
+structures, qui sont en pratique eux-aussi très utilisés. En effet, en
+Go les paramètres d’une fonction sont toujours passés par
+<strong>copie</strong>, quelque-soit le type du paramètre. Cela veut
+dire que si on a défini une très grosse structure avec beaucoup de
+champs prenant beaucoup de place en mémoire, et qu’on la passe souvent
+en paramètre de fonctions (par exemple dans une boucle), notre programme
+risque de ne pas être très efficace, car il va passer beaucoup de temps
+à recopier le contenu de la structure : il est donc plus traditionnel de
+passer des pointeurs vers des structures.</p>
+<p>On va commencer par définir deux types : une structure contenant un
+seul champ de type entier et un type pointeur vers ce type
+structure.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> cellule <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    val <span class="dt">int</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> ptrCellule <span class="op">*</span>cellule</span></code></pre></div>
+<p>On définit maintenant une fonction qui prend une <code>cellule</code>
+en paramètre et affiche simplement l’adresse du paramètre.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> parCopie<span class="op">(</span>cell cellule<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Printf<span class="op">(</span><span class="st">&quot;Adresse du paramètre = %p</span><span class="ch">\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">&amp;</span>cell<span class="op">)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Et dans la fonction <code>main</code>, on va simplement définir une
+variable de type <code>cellule</code>, afficher son adresse, puis
+appeler <code>parCopie</code> avec la variable comme paramètre.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> cell cellule</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>fmt<span class="op">.</span>Printf<span class="op">(</span><span class="st">&quot;Adresse de la cellule = %p</span><span class="ch">\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">&amp;</span>cell<span class="op">)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>parCopie<span class="op">(</span>cell<span class="op">)</span></span></code></pre></div>
+<p>On voit bien en exécutant le programme que les deux adresses sont
+différentes (mais peut être pas de beaucoup vu qu’il y a des chances
+qu’en pratique la copie soit allouée juste après la variable dans la
+mémoire).</p>
+<p>Maintenant on va ajouter le bout de code suivant qui initialise le
+champ de la structure, définit une variable de type pointeur vers une
+<code>cellule</code>, et fait quelques affichages.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cell<span class="op">.</span>val <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>fmt<span class="op">.</span>Println<span class="op">(</span><span class="st">&quot;Valeur dans la structure =&quot;</span><span class="op">,</span> cell<span class="op">.</span>val<span class="op">)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> ptrCell ptrCellule <span class="op">=</span> <span class="op">&amp;</span>cell</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>fmt<span class="op">.</span>Println<span class="op">(</span><span class="st">&quot;Valeur dans la structure =&quot;</span><span class="op">,</span> <span class="op">(*</span>ptrCell<span class="op">).</span>val<span class="op">)</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>fmt<span class="op">.</span>Println<span class="op">(</span><span class="st">&quot;Valeur dans la structure =&quot;</span><span class="op">,</span> ptrCell<span class="op">.</span>val<span class="op">)</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>ptrCell<span class="op">.</span>val <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>fmt<span class="op">.</span>Println<span class="op">(</span><span class="st">&quot;Valeur dans la structure =&quot;</span><span class="op">,</span> cell<span class="op">.</span>val<span class="op">)</span></span></code></pre></div>
+<p>Le premier affichage ne pose pas de difficulté. Le deuxième semble
+plus complexe dans la syntaxe <code>(*ptrCell).val</code>, mais il
+suffit de dérouler pas à pas :</p>
+<ol type="1">
+<li><code>ptrCell</code> est un pointeur sur une <code>cellule</code>
+;</li>
+<li><code>*ptrCell</code> déréférence ce pointeur, on a donc maintenant
+une vraie <code>cellule</code> ;</li>
+<li>on accède au champ <code>val</code> de cette cellule pour afficher
+sa valeur ;</li>
+<li>on met des parenthèses pour être sûr que ce déréférencement est fait
+en premier, quelques-soient les priorités des opérateurs <code>*</code>
+et <code>.</code>.</li>
+</ol>
+<p>Le troisième affichage parait incohérent du point de vue des types,
+puisqu’on accède au champ <code>val</code> d’un pointeur, qui ne
+contient pas lui-même de champ ! C’est en fait tout simplement un
+raccourci offert par le langage Go, pour éviter d’avoir à taper
+<code>(*ptrCell).val</code>, mais cela revient exactement au même (pour
+ceux qui connaissent C, il n’y a pas de différence en Go entre les
+opérateurs <code>.</code> et <code>-&gt;</code> : les deux s’écrivent
+<code>.</code>). Ce raccourci existe aussi pour les pointeurs sur les
+tableaux, on peut écrire <code>ptrTab[0]</code> au lieu de
+<code>(*ptrTab)[0]</code> si <code>ptrTab</code> a été défini comme un
+pointeur vers un tableau statique.</p>
+<p>L’affectation <code>ptrCell.val = 10</code> est basée sur le même
+principe et le dernier affichage sert juste à contrôler qu’on a bien
+modifié la valeur.</p>
+<p>Jusqu’ici, on a toujours initialisé nos pointeurs en leur affectant
+l’adresse d’une autre variable existante, par exemple en écrivant
+<code>var ptrCell ptrCellule = &amp;cell</code>. On peut aussi allouer
+directement de la mémoire et renvoyer l’adresse de la zone allouée grâce
+à la fonction <code>new</code> (<a
+href="https://pkg.go.dev/builtin#new">documentation</a>).</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ptrCell <span class="op">=</span> <span class="bu">new</span><span class="op">(</span>cellule<span class="op">)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>fmt<span class="op">.</span>Printf<span class="op">(</span><span class="st">&quot;Valeur du pointeur = %p, adresse de cell = %p</span><span class="ch">\n</span><span class="st">&quot;</span><span class="op">,</span> ptrCell<span class="op">,</span> <span class="op">&amp;</span>cell<span class="op">)</span></span></code></pre></div>
+<p>On voit que <code>ptrCell</code> ne contient plus l’adresse de
+<code>cell</code>, mais qu’on a bien allouée une nouvelle zone mémoire à
+une autre adresse. On peut modifier la valeur du champ <code>val</code>
+exactement comme on l’a déjà fait avec une variable locale.</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode go"><code class="sourceCode go"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ptrCell<span class="op">.</span>val <span class="op">=</span> <span class="dv">20</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>fmt<span class="op">.</span>Println<span class="op">(</span><span class="st">&quot;Valeur dans la structure =&quot;</span><span class="op">,</span> ptrCell<span class="op">.</span>val<span class="op">)</span></span></code></pre></div>
+<p>Enfin, il pourrait nous prendre l’envie de manipuler des pointeurs de
+pointeurs vers une <code>cellule</code> (et pourquoi pas d’abord ?).</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode go"><code class="sourceCode go"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> ptrPtrCell <span class="op">*</span>ptrCellule</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>ptrPtrCell <span class="op">=</span> <span class="op">&amp;</span>ptrCell</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>fmt<span class="op">.</span>Println<span class="op">(</span><span class="st">&quot;Valeur dans la structure via le pointeur de pointeur =&quot;</span><span class="op">,</span> <span class="op">(*</span>ptrPtrCell<span class="op">).</span>val<span class="op">)</span></span></code></pre></div>
+<p>On voit qu’ici, on est bien obligé d’utiliser la syntaxe « lourde »
+avec parenthèses et étoile pour déréférencer le premier niveau de
+pointeur, le raccourci offert par Go ne fonctionne que pour un pointeur
+vers une structure, et pas un pointeur vers un pointeur vers une
+structure.</p>
+<h3 id="mais-au-fait-quest-ce-quune-string-petit-aparté">Mais au fait,
+qu’est-ce qu’une <em>string</em> ? (petit aparté)</h3>
+<p>On a manipulé très souvent des <em>string</em> (en français : chaîne
+de caractères) dans nos programmes sans trop se demander comment elles
+sont implantées en Go.</p>
+<p>En fait, on a implicitement considéré que chaque élément d’une
+<em>string</em> (c’est-à-dire <code>chaine[idx]</code>) représentait un
+caractère « complet » comme c’est le cas en C par exemple. En effet, C
+gère par défaut uniquement les caractères de la table ASCII, qui sont
+tous compris dans
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mi>.</mi><mn>.127</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[0..127]</annotation></semantics></math>.
+Donc codés sur 7 bits, mais en pratique on les code sur des octets (sur
+8 bits) et tant pis si on gaspille un bit !</p>
+<p>On a vu dans le TP du chiffre de Jules César qu’en Go, les caractères
+(appelés « runes ») issue d’une chaîne littérale sont en fait des
+entiers (littéralement des <code>int32</code>) représentant leur
+<em>codepoint</em> Unicode (<a
+href="https://fr.wikipedia.org/wiki/Unicode">page Wikipédia</a>)</p>
+<p>En Go, les <em>string</em> sont des <em>slices</em> non modifiables
+d’octets qui représentent des runes, c’est-à-dire des entiers sur 32
+bits. Un octet est un entier dans
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mi>.</mi><mn>.255</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[0..255]</annotation></semantics></math>,
+qu’on peut désigner en Go par les types <code>uint8</code> ou
+<code>byte</code> qui sont équivalents.</p>
+<p>Exécutons le bout de code suivant dont le résultat affiché paraît
+assez logique :</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode go"><code class="sourceCode go"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>chaine <span class="op">:=</span> <span class="st">&quot;abc&quot;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx <span class="op">:=</span> <span class="dv">0</span><span class="op">;</span> idx <span class="op">&lt;</span> <span class="bu">len</span><span class="op">(</span>chaine<span class="op">);</span> idx<span class="op">++</span> <span class="op">{</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>chaine<span class="op">[</span>idx<span class="op">],</span> <span class="dt">string</span><span class="op">(</span>chaine<span class="op">[</span>idx<span class="op">]))</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>En effet, la lettre <code>a</code> en minuscule est représenté par la
+rune 97, c’est son code UTF-8 et aussi d’ailleurs son code ASCII (tapez
+<code>man ascii</code> dans votre terminal pour vous en convaincre) et
+on n’a besoin que d’un octet pour coder cette rune. Idem pour
+<code>b</code> et <code>c</code>.</p>
+<p>Mais que se passe-t-il si on écrit plutôt :</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode go"><code class="sourceCode go"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>chaine2 <span class="op">:=</span> <span class="st">&quot;10€&quot;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx <span class="op">:=</span> <span class="dv">0</span><span class="op">;</span> idx <span class="op">&lt;</span> <span class="bu">len</span><span class="op">(</span>chaine2<span class="op">);</span> idx<span class="op">++</span> <span class="op">{</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>chaine2<span class="op">[</span>idx<span class="op">],</span> <span class="dt">string</span><span class="op">(</span>chaine2<span class="op">[</span>idx<span class="op">]))</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>On voit que le caractère € n’est pas codés sur un seul octet ! Si on
+essaie d’accéder à l’octet 2 de la chaîne par exemple, on ne récupère
+qu’un bout de la rune et on affiche n’importe-quoi. Une façon correcte
+d’afficher le contenu de chaîne serait par exemple :</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode go"><code class="sourceCode go"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>tabRunes <span class="op">:=</span> <span class="op">[]</span><span class="dt">rune</span><span class="op">(</span><span class="st">&quot;10€&quot;</span><span class="op">)</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx <span class="op">:=</span> <span class="dv">0</span><span class="op">;</span> idx <span class="op">&lt;</span> <span class="bu">len</span><span class="op">(</span>tabRunes<span class="op">);</span> idx<span class="op">++</span> <span class="op">{</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>tabRunes<span class="op">[</span>idx<span class="op">],</span> <span class="dt">string</span><span class="op">(</span>tabRunes<span class="op">[</span>idx<span class="op">]))</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Une façon de mieux comprendre ce qui se passe est d’afficher la
+taille des variables manipulées dans les deux versions :</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode go"><code class="sourceCode go"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fmt<span class="op">.</span>Println<span class="op">(</span><span class="bu">len</span><span class="op">(</span>chaine2<span class="op">))</span> <span class="co">// Affiche 5</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>fmt<span class="op">.</span>Println<span class="op">(</span><span class="bu">len</span><span class="op">(</span>tabRunes<span class="op">))</span> <span class="co">// Affiche 3</span></span></code></pre></div>
+<p>On voit que dans le cas de <code>chaine2</code>, les caractères sont
+« fractionnés » en octets (car une <em>string</em> est un <em>slice</em>
+de <em>bytes</em>), alors que pour <code>tabRunes</code>, Go considère
+bien chaque élément du tableau comme une <em>rune</em>, c’est-à-dire un
+entier sur 32 bits.</p>
+<p>On peut raisonnablement se demander à ce moment-là s’il est vraiment
+nécessaire de faire des choses aussi compliquées pour parcourir une
+chaîne de caractères en Go… La réponse est non !</p>
+<p>Comme évoqué pendant le CTP sur les boucles, Go fournit une deuxième
+forme de boucle communément appelée un <em>foreach</em> et qui permet
+d’énumérer tous les éléments d’un tableau.</p>
+<p>Par exemple, si on a un tableau de <code>float64</code> appelé
+<code>tab</code>, on peut écrire :</p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode go"><code class="sourceCode go"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx<span class="op">,</span> val <span class="op">:=</span> <span class="kw">range</span> tab <span class="op">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>où <code>idx</code> correspondra à l’indice de chaque élément (0, 1,
+2, …) et <code>val</code> la valeur <code>float64</code> de chaque
+élément. Pour ceux qui connaissent Python, c’est l’équivalent d’un
+<code>range</code> combiné avec un <code>enumerate</code>.</p>
+<p>Cette construction marche aussi pour les <em>strings</em> et on peut
+donc écrire :</p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode go"><code class="sourceCode go"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _<span class="op">,</span> code <span class="op">:=</span> <span class="kw">range</span> chaine2 <span class="op">{</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>code<span class="op">,</span> <span class="dt">string</span><span class="op">(</span>code<span class="op">))</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>pour énumérer directement les <em>runes</em> composant la chaîne de
+caractères.</p>
+<p>Enfin, on a dit qu’une <em>string</em> était un <em>slice</em> non
+modifiable : essayez par exemple d’écrire <code>chaine[0] = 'z'</code>
+et vous verrez que le compilateur ne vous laisse pas écraser le contenu
+de la chaîne de caractères. Impossible aussi d’utiliser
+<code>append</code> sur des <em>string</em> : lorsqu’on utilise
+l’opérateur de concaténation de chaînes de caractères en écrivant par
+exemple <code>"abc" + "def"</code>, le compilateur alloue en fait une
+nouvelle chaîne de la bonne taille et recopie les deux opérandes
+dedans.</p>
+<p>Vous pouvez consulter <a href="https://go.dev/blog/strings">cette
+documentation</a> si vous voulez en savoir plus sur le sujet passionnant
+des chaînes de caractères en Go.</p>
+<h3 id="il-y-a-des-pointeurs-partout">Il y a des pointeurs partout
+!</h3>
+<p>En pratique, on a déjà souvent utilisé des pointeurs sans s’en rendre
+compte. Par exemple, lorsqu’on avait déclaré un <code>Scanner</code>
+pour lire des entrées depuis <em>stdin</em> avec la ligne
+<code>lecteur := bufio.NewScanner(os.Stdin)</code>, on ne s’était pas
+rendu compte que <code>NewScanner</code> renvoie en fait un pointeur
+vers un <code>Scanner</code>, ce que l’on peut vérifier aisément grâce à
+<code>fmt.Printf("Type de lecteur : %T\n", lecteur)</code> qui affiche
+<code>Type de lecteur : *bufio.Scanner</code>.</p>
+<p>De façon générale, dès que l’on va devoir manipuler un objet (dans le
+sens « quelque-chose ») de grande taille dans un langage basé sur des
+passages de paramètres par copie, il est traditionnel d’utiliser plutôt
+des pointeurs vers ces objets pour éviter de trop pénaliser les
+performances et de gaspiller de l’espace mémoire.</p>
+<figure>
+<img src="s13_2_xkcd.png"
+title="Une super blague pour ne faire rire personne en soirée"
+alt="XKCD" />
+<figcaption aria-hidden="true">XKCD</figcaption>
+</figure>
+
+</main>
+<div><br></div>
+</body>
+</html>

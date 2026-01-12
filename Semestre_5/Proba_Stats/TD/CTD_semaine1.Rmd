@@ -1,0 +1,563 @@
+---
+title: "Semaine 1 - Exercices"
+output:
+  html_document: 
+    toc: true
+    toc_float: true
+date: "Semaine 1"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Préliminaire concernant l'utilisation de Rstudio (et R)
+
+**Important**: Rstudio permet d’associer un projet à un répertoire de travail particulier, facilitant ainsi l'organisation et la gestion des travaux. Ainsi, on débutera le TD de la manière suivante
+
+1. créer un répertoire "TD_semaine_1",
+2. placer ce fichier de travail dans ce répertoire quitte à relancer l'application, 
+3. associer un projet à ce répertoire dans l’onglet File : 
+- sélectionner **File > New Project**
+- suivre les instructions de l’interface.
+
+
+Le répertoire de travail (workspace) de R est le dossier dans lequel le logiciel va rechercher des fichiers ou des données. L’environnement de travail est sauvegardé dans le fichier local nommé **.RData**. On peut s'assurer que l'on travaille dans le répertoire "TD_semaine_1" de la manière suivante
+
+
+```{r}
+# voir le chemin vers mon répertoire local  
+getwd()
+```
+
+En quittant et en relançant le logiciel, on retrouvera la session dans l'état où on l'a quittée. Les objets contenus dans le fichier**.RData**. sont visibles dans l'onglet "Environment" de Rstudio.
+
+```{r}
+# voir le contenu de mon environnement 
+ls()
+```
+
+Lors de l'utilisation de commandes en mode interactif, la suite des commandes est enregistrée dans le fichier *.Rhistory*. Elle peut être retrouvée par la commande R `history()` et dans l'onglet "History" de Rstudio.
+
+```{r}
+history()
+```
+
+
+# Exercice 0
+
+- Compléter les codes ci-dessous.
+
+**Solution.**
+
+```{r}
+# Commentaire : Ce chunk a été crée grâce à l'icone "+C"
+# Calcul du logarithme de 3 
+# réponse attendue : 1.098612
+
+
+
+# Calcul de la somme 1 + 1 
+# réponse attendue : 2
+```
+
+
+- Calculer la moyenne d'un vecteur de 100 nombres aléatoires tirés de manière uniforme entre 0 et 1.
+
+**Solution.**
+
+```{r}
+# x contient 100 variables aléatoires uniformément réparties entre 0 et 1
+  set.seed(1)
+  x <- runif(100)
+
+# la fonction mean() calcule la moyenne du vecteur
+help(mean)
+# reponse attendue : environ 0.518
+```
+
+
+
+
+# Tirages aléatoires selon une loi de probabilité discrète
+
+Nous souhaitons effectuer des tirages aléatoires dans un ensemble fini de quatre valeurs numérotées (penser au lancer d'un dé non nécessairement équilibré) selon une loi de probabilité donnée, définie de la manière suivante
+
+```{r}
+# Définition des probabilités
+# Remplacez ces valeurs par les probabilités de votre choix
+probabilites <- c(0.2, 0.3, 0.1, 0.4) 
+```
+
+## Exercice 1
+
+- Utiliser la fonction `sample()` pour effectuer 100 tirages aléatoires indépendants selon la loi de probabilité définie ci-dessus. Les tirages prendront les valeurs 1,2,3,4.
+
+Les arguments `size` (taille de l'échantillon), `replace` (indiquant si les échantillons sont tirés avec remplacement) et `prob` (les probabilités correspondantes) devront être spécifiés. 
+
+**Solution.**
+
+```{r}
+# Générer un échantillon aléatoire en utilisant les probabilités données
+echantillon <- sample(1:length(probabilites), 
+                      size = , 
+                      replace = , 
+                      prob = )
+```
+
+- Afficher une table des valeurs de l'échantillon
+
+**Solution.**
+
+```{r}
+# Afficher une table des valeurs de l'échantillon : table()
+```
+
+- Afficher les 10 premières valeurs de l'échantillon. Pour cela, on peut utiliser le code suivant
+
+**Solution.**
+
+```{r}
+# 10 premières valeurs de l'échantillon.
+echantillon[1:10]
+```
+
+
+- Terminer avec quelques graphiques. Par exemple, nous pouvons représenter l'échantillon de valeurs simulées par un camembert (pie) ou par un diagramme en barre.
+
+**Solution.**
+
+```{r}
+# partitionne la fenêtre graphique en une ligne et deux colonnes
+par(mfrow = c(1,2))
+
+# un camembert est une "tarte" en anglais (pie) 
+pie(table(echantillon), 
+    col = c("red3", "darkblue", "green4", "gold"),
+    main = "Probabilités empiriques")
+
+# diagramme en barre
+barplot(table(echantillon), 
+        col = c("red3", "darkblue", "green4", "gold"),
+        main = "Effectifs empiriques", las = 1)
+```
+
+
+
+# Principales classes d'objets en R
+
+Dans le langage R, toute forme de donnée est appelée *objet*. Les variables, les fonctions, les opérateurs, et même le symbole représentant le nom d’un objet est un objet. Les objets possèdent au minimum un mode (ou classe) et une longueur. Les principales classes d'objet sont les suivantes
+
+-   `numeric`: un vecteur contenant des valeurs numériques,
+-   `character` : un vecteur contenant des caractères ou des chaînes de caractères,
+-   `logical` : un vecteur contenant des valeurs logiques ou binaires,
+-   `matrix` : un vecteur contenant des valeurs numériques, recodé comme une matrice comportant $n$ lignes et $p$ colonnes,
+-   `list` : une liste d'objets potentiellement hétérogène, contenant par exemple des vecteurs, des matrices, des caractères,
+-   `data.frame` : une liste d'objets de même longueur organisée en tableau,
+-   `function` : une fonction.
+
+
+## Exercice 2
+
+
+### Question 1
+
+Vérifier que l'object `echantillon` est de type "numeric" (et de classe "integer")
+
+**Solution.**
+
+```{r}
+# help : is.numeric, mode, class
+```
+
+### Question 2
+
+Calculer la longueur (`length`) de l'object `echantillon`, extraire la première valeur, supprimer la première valeur et recalculer la longueur de l'objet modifié.
+
+**Solution.**
+
+```{r}
+# Longueur
+
+# Première valeur
+
+# Nouveau vecteur (on supprime des éléments avec le signe "-")
+
+# Longueur du vecteur modifié
+
+```
+
+### Question 3
+
+Évaluer la condition logique suivante
+
+```{r}
+## condition logique 
+condition = (echantillon > 2)
+
+## evaluation (afficher l'objet)
+condition
+```
+
+Quelle est la classe de l'objet `condition` ? Quelle est sa longueur ? Compter le nombre de fois ou la condition est réalisée. Calculer la somme des valeurs de l'échantillon vérifiant la condition logique.
+
+**Solution.**
+
+```{r}
+# Classe de l'objet condition
+
+# Longueur de l'objet condition
+
+# nombre de fois où la condition est réalisée (sum)
+
+# somme des valeurs de l'échantillon vérifiant la condition logique
+
+```
+
+### Question 4 : ce qu'il faut éviter de faire (des structures itératives)
+
+Vérifier que le code précédent reposant sur les vecteurs 
+
+```{r}
+# somme des valeurs de l'échantillon vérifiant la condition logique
+sum(echantillon[condition])
+```
+
+est équivalent au code suivant.
+
+**Solution.**
+
+```{r}
+# initialisation de la somme 
+nb <- 0
+n <- length(echantillon) 
+
+# calcul iteratif de la somme 
+for (i in 1:n){   # 1:n est un vecteur de valeurs de 1 à n
+    if (echantillon[i] > 2){
+      nb <- nb +  echantillon[i]
+    } 
+  }
+print(nb) # on pourrait simplement écrire "nb"
+```
+
+
+# Objet de classe `list` ou `data.frame`
+
+Voici un objet de classe `list` contenant le carnet de santé de mes animaux domestiques
+
+```{r}
+mes_betes <- list(animal = c("chat", "chien"), 
+                  sex = c("M", "F"), 
+                  age = c(2, 8), 
+                  vaccine = c(TRUE, TRUE))
+```
+
+Les attributs de la liste `mes_betes`, l'age ou le genre par exemple, sont accessibles par le symbole dollar
+
+```{r}
+mes_betes
+```
+
+```{r}
+## mes animaux
+mes_betes$animal
+
+# le premier de mes animaux
+mes_betes$animal[1]
+```
+
+## Exercice 3
+
+### Question 1
+
+Le second animal est en fait un raton laveur. Modifier l'argument `$animal` de la liste pour corriger cette erreur (sans reprendre le code précédent). Vérifier le contenu de la liste.
+
+**Solution.**
+
+```{r}
+# remplacer "chien" par "raton laveur"
+
+# verification
+
+```
+
+### Question 2
+
+Remarquons que tous les attributs de la liste ont la même longueur (égale à 2). Plutôt que le format de liste, nous pouvons organiser les données sous la forme d'un tableau (`data.frame`). Un objet de type `data.frame` est une liste particulière organisée en colonnes.
+
+Créer un objet de classe `data.frame` à partir des données précédentes (utiliser `data.frame` ou `as.data.frame`). Remarquer que des noms sont donnés aux colonnes du tableau de données.
+
+**Solution.**
+
+```{r}
+# creation ou conversion de l'objet `mes_betes` : as.data.frame
+
+# vérification du format : is.data.frame
+
+# les noms des attributs sont donnés aux colonnes du tableau de données
+mes_betes
+
+# noms des colonnes : colnames 
+
+```
+
+
+
+## Exercice 4
+
+Dans la suite, nous serons par exemple amenés à manipuler des tableaux de données contenant des statistiques sur le football et nous nous interrogerons sur l'existence de loi de probabilités décrivant les scores des matchs.
+
+
+Télécharger le fichier `saison_2022.csv` depuis chamilo et le placer dans le répertoire de travail. Ces données, obtenues à l'aide du package `worldfootballR`, correspondent aux matchs de la saison de championnat de France masculin 2021-2022.
+
+```{r}
+saison_2022 <- read.csv("saison_2022.csv")
+head(saison_2022)
+```
+
+
+### Question 1
+
+- Vérifier la classe de l'objet `saison_2022` ainsi chargé en mémoire.
+
+**Solution.**
+
+```{r}
+# classe de l'objet saison_2022
+```
+
+- Extraire le nom des colonnes du tableau de données
+
+**Solution.**
+
+```{r}
+# Noms des colonnes apparaissant dans le tableau : colnames
+```
+
+### Question 2
+
+Nous cherchons à récupérer le score à domicile, c'est à dire le nombre de buts marqués par l'équipe qui reçoit.  Les buts marqués à domicile correspondent à la colonne "HomeGoals" du tableau de données. Vérifier que l'on peut les extraire de plusieurs façons.
+
+**Solution.**
+
+```{r}
+# On peut obtenir la colonne "HomeGoals" de la manière suivante 
+but_a_domicile  <- saison_2022$HomeGoals
+
+# Méthode alternative  
+but_a_domicile <- saison_2022[,"HomeGoals"]
+```
+
+### Question 3
+
+- Combien de matchs ont-ils donné lieu plus de quatre buts à domicile ?
+
+**Solution.**
+
+```{r}
+# nombre de matchs ayant donné lieu plus de quatre buts à domicile
+```
+
+- À l'aide de la fonction `table` créer un histogramme (diagramme en batons) du nombre de buts marqués à domicile.
+
+**Solution.**
+
+```{r}
+ # help(table)
+
+ # utiliser plot() pour créer un diagramme en batons à partir de l'objet créé par table()
+```
+
+### Question 4
+
+Utiliser la fonction `barplot` pour représenter ce résultat graphiquement. Il est important de pouvoir interpréter la figure de manière indépendante du contexte écrit. 
+
+**Solution.** Voici ce qu'il faut éviter de faire (se contenter d'utiliser les valeurs par défaut de la fonction) !
+
+```{r}
+# methode farniente
+barplot(table(a_toi_de_changer_ca))
+```
+
+En indiquant les noms des axes et en précisant les légendes, la figure devient plus lisible. Il est important de décrire au mieux les données. Par exemple, leur nombre doit être clairement indiqué.
+
+
+```{r}
+help(barplot)
+barplot(table(i_like_to_move_it), col = "blue3",
+       xlab = "Nombre de buts à domicile",
+       ylab = "Effectif",
+       las = 1)
+legend(x = "topright", col = "blue3", pch =19, legend = "Saison 2022 (n = 382)")
+```
+
+
+### Question 5
+
+
+On souhaite comparer l'histogramme obtenu ci-dessus à celui d'une loi de Poisson de paramètre $\lambda$. 
+
+- Quelle valeur de $\lambda$ semble-t-il raisonnable de choisir pour décrire les observations ?
+
+**Solution.**
+
+```{r}
+# valeur du paramètre de la loi de Poisson
+# on sait que lambda est l'espérance de la loi
+lambda <- valeur_raisonnable
+```
+
+- À l'aide de la fonction `barplot` (option `beside = TRUE`), juxtaposer l'histogramme du nombre de buts marqués à domicile à celui d'une loi de Poisson pour les valeurs observées (utiliser `rbind` pour créer une matrice de hauteur). Pour la loi de Poisson, on considère un effectif identique aux observations. Commenter le résultat.
+
+**Solution.**
+
+```{r}
+#  On reprend les commandes de la question precedente
+#  help : dpois, rbind, barplot
+
+ barplot(rbind(la_les_effectifs_observés, 
+               ici_les_effectifs_predits),
+        beside = TRUE, 
+        col = c("blue3", "red4"), 
+        xlab = "Nombre de buts à domicile",
+        ylab = "Effectif", 
+        las = 1)
+legend(x = "topright", col = c("blue3", "red4"), pch =19, 
+       legend = c("Saison 2022 (n = 382)", "Loi de Poisson"))
+
+```
+
+
+# Mise en oeuvre de quelques principes
+
+## Problème 1
+
+Les données **BreastCancer** représentent des mesures effectuées sur des tumeurs du sein chez 699 patientes. Ces mesures sont associées aux diagnostics "benign" (bénin) ou "malignant" (grave).  
+
+On lit les données **BreastCancer** à partir de la bibliothèque `mlbench` (à installer éventuellement) et on les convertit en matrice en exécutant le code suivant.
+
+```{r}
+#install.packages("mlbench")
+library('mlbench')
+help(BreastCancer)
+
+# charge les données en mémoire et visualise les premières lignes
+data(BreastCancer)
+head(BreastCancer)
+
+# crée une matrice à partir du tableau de données "BreastCancer"
+breast_cancer <- data.matrix(BreastCancer)
+```
+
+### Question 1
+
+- À l'aide des commandes `anyNA` ou `is.na`, tester l'existence de valeur manquantes dans la matrice `breast_cancer`. Combien de patientes ont-elles des valeurs manquantes pour au moins une mesure ?
+
+**Solution.**
+
+```{r}
+# teste l'existence de valeur manquantes dans "breast_cancer"
+help(anyNA)
+complete_le_code
+
+# nombre des valeurs manquantes
+help(is.na)
+complete_le_code
+```
+
+### Question 2
+
+- Calculer la valeur moyenne de la variable **Cell.size** chez les patientes. Combien de patientes ont une valeur strictement supérieure à 5 ? Combien de ces patientes ont des diagnostics "malignant" ?
+
+**Solution.**
+
+```{r}
+# comment 1 : moyenne de la variable "Cell.Size"
+calcule_mean_cell.size_toi_meme
+
+# comment 2 : Combien de patientes ont une valeur > 5
+condition <-  breast_cancer[,"Cell.size"] >  5
+donne_la_reponse
+```
+
+
+```{r}
+# comment 3 : proportion de telles patientes ayant un diagnostic "malignant" ?
+mean(trouve_ce_qui_faut_ecrire_ici)
+```
+
+
+- Visualiser le résultat précédent
+
+**Solution.**
+
+```{r}
+plot(BreastCancer$Class[condition], 
+     col = c("orange", "black"),
+     las = 1,
+     ylab = "Nombre de patientes")
+```
+
+
+
+## Question 3
+
+Afficher la loi empirique (histogramme) de la variable "Cell.size".
+
+**Solution.** On peut utiliser plot ou barplot
+
+```{r}
+plot(table(quelque_chose)/nrow(breast_cancer), lwd = 4, col = "green4", ylab = "frequence")
+```
+
+## Question 4
+
+On souhaite établir un test à partir de la variable "Cell.size" afin d'émettre automatiquement un diagnostic `malignant`. Pour un seuil donné, on dira qu'un test est **positif** si **"Cell.size" \> seuil**. On dira qu'un test positif est un **faux positif** si le diagnostic réel est `benign`.
+
+Décrire la probabilité qu'un test soit un **faux positif** et la probabilité qu'un test soit un **vrai positif** comme des probabilités conditionnelles. Calculer ces probabilités pour un seuil égal à 5, puis égal à 4.
+
+**Solution.**
+
+```{r}
+# comment 1: definition du test pour un seuil 5
+positif =  definit_moi_logical
+
+# comment 2: calcul des probabilités 
+taux_faux_positif = mean(complete_la)
+cat("taux de faux positifs: ", taux_faux_positif ,"\n")
+
+taux_vrai_positif = mean(complete_ici)
+cat("taux de vrais positifs: ",  taux_vrai_positif,"\n")
+```
+
+## Question 6
+
+Représenter graphiquement le taux de vrais positifs en fonction du taux de faux positifs, pour toutes les valeurs de seuil comprises entre 0 et 11. Cette représentation est appelée *courbe ROC*.
+
+```{r}
+# 
+theta = seq(0, 11)
+
+pchap <- function(seuil)
+{
+   positif =  breast_cancer[,"Cell.size"] > seuil 
+  c(taux_de_faux_positif_a_definir,
+    taux_de_vrai_positif_a_definir)
+}
+
+res <- t(sapply(theta, pchap))
+
+plot(res, 
+     lwd = 4, type = "l",
+     col = "darkblue",
+     xlab ="TFP", ylab = "TVP", main = "ROC")
+points(res, 
+       pch = 19,
+       col = "darkblue")
+abline(0,1)
+```
+
+Selon cette courbe, quelles valeurs de seuil semblent-elles raisonnables pour effectuer un test ? Justifier la réponse.
+

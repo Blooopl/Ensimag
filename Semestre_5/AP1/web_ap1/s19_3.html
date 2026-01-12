@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap3">Chapitre 3</a> : <a href="index.html#Chap3Seance19">Séance 19</a> : <a href="s19_3.html">Les mots suivants</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s19_3.go">s19_3.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<p>Dans cet exercice, on va analyser un fichier texte et construire le
+graphe des mots suivants, c’est-à-dire que pour chaque nœud représentant
+un mot, il sera connecté par une arête à un autre nœud représentant un
+mot qui le suit dans le texte initial. De plus, on décorera les arrêtes
+avec le nombre d’occurrences de chaque couple de mots.</p>
+<p>Par exemple, avec le texte de Joey ci-dessous :</p>
+<pre class="text"><code>Gabba gabba, we accept you, we accept you, one of us.
+Gabba gabba hey, gabba gabba hey...
+Hey oh, let&#39;s go !</code></pre>
+<p>on doit obtenir un graphe de ce genre (la disposition des nœuds n’a
+aucune importance) :</p>
+<figure>
+<img src="s19_3_joey.svg" title="Pinhead"
+alt="Graphe du texte de Joey" />
+<figcaption aria-hidden="true">Graphe du texte de Joey</figcaption>
+</figure>
+<p>On vous recommande de tester chaque fonction à écrire au fur et à
+mesure pour être sûr d’avoir bien compris les structures de données
+qu’on va manipuler.</p>
+<p>Écrire une fonction
+<code>lesMotsDuFichier(nomFichier string) []string</code> qui lit le
+fichier texte dont le nom est passé en paramètre et renvoie le
+<em>slice</em> contenant tous les mots du fichier, chaque mot étant
+représenté par une chaîne de caractères.</p>
+<p>En plus de toutes les fonctions classiques que l’on a déjà vu pour
+lire un fichier texte ligne par ligne : <code>os.Open</code> (<a
+href="https://pkg.go.dev/os#Open">documentation</a>),
+<code>fich.Close</code> (<a
+href="https://pkg.go.dev/os#File.Close">documentation</a>),
+<code>bufio.NewScanner</code> (<a
+href="https://pkg.go.dev/bufio#NewScanner">documentation</a>),
+<code>lecteur.Scan</code> (<a
+href="https://pkg.go.dev/bufio#Scanner.Scan">documentation</a>) et
+<code>lecteur.Text</code> (<a
+href="https://pkg.go.dev/bufio#Scanner.Text">documentation</a>), vous
+aurez vraisemblablement besoin de la fonction
+<code>strings.FieldsFunc</code> (<a
+href="https://pkg.go.dev/strings#FieldsFunc">documentation</a>) pour
+fractionner une ligne de texte en un <em>slice</em> de mots. Cette
+fonction a la particularité de prendre en paramètre une autre fonction,
+qui doit préciser quels caractères seront considérés comme des
+séparateurs. Il suffira donc de définir :</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> toutSaufLettre<span class="op">(</span>car <span class="dt">rune</span><span class="op">)</span> <span class="dt">bool</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">!</span>unicode<span class="op">.</span>IsLetter<span class="op">(</span>car<span class="op">)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>et d’appeler
+<code>strings.FieldsFunc(lecteur.Text(), toutSaufLettre)</code> pour
+fractionner la ligne en mots.</p>
+<p>On devra convertir au passage les mots en minuscules pour que
+<code>Gabba</code> et <code>gabba</code> soient considérés comme le même
+mot : c’est exactement ce que fait la fonction
+<code>strings.ToLower</code> (<a
+href="https://pkg.go.dev/strings#ToLower">documentation</a>).</p>
+<p>Enfin, vous aurez surement besoin de la fonction <code>append</code>
+(<a href="https://pkg.go.dev/builtin#append">documentation</a>) pour
+remplir le <em>slice</em> et vous devrez bien sûr gérer les cas
+d’erreurs possibles : si on ne trouve pas le fichier source, ou s’il
+contient moins de 2 mots.</p>
+<p>Écrire une fonction
+<code>lesCouplesDeMots(lesMots []string) []coupleDeMots</code> qui prend
+le <em>slice</em> contenant tous les mots du texte et renvoie un
+<em>slice</em> contenant tous les couples de mots, sachant qu’un couple
+de mots est composé d’un mot et de son successeur immédiat dans le
+texte. Par exemple, dans le texte ci-dessus, (<code>gabba</code>,
+<code>gabba</code>) est un couple de mots et (<code>gabba</code>,
+<code>we</code>) en est un autre. Le type <code>coupleDeMots</code> peut
+être défini tout simplement par une <code>struct</code> contenant deux
+chaînes de caractères <code>mot1</code> et <code>mot2</code>.</p>
+<p>Écrire une fonction
+<code>lesNombresDeCouples(lesCouples []coupleDeMots) map[string]map[string]int</code>
+qui prend les couples de mots et renvoie une <em>map</em> dont les clés
+sont les mots
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">m1</annotation></semantics></math>
+du texte et les valeurs des <em>maps</em> dont les clés sont des mots
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">m2</annotation></semantics></math>
+du texte et les valeurs le nombre d’occurrences du couple
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mn>1</mn><mo>,</mo><mi>m</mi><mn>2</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(m1, m2)</annotation></semantics></math>
+dans le texte. On rappelle que la fonction <code>make</code> (<a
+href="https://pdk.go.dev/builtin#make">documentation</a>) sert à allouer
+et initialiser une <em>map</em>.</p>
+<p>Écrire une fonction
+<code>génèreGraphe(nomFichier string, lesNombres map[string]map[string]int)</code>
+qui prend en paramètre le nom du fichier destination ainsi que les
+nombres d’occurrences de chaque couple de mots et génère le fichier au
+format Graphviz (<a href="https://fr.wikipedia.org/wiki/Graphviz">page
+Wikipédia</a>). Ce format est tellement simple qu’on vous laisse le
+deviner à partir du fichier produit à partir du texte de Joey fourni
+ci-dessous.</p>
+<p>Le programme devra être exécuté par :
+<code>go run mots_suivants.go fichier.txt fichier.gv</code>. On pourra
+ensuite convertir ce fichier <code>.gv</code> en image SVG avec la
+commande <code>dot -Tsvg fichier.gv -o fichier.svg</code>.</p>
+<h3 id="fichiers-fournis-pour-tester-le-programme">Fichiers fournis pour
+tester le programme</h3>
+<p>Le texte de Joey (<a href="s19_3_joey.txt">télécharger le
+fichier</a>) et son fichier Graphviz (<a
+href="s19_3_joey.gv">télécharger le fichier</a>).</p>
+<figure>
+<img src="s19_3_joey.jpg"
+title="J&#39;ai réussi à placer Joey Ramone dans un TP d&#39;AP1, je suis très fier de moi"
+alt="Joey" />
+<figcaption aria-hidden="true">Joey</figcaption>
+</figure>
+<p>Le texte d’Arthur (<a href="s19_3_arthur.txt">télécharger le
+fichier</a>) et son fichier Graphviz (<a
+href="s19_3_arthur.gv">télécharger le fichier</a>).</p>
+<figure>
+<img src="s19_3_arthur.png"
+title="Alors la coiffure, c&#39;est n&#39;importe-quoi" alt="Arthur" />
+<figcaption aria-hidden="true">Arthur</figcaption>
+</figure>
+<p>Le texte de Charles (<a href="s19_3_charles.txt">télécharger le
+fichier</a>) et son fichier Graphviz (<a
+href="s19_3_charles.gv">télécharger le fichier</a>).</p>
+<figure>
+<img src="s19_3_charles.png"
+title="On sent bien la joie de vivre dans le regard" alt="Charles" />
+<figcaption aria-hidden="true">Charles</figcaption>
+</figure>
+
+</main>
+<div><br></div>
+</body>
+</html>

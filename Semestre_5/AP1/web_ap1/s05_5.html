@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap2">Chapitre 2</a> : <a href="index.html#Chap2Seance05">Séance 05</a> : <a href="s05_5.html">Aléatoire</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s05_5.go">s05_5.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<p>En informatique, on a très souvent besoin de générer aléatoirement
+des nombres, notamment pour écrire des tests ou faire de la
+cryptographie. On devrait d’ailleurs parler plus précisément de nombres
+pseudo-aléatoires, car il est très difficile de générer vraiment de
+l’aléatoire sur des machines déterministes comme les ordinateurs.</p>
+<h3 id="entiers">Entiers</h3>
+<p>En étudiant la <a
+href="https://pkg.go.dev/math/rand#Intn">documentation</a> de la
+fonction <code>rand.Intn</code>, écrivez une fonction
+<code>devinette</code> qui tire un entier aléatoire dans un certain
+intervalle et demande à l’utilisateur d’essayer de le deviner par
+dichotomie, en indiquant à chaque tentative si la valeur saisie est trop
+grande, trop petite ou bonne, puis testez-la en l’appelant dans une
+fonction <code>main</code>.</p>
+<p>Une trace possible du programme demandé pourrait être :</p>
+<pre class="text"><code>J&#39;ai tiré aléatoirement un entier entre 1 et 10 inclus, il faut le deviner !
+Entrez un entier entre 1 et 10 inclus : 5
+Trop grand, essayez encore une fois !
+Entrez un entier entre 1 et 10 inclus : 2
+Trop petit, essayez encore une fois !
+Entrez un entier entre 1 et 10 inclus : 4
+Bravo, c&#39;était ça !</code></pre>
+<h3 id="flottants">Flottants</h3>
+<p>En étudiant la <a
+href="https://pkg.go.dev/math/rand#Float64">documentation</a> de la
+fonction <code>rand.Float64</code>, écrivez une fonction
+<code>monteCarlo</code> qui calcule et affiche une approximation de
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics></math>
+en utilisant la <a
+href="https://fr.wikipedia.org/wiki/Méthode_de_Monte-Carlo#Détermination_de_la_valeur_de_π">méthode
+de Monte-Carlo</a>, puis testez-la en l’appelant dans votre fonction
+<code>main</code>.</p>
+<p>Informellement, la méthode de Monte-Carlo consiste à tirer
+aléatoirement un point de coordonnées
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+et
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
+entre 0 et 1, et à vérifier si ce point se situe dans le quart de cercle
+de rayon 1, c’est-à-dire si :
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><msup><mi>y</mi><mn>2</mn></msup></mrow></msqrt><mo>≤</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sqrt{x^2+y^2} \leq 1</annotation></semantics></math>,
+que l’on peut simplifier en :
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><msup><mi>y</mi><mn>2</mn></msup><mo>≤</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x^2+y^2 \leq 1</annotation></semantics></math>.</p>
+<p>Si c’est le cas, on incrémente un compteur préalablement initialisé à
+zéro. Si on itère un nombre de fois suffisamment grand, on obtiendra en
+sortie de boucle une approximation de
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mi>π</mi><mn>4</mn></mfrac><annotation encoding="application/x-tex">\frac{\pi}{4}</annotation></semantics></math>
+en divisant la valeur du compteur par le nombre d’itérations.</p>
+<p>On pourra définir le nombre d’itérations comme une constante globale
+qui devrait commencer à produire un résultat intéressant à partir d’un
+million de tours de boucle.</p>
+<p>Une trace possible du programme demandé pourrait être :</p>
+<pre class="text"><code>Je vais travailler en 1e+08 itérations...
+Valeur de référence    : 3.141592653589793
+Approximation calculée : 3.1414962</code></pre>
+
+</main>
+<div><br></div>
+</body>
+</html>

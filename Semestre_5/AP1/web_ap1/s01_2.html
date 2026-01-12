@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap1">Chapitre 1</a> : <a href="index.html#Chap1Seance01">Séance 01</a> : <a href="s01_2.html">Premier programme</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s01_2.go">s01_2.go</a>
+</div>
+<h2 id="premier-programme">Premier programme</h2>
+<h3 id="unix-est-notre-ami-pour-la-vie-et-vscode-aussi">Unix est notre
+ami pour la vie (et VSCode aussi)</h3>
+<p>On recommande pour ce cours d’utiliser l’éditeur de texte gratuit et
+<em>open source</em> VSCode, disponible sur tous les systèmes. Il est
+préinstallé sur les machines de l’Ensimag, mais il faut le configurer
+pour qu’il sache reconnaitre le langage Go que l’on va utiliser. Si vous
+connaissez déjà un autre éditeur que vous avez l’habitude d’utiliser, ça
+ne pose pas de problème, mais il est recommandé d’en utiliser un qui
+gère Go (complétion des identifiants, vérification à la volée de la
+syntaxe, …).</p>
+<p>Toutes les commandes Unix doivent être exécutées dans un terminal.
+Lorsqu’on ouvre un terminal, on se trouve en général à la racine du
+répertoire personnel, ce qu’on appelle aussi le <em>homedir</em>. Taper
+la commande <code>pwd</code> pour afficher le chemin absolu complet
+menant à votre répertoire personnel : comme c’est vraisemblablement un
+chemin assez long et compliqué (et qui dépend de chaque utilisateur et
+de la machine utilisée), on le désignera désormais sous son petit nom :
+<code>~</code> (tilde).</p>
+<p>Assurez-vous d’être bien à la racine de votre compte en tapant la
+commande <code>cd</code> (sans répertoire après la commande : mais vous
+pourriez aussi taper <code>cd ~</code> qui ferait exactement la même
+chose). Puis taper la commande <code>rm -fr .vscode .config/Code</code>
+: <strong>attention</strong> cette commande peut détruire tout le
+contenu de votre compte si elle est mal-utilisée, prenez donc bien soin
+de la recopier ou copier-coller correctement !</p>
+<p>Créer un répertoire AP1 avec la commande <code>mkdir AP1</code>, puis
+rentrer dedans grâce à <code>cd AP1</code>, puis créer un
+sous-répertoire TP1, puis rentrer dedans : une fois qu’on a fait tout
+ça, on peut vérifier qu’on est dans le sous-répertoire
+<code>~/AP1/TP1</code> en exécutant la commande <code>pwd</code>. On
+aurait d’ailleurs pu faire plus simplement <code>mkdir -p AP1/TP1</code>
+puis <code>cd AP1/TP1</code> pour arriver directement au même résultat
+!</p>
+<p>Maintenant qu’on a créé un répertoire pour le TP1, on va devoir créer
+des sous-répertoires pour chaque exercice : en effet, un programme Go
+est un ensemble de fichiers <code>.go</code> localisés dans le
+répertoire courant, et cela poserait des problèmes de mettre plusieurs
+programmes dans le même répertoire.</p>
+<p>Exécuter dans le terminal la commande
+<code>mkdir premier_prog &amp;&amp; cd premier_prog</code>, ce qui nous
+permet au passage de remarquer que sous Unix, on peut mettre deux
+commandes à la suite et le <code>&amp;&amp;</code> entre les deux nous
+assure que la deuxième ne sera exécutée que si la première a
+fonctionné.</p>
+<p>On va maintenant créer notre programme en utilisant la commande
+<code>touch premier_prog.go</code>. On peut voir qu’un fichier vide
+(taille de 0 octet) est bien créé dans le répertoire en faisant
+<code>ls -lh</code>. On va l’ouvrir avec notre éditeur de texte préféré
+VSCode en tapant <code>code premier_prog.go</code>.</p>
+<p>Lorsque l’éditeur démarre, il devrait nous proposer d’installer
+l’extension recommandée pour le langage Go (en bas à droite de la
+fenêtre) : la bonne réponse à cette question est « Install ». Pas de
+panique si vous avez cliqué trop vite et que la fenêtre a disparu : on
+peut installer l’extension à la main. Le plus simple pour cela est de
+cliquer sur l’icône qui représente trois carrés droits et un tordu, dans
+la barre de gauche de la fenêtre (ou sinon par le menu « View » puis «
+Extensions »). Il est possible qu’on vous propose l’extension Go de « Go
+Team at Google » dans les extensions « Recommended », sinon il suffit de
+taper « Go » dans le moteur de recherche des extensions pour la trouver.
+Cliquer sur le bouton bleu <code>Install</code> pour lancer
+l’installation de l’extension, en acceptant de faire confiance à
+l’extension grâce au bouton « Trust Publisher &amp; Install ». Vous
+devez voir une console s’ouvrir en bas de VSCode vous informant qu’il
+est en train d’installer des outils nommés <code>gopls</code> et
+<code>staticcheck</code>.</p>
+<p>Ce qui va prendre un peu de temps…</p>
+<p>Une fois qu’il a fini de compiler les outils (il doit afficher
+<code>SUCCEEDED</code> pour les deux outils dans l’onglet « Output » de
+la console), nous allons désactiver le « Restricted Mode » qui est un
+peu pénible sur VSCode. Pour cela, cliquez sur la touche
+<code>ctrl</code> et la touche <code>,</code> (virgule) en même temps.
+Dans le moteur de recherche de la fenêtre qui s’ouvre, tapez « trust:
+enabled » et décochez le bouton à côté de la ligne « Controls whether or
+not Workspace Trust is enabled within VS Code ». Cliquez sur « Restart »
+pour qu’il relance VSCode.</p>
+<p>Et là, on va pouvoir enfin commencer le TP !</p>
+<h3
+id="configuration-de-léditeur-emacs-pour-ceux-qui-ne-sont-pas-amis-avec-vscode">Configuration
+de l’éditeur Emacs (pour ceux qui ne sont pas amis avec VSCode)</h3>
+<p>Si VSCode ne vous plaît pas, il est possible d’utiliser un autre
+éditeur très pratique (et libre également) : <a
+href="https://www.gnu.org/software/emacs/">GNU Emacs</a>. Le mode Go
+n’étant pas installé par défaut sur les machines de l’école, il vous
+faudra l’installer manuellement. Ce n’est pas très compliqué. Pour
+cela :</p>
+<ol type="1">
+<li>Ouvrez l’éditeur Emacs ;</li>
+<li>Tapez le raccourci <code>alt-x</code> (aussi appelé <code>M-x</code>
+dans la terminologie Emacs) pour lancer une commande ;</li>
+<li>Tapez le nom de la commande : <code>package-install</code> (vous
+pouvez utiliser la complétion automatique avec tab pour faire plus
+simple) ;</li>
+<li>Lorsqu’Emacs vous demande quel paquetage installer, tapez
+<code>go-mode</code></li>
+<li>Redémarrez Emacs.</li>
+</ol>
+<p>Et c’est tout. Lorsque vous redémarrez Emacs et que vous ouvrez un
+fichier portant l’extension <code>.go</code>, l’éditeur vous place
+automatiquement en mode Go avec coloration syntaxique et complétion
+automatique si vous avez de la chance.</p>
+<h3 id="squelette-général-dun-programme-go">Squelette général d’un
+programme Go</h3>
+<p>Chaque programme Go doit faire partie d’un <em>package</em>,
+c’est-à-dire un ensemble de fichiers Go regroupés selon un même thème.
+Dans le cadre de nos petits TP d’AP1, on ne créera pas de nouveaux
+<em>packages</em> à part celui par défaut qui doit contenir le programme
+principal.</p>
+<p>Taper <code>package main</code> dans VSCode puis sauter une ligne :
+c’est toujours une bonne chose d’écrire des programmes aérés et faciles
+à lire.</p>
+<p>On va maintenant écrire notre première fonction Go, qui sera la
+fonction principale, c’est-à-dire le point d’entrée du programme. On ne
+va même pas avoir besoin de se creuser la tête pour lui trouver un nom,
+car la fonction principale d’un programme Go <strong>doit</strong>
+toujours s’appeler <code>main</code>.</p>
+<p>Taper <code>// Point d'entrée du programme</code> et aller à la
+ligne. Cette ligne est en fait un commentaire : il ne s’agit pas d’une
+ligne de code, mais d’une information qu’on ajoute dans notre programme
+pour en faciliter la compréhension. En Go, il existe deux sortes de
+commentaires :</p>
+<ul>
+<li>les commentaires sur une ligne : tout ce qui est écrit entre
+<code>//</code> et la fin de la ligne est considéré comme un commentaire
+;</li>
+<li>les commentaires sur plusieurs lignes : toutes les lignes écrites
+entre <code>/*</code> et <code>*/</code> sont considérées comme des
+commentaires.</li>
+</ul>
+<p>Taper <code>func main() {</code> et aller à la ligne. Notre fonction
+principale ne prend pas de paramètre, d’où les parenthèses vides.
+L’accolade ouvrante indique qu’on va maintenant écrire le corps de la
+fonction et l’éditeur VSCode est suffisamment malin pour indenter
+automatiquement ce que l’on tape : <strong>il est très fortement
+recommandé de suivre le formatage proposé par l’éditeur de
+texte</strong> qui applique les recommandations officielles du
+langage.</p>
+<p>Taper <code>fmt.Println("Coucou !")</code> et aller à la ligne. La
+fonction <code>Println</code> est une fonction fournie par la
+bibliothèque standard Go (<a href="https://pkg.go.dev/fmt#Println">lien
+vers la documentation de <code>Println</code></a>) et sert simplement à
+afficher la chaîne de caractères qu’on lui passe en paramètre, suivie
+d’un retour chariot (pour aller à la ligne). Cette fonction est définie
+dans un <em>package</em> qui s’appelle <code>fmt</code> : on doit donc
+bien préciser systématiquement le nom du <em>package</em> contenant la
+fonction que l’on veut utiliser.</p>
+<p>Taper <code>}</code> et aller à la ligne : on voit que l’éditeur de
+texte nous ramène en début de ligne, car il a compris qu’on vient de
+terminer d’écrire le corps de la fonction.</p>
+<p>Un programmeur averti et précautionneux aura déjà remarqué que l’on a
+oublié de faire quelque-chose de très important : sauvegarder notre
+programme. En effet, <strong>il est très (<em>mais vraiment très</em>)
+fortement recommandé de sauvegarder régulièrement ce qu’on
+écrit</strong>, car en cas de plantage de la machine ou de l’éditeur, on
+peut tout perdre d’un coup.</p>
+<p>Utiliser le raccourci clavier traditionnel dans la plupart des
+applications sous Unix (et Windows) en appuyant en même temps sur les
+touches <code>ctrl</code> et <code>s</code>.</p>
+<p>Et là, on remarque qu’en plus d’avoir sauvegardé le fichier
+<code>premier_prog.go</code>, l’éditeur vient de rajouter tout seul la
+ligne <code>import "fmt"</code> entre la ligne contenant le nom du
+<em>package</em> et le début de la fonction <code>main</code>.</p>
+<p>En effet, on doit lister explicitement les <em>packages</em> que le
+programme qu’on écrit utilise. On aurait donc dû écrire nous-mêmes cette
+ligne lorsqu’on a réalisé qu’on avait besoin du <em>package</em>
+<code>fmt</code> pour appeler <code>Println</code>, mais comme on
+utilise un éditeur intelligent, on peut se permettre d’être un peu
+étourdis !</p>
+<h3 id="chaîne-de-compilation-exécution-et-nettoyage">Chaîne de
+compilation, exécution et nettoyage</h3>
+<p>Maintenant qu’on a écrit notre premier programme en Go, on a envie de
+l’exécuter pour voir ce qu’il fait, même si on s’en doute un peu. Mais
+Go est un langage compilé, ce qui signifie qu’on doit d’abord traduire
+le code Go vers un langage compréhensible par la machine (qu’on appelle
+d’ailleurs « langage machine »), en utilisant un logiciel appelé «
+compilateur ».</p>
+<p>Comme beaucoup d’éditeurs modernes, VSCode permet de compiler et
+exécuter des programmes Go directement depuis l’interface graphique de
+l’éditeur. Dans ce cours d’AP1, vous privilégierez l’utilisation du
+terminal Unix, car apprendre à utiliser ces commandes fait partie des
+objectifs pédagogique du cours !</p>
+<p>Taper la commande <code>go build premier_prog.go</code> pour compiler
+le programme : s’il n’y a pas d’erreur, aucun message ne sera affiché et
+le fichier binaire <code>premier_prog</code> sera généré dans le
+répertoire courant. Vous pouvez le vérifier en utilisant la commande
+<code>ls -lh</code> : notez que le fichier binaire est beaucoup plus
+gros que le fichier source !</p>
+<p>Exécuter le programme avec la commande <code>./premier_prog</code> :
+le <code>./</code> est obligatoire pour dire au système que c’est le
+binaire <code>premier_prog</code> localisé dans le répertoire courant
+<code>.</code> que l’on veut exécuter (sinon il le chercherait
+uniquement dans les répertoires définis par la variable d’environnement
+<code>PATH</code>). Si tout se passe bien, le programme doit nous faire
+coucou, puis se terminer sans erreurs.</p>
+<p>Il est important de supprimer les fichiers binaires quand on a fini
+l’exercice : en effet, les comptes informatiques des élèves disposent
+d’un quota d’espace disque limité, et on risque de vite le saturer si on
+laisse trainer des fichiers binaires de plusieurs mégaoctets. Pour cela,
+il suffit d’exécuter la commande <code>go clean premier_prog.go</code>
+qui va effacer tous les fichiers binaires générés lors de la
+compilation.</p>
+<p>Toutes les étapes détaillées ci-dessus peuvent en pratique être
+exécutées automatiquement en tapant simplement la commande
+<code>go run premier_prog.go</code> qui va donc compiler, exécuter et
+nettoyer notre programme : il est recommandé de la privilégier pour
+éviter d’oublier de nettoyer les programmes (même si cela implique que
+le programme sera recompilé avant chaque exécution).</p>
+<h3 id="erreurs">Erreurs</h3>
+<p>Pour s’habituer aux messages d’erreur classiques que l’on risque de
+rencontrer dans nos programmes, on va volontairement introduire des
+erreurs dans notre code.</p>
+<p>Commencer par commenter la ligne <code>package main</code> et
+sauvegarder le fichier, puis exécuter
+<code>go run premier_prog.go</code> et essayer de comprendre le message
+d’erreur affiché par le compilateur.</p>
+<p>Faites le même test en dé-commentant la ligne
+<code>package main</code> et commentant celle commençant par
+<code>func</code>.</p>
+<p>Faites ensuite le même test en dé-commentant la ligne commençant par
+<code>func</code> et en commentant la ligne <code>}</code>.</p>
+<p>Faites enfin le même test en dé-commentant la ligne <code>}</code> et
+en commentant celle commençant par <code>fmt.Println</code>. Vous
+devriez alors remarquer que :</p>
+<ul>
+<li>l’éditeur supprime tout seul la ligne <code>import "fmt"</code> qui
+est devenue inutile ;</li>
+<li>l’exécution ne produit aucun message d’erreur, car il est
+parfaitement légal d’écrire un programme qui ne fait rien du tout !</li>
+</ul>
+<p>Vous noterez qu’on ne vous a pas fait tester le fait de commenter la
+ligne <code>import "fmt"</code>, car l’éditeur va systématiquement la
+remettre tant que le programme utilisera <code>Println</code> : il
+n’existe pas de cas légal où on pourrait se passer du
+<code>import</code> quand utilise une fonction du <em>package</em>.</p>
+<p>N’oubliez pas de dé-commenter la ligne commençant par
+<code>fmt.Println</code> avant de passer à la partie suivante.</p>
+<h3 id="redirections">Redirections</h3>
+<p>Lorsqu’on écrit des programmes qui génèrent beaucoup de traces, ou
+quand l’affichage produit correspond en fait à des données (par exemple,
+une image), il est souvent pratique d’utiliser une redirection qui va,
+comme son nom l’indique, rediriger les traces dans un fichier.</p>
+<p>Exécuter <code>go run premier_prog.go &gt; traces.txt</code> : vous
+constaterez que le programme ne produit aucun affichage dans le
+terminal.</p>
+<p>Exécuter la commande <code>ls</code> : un nouveau fichier
+<code>traces.txt</code> vient d’apparaitre dans le répertoire.</p>
+<p>Ouvrir ce fichier par exemple en tapant <code>code traces.txt</code>
+(ou en passant par le menu de VSCode) : l’affichage qu’on aurait dû voir
+dans le terminal a en fait été écrit dans le fichier !</p>
+<p><strong>Faites attention</strong> en utilisant les redirections : si
+le fichier destination existe déjà, il est immédiatement écrasé sans
+avertissement dès qu’on lance la commande !</p>
+<p>Il existe des commandes Unix qui permettent d’afficher rapidement le
+contenu d’un fichier texte sans avoir besoin de l’ouvrir dans un éditeur
+de texte :</p>
+<ul>
+<li><code>cat traces.txt</code> affiche simplement le contenu du fichier
+dans le terminal ;</li>
+<li><code>less traces.txt</code> a le même effet, mais le contenu est
+paginé : si le texte est très long, vous pourrez descendre et remonter
+dans le texte en utilisant les flèches du clavier (il faut appuyer sur
+la touche <code>q</code> pour sortir du programme
+<code>less</code>).</li>
+</ul>
+
+</main>
+<div><br></div>
+</body>
+</html>

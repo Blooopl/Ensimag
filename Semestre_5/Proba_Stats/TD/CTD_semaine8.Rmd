@@ -1,0 +1,480 @@
+---
+title: "Régression linéaire simple"
+lang: "fr"
+output:
+  html_document: 
+    toc: true
+    toc_float: true
+date: "Semaine 8"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=8, fig.height=4)
+```
+
+
+
+
+## Objectifs 
+
+Les objectifs de ce CTD sont, dans un premier temps, d’établir quelques propriétés théoriques du modèle de régression linéaire simple. Dans un second temps, ces propriétés seront appliquées à l’étude de la relation entre deux variables simulées, pour lesquelles l’ensemble des hypothèses du modèle peuvent être vérifiées. 
+
+Le modèle de régression linéaire simple implique une seule variable explicative (ou prédicteur), notée $X$. La relation peut être exprimée comme suit :
+
+\begin{equation}
+Y = b_0 + b_1 X + \epsilon,
+\end{equation}
+où
+
+-   $Y$ est la variable réponse,
+
+-   $X$ est le prédicteur,
+
+-   $b_0$ est l'ordonnée à l'origine ou intercept,
+
+-   $b_1$ est le coefficient de la pente ou taille de l'effet de $X$ sur $Y$.
+
+-   $\epsilon$ est l'erreur résiduelle représentant l'écart entre les valeurs observées et celles prédites (ou ajustées). L'erreur $\epsilon$ est une variable aléatoire gaussienne de moyenne nulle et de variance $\sigma^2$, indépendante de $X$.
+
+
+
+
+## Exercice 1. Quelques propriétés mathématiques du modèle de régression linéaire.
+
+On suppose que les variables  $X$ et $Y$ sont reliées selon le modèle de régression linéaire simple décrit ci-dessus. 
+
+### Question 1
+
+Montrer que l'espérance conditionnelle de $Y$ sachant $X = x$ est égale à
+
+$$
+\mathbb{E}[Y | X = x] = b_0 + b_1 x \,.
+$$
+
+
+**Solution.** Décrire les arguments principaux conduisant au résultat. Commenter brièvement ce résultat en admettant que le terme *régression* est un synonyme du terme *espérance conditionnelle*. 
+
+
+
+### Question 2
+
+Montrer que 
+$$
+b_1 = \frac{{\rm Cov}(X,Y)}{{\rm Var}(X)}
+$$ 
+et que 
+
+$$
+b_0 = \mathbb{E}[Y] - b_1\mathbb{E}[X] \, .
+$$
+
+**Solution.**  Calculer la covariance du couple $(X,Y)$, puis l'espérance de $Y$. 
+
+
+### Question 3
+
+Proposer des estimateurs des paramètres de régression $b_0$ et $b_1$. 
+
+
+**Solution.**  Les estimateurs sans biais (division par $n-1$) ou biaisés (division par $n$) de la covariance et de la variance pourront être utilisés indifféremment. En effet, les divisions se simplifient dans la fraction décrivant $b_1$.
+
+
+
+
+
+### Question 4
+
+Que devient la valeur de $b_1$ lorsque les variables $X$ et $Y$ sont respectivement divisées par $\sqrt{{\rm Var}(X)}$ et $\sqrt{{\rm Var}(Y)}$ ? Comment interpréter la pente de la droite de régression lorsque les variables sont normalisées (variances égales à 1) ? 
+
+
+**Solution.** Reporter uniquement les réponses. Ne pas oublier l'interprétation. 
+
+
+### Question 5
+
+On note $\rho$ le coefficient de corrélation linéaire entre $X$ et $Y$ 
+
+$$
+    \rho = \frac{{\rm Cov}(X,Y)}{\sqrt{{\rm Var}(X)} \sqrt{{\rm Var}(Y)}}  \, .
+$$ 
+
+On rappelle que la variance de $\epsilon$ est égale à $\sigma^2$. Démontrer que 
+
+$$
+    \rho^2 = 1 - \frac{\sigma^2}{{\rm Var}(Y)} \, .
+$$ 
+
+**Solution.** Calculer la variance de $Y$ et utiliser l'expression théorique obtenue pour $b_1$ dans la question 2.  
+
+
+
+### Question 6
+
+Montrer que la variance de la réponse $Y$ peut être partitionnée en une *part expliquée* par le prédicteur $X$ et une part *expliquée* par le résidu $\epsilon$. En déduire que la part de variance expliquée par le prédicteur est égale à $\rho^2$. La part de variance expliquée par le résidu est égale à $1 - \rho^2$.
+
+**Solution.** Utiliser la formule d'Eve et calculer la part de variance expliquée, définie de la manière suivante 
+
+$$
+r^2  = \frac{\text{Var}(\mathbb{E}[Y|X])}{\text{Var}(Y)} = \text{compléter.}
+$$
+
+
+
+
+## Exercice 2. Estimateurs des moindres carrés (ordinaires)
+
+On dispose désormais de $n$ observations indépendantes du modèle de régression linéaire simple
+
+$$
+y_i = b_0 + b_1 x_i + \epsilon_i \, , \quad i = 1, \dots, n \, .
+$$
+
+Les résidus $\epsilon_i$ sont supposés représenter $n$ tirages indépendants de la loi $N(0, \sigma^2)$. On considère la fonction *de perte* suivante
+
+$$
+{\rm RSS}(b_0, b_1) = \sum_{i=1}^n \left( y_i - b_0 - b_1 x_{i} \right)^2 \, .
+$$
+
+L'acronyme RSS signifie *Residual Sum of Squares*, c'est à dire, la somme des carrés des résidus.
+
+### Question 1
+
+On note $\bar{x}$ et $\bar{y}$ les moyennes empiriques des échantillons $\mathbf{x}$ et $\mathbf{y}$.
+Montrer que les valeurs $\hat b_0$ et $\hat b_1$ minimisant la fonction de perte ${\rm RSS}(b_0, b_1)$ sont égales à
+
+$$
+\hat b_1 =  \frac{ \sum_{i = 1}^n x_i y_i/n - \bar{x} \bar{y}}{\sum_{i = 1}^n x_i^2/n -  \bar{x}^2}  \, ,
+$$ 
+
+et
+
+$$
+\hat b_0 = \bar{y}  - \hat b_1 \bar{x}   \, .
+$$
+Comparer ces résultats aux valeurs théoriques de l'exercice précédent.
+
+
+**Solution.** On dérive la fonction ${\rm RSS}(b_0, b_1)$ par rapport aux paramètres $(b_0, b_1)$, puis on vérifie (ou on admet) que le point où le gradient s'annule est unique et correspond à un minimum. 
+
+
+
+
+### Question 2
+Pour un échantillon de taille $n$, on définit la **somme totale des carrés** (TSS) de la manière suivante
+
+$$
+{\rm TSS} = \sum_{i=1}^n \left( y_i - \bar{y} \right)^2 \, ,
+$$ 
+
+et le **coefficient de détermination** de la manière suivante
+
+$$
+R^2 = 1 -\frac{\rm RSS}{\rm TSS} \, .
+$$
+où $\rm RSS = {\rm RSS}(\hat b_0, \hat b_1)$.
+
+Quels paramètres sont estimés par ces statistiques ? Justifier votre réponse. Pourquoi le coefficient de détermination est-il parfois appelé "pourcentage de variance expliquée" ? 
+
+
+**Solution.** Comparer ces valeurs aux résultats théoriques de l'exercice précédent (on pourra considérer des estimateurs biaisés des variances).
+
+
+
+## Exercice 3. 
+
+
+Le poids d'un chat domestique dans une population est représenté par une variable $y$, exprimée en kg. On considère la variable $x$ représentant la dose alimentaire journalière (croquettes), exprimée en g, donnée à un animal adulte. Nous cherchons à décrire l'effet de la dose alimentaire journalière sur le poids d'un animal. Un échantillon de taille $n = 95$ est fidèlement reproduit dans l'expérience suivante. 
+
+```{r}
+# simulation : est-elle seulement réaliste...
+set.seed(123)
+nn = 100
+
+# ration de croquettes king-size
+x = rnorm(nn, 100, sd = 10)
+
+# forcement gros-minet est en surcharge pondérale
+epsilon = rnorm(nn, 0, sd = 0.6)
+y = -5.2 + 0.09 * x  + epsilon 
+
+# y a pas de chatons (moins de 2 kg)
+x <- x[y > 2]
+y <- y[y > 2]
+
+
+
+# et voici nos données 
+plot(x, y, 
+     cex = .9, col = "red4", pch = 19, las = 1,
+     xlab = "Ration de croquettes (g)",
+     ylab = "Poids de l'animal (kg)")
+```
+
+### Question 1
+
+À l'aide de la commande `lm`, ajuster un modèle de régression linéaire aux données : $y$ est la réponse, $x$ le prédicteur. Afficher le résumé des estimations. Reprendre le graphique ci-dessus en représentant la droite de régression linéaire (`abline`). Inclure une légende en haut à gauche du graphique indiquant la signification du tracé et donnant le coefficient de détermination $R^2$.
+
+
+**Solution.**  Compléter le code suivant. Remarquer que la commande `summary` renvoie un objet de classe "summary.lm". Extraire de cet objet l'argument correspondant au calcul de $R^2$. 
+
+
+```{r}
+## commentaire 1
+mod = lm(trouve_la_formule)
+
+## commentaire 2
+resume = summary(mod)
+resume
+
+## extraire le coefficient de détermination R2
+resume$complete_moi
+```
+
+Commenter le résultat. 
+
+```{r}
+# revoici nos données 
+plot(x, y, 
+     cex = .9, col = "red4", pch = 19, las = 1,
+     xlab = "Ration de croquettes (g)",
+     ylab = "Poids de l'animal (kg)")
+
+# ajouter une légende
+legend(x = "topleft", legend = "complete_moi")
+
+# tracer la droite de régression 
+abline(complete_mi)
+```
+
+### Question 2
+
+Quel est l'effet prédit d'une augmentation (respectivement d'une diminution) de 10 g de la ration journalière sur le poids des chats ? Calculez ces effets en grammes sans utiliser la commande `lm`, puis vérifier votre réponse à l'aide du résultat de la commande.
+
+
+**Solution.** Remarquer que la commande `lm` renvoie un objet (liste) de classe "lm". Extraire de cet objet l'argument correspondant au calcul de la taille d'effet. 
+
+```{r}
+cat("Effet d'une augmentation de 10 g de la ration journalière :", round(complete_moi)),"g") 
+```
+
+
+
+
+
+### Question 3
+
+Comment interprétez-vous les effets prédits ? Les prédictions sont-elles valides pour un animal en particulier ?
+
+
+**Solution.** Donner une interprétation populationnelle (et donc statistique) du résultat : "Les animaux qui recoivent une ration journalière 10 g supérieure à ceux d'une population blablabla à compléter".
+
+
+### Question 4
+
+Estimer l'espérance conditionnelle du poids d'un animal sachant que sa ration journalière de croquettes est 112 g. Interpréter le résultat. 
+
+**Solution.** Effectuer le calcul directement à l'aide des coefficients estimés, puis vérifier à l'aide de la commande `predict` ou `predict.lm`. 
+
+```{r}
+# l'espérance conditionnelle est la 'prédiction' de la variable réponse
+# pour la valeur x du prédicteur
+
+round(predict(mod, newdata = data.frame(x = 112)), 2)
+```
+
+Ne pas oublier d'interpréter le résultat.
+
+
+### Question 5
+
+Afficher l'histogramme des résidus, puis un graphe quantile-quantile pour vérifier l'adéquation de la loi normale. Commenter le résultat.
+
+**Solution.** Compléter le code suivant. 
+
+```{r}
+#residus = mod$residuals
+residus <-  y - complete_moi
+hist(residus, col = "pink")
+
+# commentaire
+qqnorm((residus - mean(residus))/sd(residus)); abline(0,1)
+```
+
+Ne pas oublier de commenter le résultat.
+
+### Question 6
+
+Calculer la somme des carrés des résidus (RSS), puis le coefficient de détermination de la régression. Vérifier le résultat à partir d'un calcul direct, puis du résumé du modèle ajusté. 
+
+
+**Solution.** Compléter le code suivant et commenter les résultats. 
+
+```{r}
+## Calcul de RSS 
+RSS = yes_we_can
+
+## TSS
+TSS = re_yes_we_re_can
+  
+## verification : R2 c'est quoi déjà 
+R2 = podemos_muchachos
+
+## et dans summary(mod)
+summary(mod)$what_the
+```
+
+
+### Question 7
+
+On admet que l'estimateur 
+
+$$
+\hat{\sigma}^2 = {\rm RSS}/(n-2)
+$$
+est un estimateur sans biais de $\sigma^2$, la variance de l'erreur résiduelle. Calculer l'estimation de l'écart-type résiduel. Identifier les estimations effectuées précedemment dans le résumé du modèle.  
+
+
+**Solution.** Utiliser la commande `summary`. Il y a quatre nombres à identifier : les deux coefficients de régression, le coefficient de détermination et l'écart-type de l'erreur résiduelle.
+
+
+
+## Exercice 4.  Le matou revient pour les tests statistiques
+
+On poursuit l'exemple concernant le poids d'un chat domestique, $y$, exprimé en kg, expliqué par une variable $x$ représentant la dose journalière de croquettes donnée à un animal, exprimée en g.
+
+### Question 1
+
+Rappeler l'estimation de la taille d'effet (ou coefficient de régression) $b_1$. 
+
+**Solution.** Utiliser par exemple la commande `coefficients`. 
+
+### Question 2
+
+Calculer la statistique de Student $t_{n-2}$ ($t$-score) associée à l'estimation $\hat b_1$ en supposant $b_1 = 0$.  Vérifier le résultat à l'aide du résumé du modèle (`summary`).
+
+**Solution.** D'après un résultat de cours (que l'on peut retrouver dans l'exercice 5), la variance de $\hat b_1$ est  $\sigma^2/n s^2_x$. On définit la valeur $t$ en normalisant l'estimateur (standardisation).  On retrouve la valeur $t$ dans la colonne "t value" du tableau des coefficients du modèle ajusté. 
+
+
+```{r}
+## Utiliser la commande suivante 
+## coef(summary(mod))
+
+cat("Le t-score est égal à : ", 
+    round(tscore, 4), 
+    "\n")
+```
+
+### Question 3
+
+Pour la pente de la régression $b_1$, donner un intervalle de confiance bilatéral au seuil $1 - \alpha = 95 \%$. Calculer cet intervalle de confiance à l'aide des quantiles de la loi de Student (`qt`). Vérifier le résultat avec la fonction `confint`.
+
+
+**Solution.**  Pour construire l'intervalle de confiance, on admettra que la variable aléatoire
+
+$$
+T_{n-2} = \sqrt{n s_x^2} \frac{\hat b_1 - b_1}{\hat{\sigma}} 
+$$
+suit une loi de Student à $n-2$ degrés de liberté.  Le code correspondant est à compléter
+
+```{r}
+# calcul des quantiles de la loi tn-2
+# alpha = 0.05
+t_lower = qt(0.025, n - 2)
+t_upper = qt(0.975, n - 2)
+
+# bornes de l'intervalle de confiance
+lower =  trouve_lower
+upper = trouve_upper
+
+conf_int = c(lower, upper)
+names(conf_int) = c("2.5%", "97.5%")
+
+# Affichage
+cat("Intervalle de confiance : \n") 
+conf_int
+```
+
+On peut vérifier ce résultat directement avec la fonction `confint`
+
+```{r}
+confint(mod)["x",]
+```
+
+
+### Question 4
+
+Calculer la $p$-valeur du test de l'hypothèse nulle "$H_0 : b_1 = 0$" en utilisant la commande `pt`. Vérifier le résultat à l'aide du résumé du modèle. L'augmentation de la dose de croquettes d'un écart-type a-t-elle un effet significatif sur le poids de l'animal (au seuil 5%) ? 
+
+**Solution.**  La $p$-valeur du test bilatéral correspond à
+
+$$
+p = \mathbb{P}( |T_{n-2}| > |t|) 
+$$ 
+
+où $t$ est le $t$-score calculé précédemment (et $b_1 = 0$).
+
+### Question 5
+
+**Test de pertinence de la régression**. Calculer la $p$-valeur pour le test de l'hypothèse nulle "$H_0 : \rho^2 = 0$" en utilisant la commande `pf`. Vérifier le résultat à l'aide du résumé du modèle.
+
+**Solution.** D'après le cours, la $p$-valeur du test correspond à
+
+$$
+p = \mathbb{P}( F_{1, n-2} > z) 
+$$ 
+
+où $F_{1, n-2}$ est de loi de Fisher $F(1, n-2)$ et
+
+$$
+z = (n-2) \frac{R^2}{1 - R^2} = (n-2) \frac{{\rm TSS} - {\rm RSS}}{{\rm RSS}} \, .
+$$
+Faire les calculs.
+
+### Question 6
+
+Vérifier que la $p$-valeur obtenue est exactement égale à celle du test de significativité de la pente $b_1$. Pourquoi est-ce vrai ? 
+
+**Solution.** Vérification : Il s'agit de la dernière ligne du résumé du modèle.  
+
+
+
+## Exercice 5. pour les pas fatigués (facultatif).  
+
+On dispose de $n$ observations indépendantes du modèle de régression linéaire 
+
+$$
+y_i = b_0 + b_1 x_i + \epsilon_i \, , \quad i = 1, \dots, n \, ,
+$$ 
+
+où les résidus $\epsilon_i$ sont issus de tirages indépendants de la loi $N(0, \sigma^2)$. 
+
+
+Dans ce qui suit, on considère que le vecteur ${\bf x} = (x_1,\dots,x_n)$ contient des valeurs fixes. Les calculs s'effectueront conditionnellement à ces valeurs. Seules les observations $y_i$ et $\epsilon_i$ sont donc issues de tirages aléatoires. On notera $Y_i$ la réponse aléatoire correspondant à l'observation $y_i$.
+
+
+
+### Question 1
+
+ Montrer que les estimateurs $\hat{b}_1$ et $\hat{b}_0$ sont des estimateurs sans biais de $b_1$ et $b_0$ conditionnellement à ${\bf x}$.
+ 
+**Solution.** On note $s_x^2 = \sum_{i = 1}^n (x_i - \bar x)^2/n$, la variance empirique (non-corrigée) calculée à partir de ${\bf x}$.  Utiliser la définition LUE de l'estimateur $\hat b_1$ (cf classe inversée)
+
+$$
+\hat b_1 =  \frac{1}{n s^2_x}   \sum_{i = 1}^n  (x_i - \bar{x}) Y_i \, ,
+$$
+afin de calculer l'espérance conditionnelle demandée : $\mathbb{E}[\hat b_1 \mid {\bf x}]$.
+
+
+ 
+### Question 2
+
+Montrer que la variance de $\hat{b}_1$ est égale à $\sigma^2/n s^2_x$ conditionnellement à {\bf x},
+où $s^2_x$ est la variance empirique de l'échantillon $\mathbf x$.
+Conclure que l'estimateur est convergent.
+
+**Solution.** Utiliser à nouveau le fait que $\hat{b}_1$ s'exprime comme combinaison linéaire des variables $Y_i$. Calculer ${\rm Var}( \hat b_1 | {\bf x})$. 
+
+
+
+
+

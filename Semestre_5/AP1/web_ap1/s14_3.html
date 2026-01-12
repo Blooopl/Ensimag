@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap3">Chapitre 3</a> : <a href="index.html#Chap3Seance14">Séance 14</a> : <a href="s14_3.html">Compression de données</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s14_3.go">s14_3.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<p>On va travailler dans cet exercice avec des images au format
+<em>Portable BitMap file format (PBM)</em> qu’on a déjà utilisé dans le
+TP convertisseur.</p>
+<p>L’avantage de ce format est que l’image est stockée dans un fichier
+texte très facile à interpréter et donc facilement portable d’un système
+à un autre. L’inconvénient majeur est que stocker des pixels sous la
+forme de caractères n’est vraiment pas optimal en termes d’espace disque
+et mémoire et engendre des fichiers de très grandes tailles même pour
+des images modestes.</p>
+<p>On va donc implanter un algorithme de compression des images basé sur
+un codage par longueur de plage (<em>Run-Length Encoding (RLE)</em> en
+anglais) dont le principe est tout simplement de factoriser les suites
+de pixels égaux en comptant leurs nombres d’occurrences consécutives.
+Par exemple, si un fichier texte contient la suite de caractères
+<code>aaaaaaaabbcccccaaa</code>, on peut le compresser simplement en
+<code>8a2b4c3a</code>. Évidemment, ce type de codage est d’autant plus
+efficace que le fichier contient de grandes plages de valeurs égales, ce
+qui sera vraisemblablement souvent le cas pour des images en noir et
+blanc.</p>
+<h3 id="le-format-pbm">Le format PBM</h3>
+<p>On donne un exemple d’une image PBM (<a
+href="s14_3_batman.pbm">s14_3_batman.pbm</a>) que vous pouvez ouvrir en
+tapant <code>eog s14_3_batman.pbm</code> dans un terminal ou en
+double-cliquant dessus dans le gestionnaire de fichier. On fournit aussi
+le fichier compressé (<a
+href="s14_3_res_batman.rle">s14_3_res_batman.rle</a>) attendu.</p>
+<p>On fournit aussi une petite image représentant un <code>E</code>
+majuscule (<a href="s14_3_e_maj.pbm">s14_3_e_maj.pbm</a>) pour vous
+permettre de comprendre le format, et aussi de tester votre programme
+sur un petit exemple lisible. On fournit aussi le fichier compressé (<a
+href="s14_3_res_e_maj.rle">s14_3_res_e_maj.rle</a>) attendu.</p>
+<p>Si vous ouvrez l’image dans un éditeur de texte (par exemple
+<code>code s14_3_e_maj.pbm</code> dans le terminal), vous comprendrez
+rapidement le format texte basique utilisé :</p>
+<ul>
+<li>la première ligne contient la chaîne <code>"P1"</code> qui indique
+qu’il s’agit d’une image PBM (<em>magic number</em>) ;</li>
+<li>la deuxième ligne contient la largeur puis la hauteur de l’image, en
+nombre de points, sous la forme de deux entiers séparés par un ou
+plusieurs espaces ou tabulations ;</li>
+<li>le reste du fichier contient les couleurs des points de l’image (0
+représente du blanc et 1 représente du noir), potentiellement séparés
+par zéro ou un ou plusieurs espaces, tabulations ou retours à la ligne :
+tous les séparateurs sont facultatifs et ignorés.</li>
+</ul>
+<p>Lorsque les images sont très larges, il est recommandé d’aller à la
+ligne au bout de 70 caractères, ce qui ne change rien au contenu de
+l’image : c’est le cas pour le fichier
+<code>s14_3_batman.pbm</code>.</p>
+<h3 id="le-format-compressé">Le format compressé</h3>
+<p>Une image PBM compressée sera également un fichier texte, sous le
+format suivant :</p>
+<ul>
+<li>la première ligne contient la chaîne <code>"RLE"</code> qui indique
+qu’il s’agit d’un fichier compressé ;</li>
+<li>la deuxième ligne contient la largeur puis la hauteur de l’image, en
+nombre de points, sous la forme de deux entiers séparés par un espace
+;</li>
+<li>chacune des lignes suivantes contiendra un entier naturel
+correspondant au nombre de répétitions de la couleur courante, en
+supposant qu’on démarre avec du blanc.</li>
+</ul>
+<p>Par exemple, le fichier :</p>
+<pre class="text"><code>RLE
+32 16
+14
+7
+23
+76
+...</code></pre>
+<p>décrit une image 32x16 contenant 14 points blancs, puis 7 points
+noirs, puis 23 points blancs, puis 76 points noirs, etc.</p>
+<p>Et le fichier :</p>
+<pre class="text"><code>RLE
+48 32
+0
+14
+7
+23
+76
+...</code></pre>
+<p>décrit une image 48x32 contenant 0 point blanc, puis 14 points noirs,
+puis 7 points blancs, puis 23 points noirs, puis 76 points blancs, etc.
+On voit donc comment gérer facilement le cas des images commençant par
+du noir.</p>
+<h3 id="travail-demandé">Travail demandé</h3>
+<p>Vous devez écrire un programme <code>pbm2rle.go</code> qui va lire
+sur <em>stdin</em> un flot de caractères qui représente soit un fichier
+PBM, soit un fichier RLE (selon le <em>magic number</em> de la première
+ligne), et appelle la fonction de compression ou décompression en
+fonction du type de fichier d’entrée.</p>
+<p>Dans ce programme, il peut être utile d’utiliser une forme de boucle
+qu’on a présentée rapidement au TP précédent : le
+<code>for range</code>, qui s’utilise simplement comme ci-dessous :</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> tab <span class="op">=</span> <span class="op">[]</span><span class="dt">int</span><span class="op">{</span><span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">7</span><span class="op">}</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx<span class="op">,</span> val <span class="op">:=</span> <span class="kw">range</span> tab <span class="op">{</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span><span class="st">&quot;tab[&quot;</span><span class="op">,</span> idx<span class="op">,</span> <span class="st">&quot;] =&quot;</span><span class="op">,</span> val<span class="op">)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>et qui affichera :</p>
+<pre class="text"><code>tab[ 0 ] = 3
+tab[ 1 ] = 4
+tab[ 2 ] = 1
+tab[ 3 ] = 5
+tab[ 4 ] = 7</code></pre>
+<p>Ce <em>foreach</em> a une autre forme encore plus compacte qui est
+pratique pour itérer sans passer par un indice. Par exemple, si
+<code>nbr</code> est un <code>int</code> défini quelque-part dans le
+code, on peut écrire :</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="kw">range</span> nbr <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  fmt<span class="op">.</span>Println<span class="op">(</span><span class="st">&quot;Coucou !&quot;</span><span class="op">)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>qui affichera <code>nbr</code> fois la chaîne <code>Coucou !</code>.
+On peut aussi utiliser directement une constante, par exemple
+<code>for range 5</code>.</p>
+<p>On ne détaille pas précisément comment vous devez implanter votre
+programme, mais on s’attend à ce que vous respectiez les directives
+ci-dessous.</p>
+<p>Vous ne devez lire qu’une seule fois le fichier source et générer à
+la volée les nombres de répétitions (pour la compression) ou générer à
+la volée les points (pour la décompression).</p>
+<p>On s’attend à ce que vous implantiez des vérifications d’intégrité
+raisonnables dans votre code, et notamment :</p>
+<ul>
+<li>vous devez vérifier que le flot de caractères lu sur <em>stdin</em>
+représente soit un fichier PBM, soit un fichier RLE (en vous basant sur
+le <em>magic number</em> de la première ligne) et afficher un message
+approprié sur <em>stderr</em> puis terminer proprement le programme si
+ce n’est pas le cas ;</li>
+<li>pour la compression, vous devez vérifier (et là encore terminer le
+programme avec un message d’erreur sinon) :
+<ul>
+<li>que le fichier source contient bien
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>a</mi><mi>r</mi><mi>g</mi><mi>e</mi><mi>u</mi><mi>r</mi><mo>×</mo><mi>h</mi><mi>a</mi><mi>u</mi><mi>t</mi><mi>e</mi><mi>u</mi><mi>r</mi></mrow><annotation encoding="application/x-tex">largeur \times hauteur</annotation></semantics></math>
+points ;</li>
+<li>que la somme des nombres de répétitions calculée à l’issue de la
+compression est bien égale au nombre de points dans le fichier source
+(cette vérification servira en fait à détecter des erreurs dans votre
+code) ;</li>
+</ul></li>
+<li>pour la décompression, vous pouvez partir du principe que le fichier
+en entrée a été produit correctement pour essayer de générer le résultat
+le plus efficacement possible.</li>
+</ul>
+<p>Pensez bien à gérer proprement toutes les erreurs possibles dans vos
+différentes fonctions.</p>
+<p>Votre programme devra bien évidemment être découpé en sous-fonctions,
+que l’on vous laisse libre de définir comme cela vous parait le plus
+pertinent pour factoriser autant de possible le code.</p>
+<p>Le résultat de l’exécution du programme sera envoyé directement sur
+la sortie standard (<em>stdout</em>). Vous pourrez générer un fichier en
+redirigeant la sortie comme on vous l’a appris en Unix, par exemple en
+exécutant
+<code>go run pbm2rle.go &lt; s14_3_batman.pbm &gt; s14_3_batman.rle</code>
+pour lire le PBM en entrée depuis <code>s14_3_batman.pbm</code> et
+écrire le RLE dans <code>s14_3_batman.rle</code>. On rappelle qu’on peut
+comparer facilement deux fichiers texte avec la commande
+<code>diff</code>, par exemple :
+<code>diff s14_3_batman.rle s14_3_res_batman.rle</code>.</p>
+<p>Si vous voulez comparer directement le résultat d’une compression +
+décompression avec le fichier original <code>s14_3_batman.pbm</code>, il
+vous faudra fractionner les lignes générées tous les 70 caractères, ce
+que vous pouvez soit implanter directement dans votre code, soit
+réaliser a-posteriori en utilisant la commande Unix <code>fold</code>
+qui fait exactement ça.</p>
+<p>Vous pourrez donc vérifier la correction de votre programme grâce à
+la commande
+<code>go run pbm2rle.go &lt; s14_3_batman.pbm  | go run pbm2rle.go | fold -w 70 | diff s14_3_batman.pbm -</code>.</p>
+
+</main>
+<div><br></div>
+</body>
+</html>

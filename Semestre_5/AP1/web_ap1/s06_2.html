@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap2">Chapitre 2</a> : <a href="index.html#Chap2Seance06">Séance 06</a> : <a href="s06_2.html">Convertisseur PBM/SVG</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s06_2.go">s06_2.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<p>Dans cet exercice, on va convertir des images d’un format matriciel
+(<a href="https://fr.wikipedia.org/wiki/Image_matricielle">page
+Wikipédia</a>) (aussi appelé <em>bitmap</em> en anglais) vers un format
+vectoriel (<a
+href="https://fr.wikipedia.org/wiki/Image_vectorielle">page
+Wikipédia</a>).</p>
+<p>De façon très résumée, on peut dire qu’une image matricielle est la
+liste des couleurs de chaque point (ou pixel (<a
+href="https://fr.wikipedia.org/wiki/Pixel">page Wikipédia</a>)) de
+l’image, alors qu’une image vectorielle est une collection de figures
+géométriques (lignes, cercles, rectangles, …).</p>
+<p>Il existe des techniques sophistiquées pour produire des images
+vectorielles de bonne qualité à partir d’une image matricielle, mais on
+fera ici au plus simple : chaque pixel sera représenté par un cercle SVG
+de rayon 1 point, avec une épaisseur de trait de 1 point aussi.</p>
+<p>Pour que les images s’affichent bien comme attendu, vous pouvez créer
+un groupe SVG englobant toute l’image avec une couleur de trait en noir
+et une couleur de remplissage en blanc, ainsi qu’une épaisseur de trait
+de 1.</p>
+<p>Le format matriciel choisi est une version simplifiée du format PBM
+(<a href="https://fr.wikipedia.org/wiki/Portable_pixmap">page
+Wikipédia</a>), qui a l’avantage d’être particulièrement facile à
+manipuler. Les fichiers <code>.pbm</code> que l’on gèrera dans cet
+exercice seront des fichiers texte composés :</p>
+<ul>
+<li>de la chaîne “P1” sur la première ligne, qui est la signature du
+format ;</li>
+<li>de la largeur de l’image sur la ligne suivante ;</li>
+<li>de la hauteur de l’image sur la ligne suivante ;</li>
+<li>des couleurs de chaque pixel, chacun sur sa propre ligne, sachant
+que 0 représente un point blanc et 1 un point noir.</li>
+</ul>
+<p>Une fois que vous aurez vérifié que le fichier <code>.pbm</code>
+commence bien par la signature attendue, vous pourrez considérer que le
+reste du fichier est bien formaté et contient le bon nombre de
+points.</p>
+<p>On s’attend à ce que votre programme lise le contenu du fichier
+<code>.pbm</code> directement sur <em>stdin</em> puis affiche le code
+SVG généré directement sur <em>stdout</em>, les messages d’erreur seront
+quant à eux-mêmes affichés sur <em>stderr</em>.</p>
+<p>Pour tester votre programme, on fournit un petit fichier
+<code>s06_2_test.pbm</code> (<a href="s06_2_test.pbm">fichier à
+télécharger</a>) qui contient l’image d’un E majuscule en noir sur fond
+blanc à la résolution 9x14 points. Le but de ce fichier est de vous
+aider à mettre au point visuellement votre programme, en vérifiant le
+code SVG affiché dans le terminal. Si vous redirigez la sortie vers un
+fichier <code>.svg</code> et que vous l’affichez avec <code>eog</code>,
+vous devriez obtenir un blob assez immonde : c’est normal, 9x14 est une
+résolution particulièrement catastrophique !</p>
+<p>Une fois que vous pensez que votre programme est correct, vous pouvez
+le tester avec le fichier <code>s06_2_image.pbm</code> (<a
+href="s06_2_image.pbm">fichier à télécharger</a>) qui contient une image
+de plus grande taille que vous pourrez aussi utiliser si vous vous
+retrouvez un jour perdu à Gotham City.</p>
+
+</main>
+<div><br></div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+digraph {
+let -> s [label = 1]
+gabba -> gabba [label = 3]
+gabba -> we [label = 1]
+gabba -> hey [label = 2]
+accept -> you [label = 2]
+you -> we [label = 1]
+you -> one [label = 1]
+oh -> let [label = 1]
+hey -> gabba [label = 1]
+hey -> hey [label = 1]
+hey -> oh [label = 1]
+s -> go [label = 1]
+we -> accept [label = 2]
+one -> of [label = 1]
+of -> us [label = 1]
+us -> gabba [label = 1]
+}

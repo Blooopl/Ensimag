@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap1">Chapitre 1</a> : <a href="index.html#Chap1Seance02">Séance 02</a> : <a href="s02_4.html">Programmation modulaire</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s02_4.go">s02_4.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<p>Dans cet exercice, on va voir qu’on peut facilement utiliser des
+fonctions ou types définis dans un fichier <code>.go</code> différent de
+celui contenant la fonction <code>main</code>. C’est une bonne pratique
+de programmation de diviser notre code en plusieurs fichiers pour éviter
+de tout écrire dans un gros fichier très long et difficile à lire. Si
+notre code est réparti dans les fichiers <code>prog.go</code> et
+<code>mod.go</code> par exemple, if suffira de taper
+<code>go run prog.go mod.go</code> pour exécuter le programme.
+<strong>Attention</strong> les deux fichiers doivent obligatoirement
+être dans le même répertoire : comme on l’a déjà vu, un programme Go
+correspond à un répertoire.</p>
+<p>On va dessiner des images au format SVG (<a
+href="https://fr.wikipedia.org/wiki/Scalable_Vector_Graphics">page
+Wikipédia du format</a>). Ce format permet de décrire dans un format
+textuel des images vectorielles, c’est-à-dire contenant des formes
+géométriques (ici : des cercles). Une image SVG peut être affichée grâce
+à la commande <code>eog mon_image.svg</code> ou simplement en
+double-cliquant dessus dans le gestionnaire de fichiers.</p>
+<p>Un des avantages de ce format est que les fichiers images sont tout
+simplement des fichiers textes, qui peuvent être lus en les ouvrant dans
+VSCode, ou même directement avec la commande <code>cat</code> dans le
+terminal. Voilà par exemple ce que devra contenir le fichier SVG attendu
+à la fin de cet exercice :</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode svg"><code class="sourceCode xml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">svg</span> <span class="ot">xmlns=</span><span class="st">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="ot">version=</span><span class="st">&quot;1.1&quot;</span> <span class="ot">width=</span><span class="st">&quot;200&quot;</span> <span class="ot">height=</span><span class="st">&quot;200&quot;</span>&gt;</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">g</span> <span class="ot">stroke=</span><span class="st">&quot;black&quot;</span> <span class="ot">fill=</span><span class="st">&quot;red&quot;</span> <span class="ot">stroke-width=</span><span class="st">&quot;5&quot;</span>&gt;</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">circle</span> <span class="ot">cx=</span><span class="st">&quot;10&quot;</span> <span class="ot">cy=</span><span class="st">&quot;10&quot;</span> <span class="ot">r=</span><span class="st">&quot;30&quot;</span> /&gt;</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">g</span>&gt;</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">g</span> <span class="ot">stroke=</span><span class="st">&quot;red&quot;</span> <span class="ot">fill=</span><span class="st">&quot;black&quot;</span> <span class="ot">stroke-width=</span><span class="st">&quot;5&quot;</span>&gt;</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">circle</span> <span class="ot">cx=</span><span class="st">&quot;100&quot;</span> <span class="ot">cy=</span><span class="st">&quot;100&quot;</span> <span class="ot">r=</span><span class="st">&quot;60&quot;</span> /&gt;</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">circle</span> <span class="ot">cx=</span><span class="st">&quot;180&quot;</span> <span class="ot">cy=</span><span class="st">&quot;50&quot;</span> <span class="ot">r=</span><span class="st">&quot;10&quot;</span> /&gt;</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">g</span>&gt;</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">svg</span>&gt;</span></code></pre></div>
+<p>Ce qui donnera l’image ci-dessous si on l’affiche avec
+<code>eog</code> :</p>
+<figure>
+<img src="s02_4_image_attendue.svg" title="Image attendue"
+alt="Image attendue" />
+<figcaption aria-hidden="true">Image attendue</figcaption>
+</figure>
+<p>Un des inconvénients bien visible dans l’exemple ci-dessus est que ce
+format est très verbeux et qu’il est facile de faire des erreurs de
+syntaxe difficiles à détecter. On fournit donc un fichier
+<code>svg.go</code> (<a href="svg.go">fichier à télécharger</a>)
+contenant le type représentant un point et des fonctions permettant de
+dessiner des formes classiques.</p>
+<p>Écrire un programme <code>test_svg.go</code> qui utilise le fichier
+SVG pour dessiner l’image ci-dessus de taille 200×200, dont on précise
+les paramètres nécessaires :</p>
+<ul>
+<li>le cercle en haut à gauche a un centre de coordonnées (10, 10) et un
+rayon de 30 points ;</li>
+<li>le gros cercle du milieu a un centre de coordonnées (100, 100) et de
+rayon 60 ;</li>
+<li>le petit cercle à droite a un centre de coordonnées (180, 50) et de
+rayon 10.</li>
+</ul>
+<p>Tous les traits ont une épaisseur de 5 points et les couleurs
+utilisées s’appellent <code>"red"</code> et <code>"black"</code>.</p>
+<p>Vous afficherez les chaînes de caractères représentant le code SVG
+directement dans le terminal, pour voir à quoi cela ressemble. Vous
+pourrez facilement générer le fichier <code>mon_image.svg</code> en
+redirigeant la sortie standard via la commande
+<code>go run test_svg.go svg.go &gt; mon_image.svg</code></p>
+
+</main>
+<div><br></div>
+</body>
+</html>

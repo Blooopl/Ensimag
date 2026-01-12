@@ -1,0 +1,338 @@
+---
+title: "Estimation statistique"
+lang: "fr"
+output:
+  html_document: 
+    toc: true
+    toc_float: true
+date: "Semaine 4"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=8, fig.height=4)
+```
+
+
+
+## Objectifs 
+
+Dans cette séance, on étudiera quelques concepts clés de l'estimation d'une grandeur statistique, par exemple le paramètre d'une loi de probabilité. On présentera les critères d'évaluation de la qualité d'un estimateur ainsi que deux méthodes classiques pour construire des estimateurs : la méthode des moments et la méthode de maximum de vraisemblance. 
+
+
+## Exercice 1. Estimateur de l'espérance et la variance.
+
+On considère un échantillon $X = (X_1, \dots, X_n)$ constitué de $n$ variables indépendantes, de même loi d'espérance $m$ et de variance $\sigma^2$ finie. 
+
+### Question 1
+
+Justifier que la moyenne empirique $\overline{X}_n$ est un estimateur sans biais et convergent du paramètre $m$. Est-il asymptotiquement gaussien ?
+
+
+**Solution.**  La solution peut être rédigée sur une feuille libre. On ne reportera que les justifications principales (théorèmes, hypothèses). 
+
+
+
+### Question 2
+
+On définit 
+
+$$
+s^2_n(X) = \frac1n \sum_{i = 1}^n \left( X_i - \overline{X}_n \right)^2
+$$
+Montrer que $s^2_n(X)$ est un estimateur biaisé de la variance $\sigma^2$. Proposer un estimateur sans biais $\hat{\sigma}^2_n$ de la variance. 
+
+**Indication** : Faire apparaître $m$ dans le calcul de $s^2_n(X)$. 
+
+
+**Solution.**  La solution peut être rédigée sur une feuille libre. On ne reportera que le résultat. 
+
+
+
+### Question 3
+
+On considère l'échantillon simulé suivant 
+
+```{r}
+  set.seed(12345)
+  n = 15
+  x = rnorm(n, m = 1, sd = 10)
+```
+
+Calculer l'estimation biasée et l'estimation non-biaisé de la variance de cet échantillon en utilisant les formules de la question 2. Comparer le résultat à la commande `var`. Commenter ce résultat. 
+
+**Solution.**
+
+```{r}
+## estimation biaisé
+remplace_moi
+
+## estimation non-biaisée
+remplace_moi
+
+## A changer : commenter le résultat de la commande var
+var(x)
+```
+
+
+
+## Exercice 2. Maximum de vraisemblance
+
+On considère un échantillon $X = (X_1, \dots, X_n)$ constitué de $n$ variables indépendantes de loi exponentielle de paramètre $\theta > 0$
+
+$$
+f(x; \theta) = \left\{ 
+\begin{array}{ll}
+\theta e^{-\theta x}  & \text{si } \, x > 0 \, , \\
+0  & \text{sinon.} \\
+\end{array}
+\right.
+$$
+
+On rappelle que la variable aléatoire 
+
+$$
+S_n = \sum_{i = 1}^n X_i
+$$ 
+
+suit la loi Gamma($n$, $\theta$) dont la densité est donnée ci-dessous
+
+
+$$
+g(x; n, \theta) = \left\{ 
+\begin{array}{ll}
+\frac{\theta^n}{(n-1)!} x^{n-1} e^{-\theta x}  & \text{si } \, x > 0 \, , \\
+0 & \text{sinon.} \\
+\end{array}
+\right.
+$$
+
+
+### Question 1
+
+On considère que les observations suivantes sont issues d'une loi exponentielle de paramètre inconnu. 
+
+```{r}
+x <- c(0.03 , 0.29 , 0.04 , 0.04 , 0.48 , 0.41, 0.05, 0.00 ,0.06, 0.05 ,0.18 ,0.01 ,0.06, 0.01, 0.09 ,0.02 ,0.08, 0.01, 0.26, 0.12)
+```
+
+
+Calculer l’estimation du paramètre $\theta$ par la méthode du maximum de vraisemblance. Vérifier que l'estimateur EMV correspond à l'estimateur par la méthode des moments. 
+
+**Solution.**  La solution peut être en partie rédigée sur une feuille libre. On reportera l'estimateur ainsi trouvé.
+
+
+```{r}
+## EMV
+hat_theta = cogito_ergo_sum
+```
+
+
+### Question 2
+
+Tracer la courbe de la log-vraisemblance pour $\theta$ appartenant à l'intervalle (0,25).  L'optimum est-il très marqué ? Pensez vous que $\theta$ pourra être estimé précisement. 
+
+
+**Solution.**  Compléter le code suivant 
+
+
+```{r}
+curve(la_fonction_ell_de_theta, 
+      xname = "theta", 
+      from = 1, to = 25, col = "coral",
+      ylab = "log-likelihood")
+
+abline(v = hat_theta, col = "darkgreen")
+```
+
+### Question 3
+
+Montrer que l'EMV est un estimateur biaisé. Montrer que l'estimateur défini par $\hat\theta_{\rm SB} = (n-1)/S_n$ est sans biais. Calculer l’estimation sans biais du paramètre $\theta$ pour les données observées. 
+
+**Solution.**  La solution peut être en partie rédigée sur une feuille libre. On reportera la formule de l'estimateur ainsi trouvé.
+
+On l'indique l'estimateur sans biais en pointillé sur le graphe précédent (y a pas de quoi lancer une alerte). 
+
+```{r}
+curve(la_fonction_ell_de_theta, 
+      xname = "theta", 
+      from = 1, to = 25, col = "coral"
+      ylab = "log-likelihood", las = 1)
+
+# formule de l'estimateur sans biais
+hat_theta_SB = ca_y_est_c_est_debiaise
+
+abline(v = hat_theta, col = "palegreen")
+abline(v = hat_theta_SB, col = "green4", lty = 2)
+```
+
+
+### Question 4
+
+Calculer la variance des estimateurs  $\hat\theta_{\rm SB}$ et $\hat\theta_{\rm MV}$. 
+En déduire que les estimateurs sont convergents. 
+
+**Solution.**  La solution peut être rédigée sur une feuille libre. On reportera le résultat. 
+
+
+### Question 5
+
+Calculer les valeurs théoriques de l'erreur quadratique moyenne de l'estimateur de maximum de vraisemblance et de l'estimateur sans biais.
+
+$$
+{\rm EQM}( \hat\theta_{\rm MV}) =  \left(\frac{n}{n-1}\right)^2    \left( \frac{1}{n-2} + \frac{1}{n^2} \right) \times \theta^2 
+$$ 
+
+et
+
+$$
+{\rm EQM}( \hat\theta_{\rm SB}) =    \frac{\theta^2}{n-2} 
+$$
+
+
+**Solution.**  La solution peut être rédigée sur une feuille libre.  
+
+
+### Question 6
+
+Comparer graphiquement les EQMs des deux estimateurs  pour $\theta = 10$ et $n$ compris entre 5 et 50. 
+
+**Solution.**  Compléter ou commenter les codes suivants. 
+
+```{r}
+## erreur quadratique moyenne de l'estimateur de maximum de vraisemblance
+eqm_mv = function(theta = 10, n){
+  # complete_moi_la_formule_est_pas_loin
+}
+
+## erreur quadratique moyenne de l'estimateur sans biais
+eqm_sb = function(theta = 10, n){
+  # c_est_froid_non_ca_chauffe_ca_chauffe
+}
+```
+
+La comparaison graphique se fait ainsi
+
+```{r}
+## commente
+n <- seq(5, 50, by = 5)
+
+## valeur du paramètre de la loi etudiée
+theta = 10
+
+## commente : c'est quoi l'erreur statistique
+plot(n, eqm_mv(theta, n), 
+     col = "blue", 
+     xlab = "taille d'échantillon (n)",
+     ylab = "EQM",
+     main = "Erreur statistique : E[(Tn - theta)^2]",
+     pch = 19, ylim = c(-10, max(eqm_mv(theta, n)+ 10)), las = 1)
+
+##
+points(n, eqm_sb(theta, n), col = "orange", pch = 19)
+abline(h = 0, lty = 2, col = "grey")
+
+## les graphiques c'est mieux avec une legende 
+grid()
+legend("topright", 
+       col = c("blue","orange"),
+       pch = 19,
+       legend = c("emv","esb"))
+```
+
+### Question 7
+
+Vérifier les résultats théoriques de la question 5 pour $\theta = 10$ et pour plusieurs valeurs de $n$ entre 5 et 50 par des simulations de Monte Carlo utilisant $m = 10000$ répétitions. 
+
+
+**Solution.**  Commenter le code suivant. 
+
+```{r}
+# vraie valeur 
+theta = 10
+
+# tailles d'échantillon
+tailles_echantillon <- seq(5, 50, by = 5)
+
+# nombre de répétition MC
+m = 10000
+
+eqm_mv_mc = NULL
+eqm_sb_mc = NULL
+
+for (nn in tailles_echantillon){
+  # commenter ce code 
+  X <- matrix(rexp(nn*m, rate = theta), ncol = m)
+  
+  # commenter ce code 
+  emv <-  nn/apply(X, 2, FUN = sum) 
+  eqm_mv_mc <- c(eqm_mv_mc, mean((emv-theta)^2))
+  
+  # commenter ce code              
+  esb <- (nn-1)/apply(X, 2, FUN = sum) 
+  eqm_sb_mc <- c(eqm_sb_mc, mean((esb-theta)^2))
+}
+```
+
+On désire afficher quoi déjà. Rappelle le ici. 
+
+```{r}
+# commentaire 
+plot(n, eqm_mv(10, n), 
+     col = "lightblue", 
+     xlab = "taille d'échantillon (n)",     
+     ylab = "EQM",
+     main = "Approximation MC (max. vrais.)",
+     type = "l")
+points(n, eqm_mv_mc, col = "green4", pch = 19)
+abline(h = 0, lty = 2, col = "grey")
+
+legend("topright", 
+       col = c("lightblue","green4"),
+       pch = 19,
+       legend = c("theorie","approximation"))
+```
+
+
+
+### Question 8
+
+Simuler $m = 10000$ échantillons de taille $n = 20$ d’une loi exponentielle de paramètre $\theta = 10$. Décrire l'histogramme de l'estimateur de maximum de vraisemblance. Quelle densité est-elle théoriquement attendue ?
+
+Indiquer la moyenne de la loi par une barre verticale rouge et la valeur de $\theta$ par une barre verticale bleue.
+
+**Solution.**  Pour trouver la densité théoriquement attendue, on peut effectuer un changement de variable. Reporter la densité attendue.  
+
+Pour la réponse numérique, créer les codes de calculs dans un bout de code (note: on peut simuler directement la loi de l'EMV, plutôt que de calculer l'estimateur pour les échantillons de loi exponentielle).   
+
+
+
+### Question 9
+
+Pour les données de l'énoncé, 
+
+```{r}
+x = c(0.03 , 0.29 , 0.04 , 0.04 , 0.48 , 0.41, 0.05, 0.00 ,0.06, 0.05 ,0.18 ,0.01 ,0.06, 0.01, 0.09 ,0.02 ,0.08, 0.01, 0.26, 0.12)
+```
+
+a-t-on suffisament de preuves pour affirmer que le paramètre inconnu $\theta$ est inférieur ou égal à $\theta_0 = 10$ ? Et pour affirmer qu'il est inférieur ou égal à $\theta_0 = 13$ (rappel : $\hat \theta \approx 8.3$) ?
+
+**Solution.**  Calculer la probabilité pour que la somme $S_n = \sum_{i = 1}^n X_n$ soit supérieure à la valeur observée ($s_n = 2.29$) sous l'hypothèse que la vraie valeur est $\theta_0 = 10$, puis $\theta_0 = 13$. Examiner chacune des deux hypothèses : semblent-elles raisonnable ou déraisonnable ?
+
+
+
+```{r}
+# nombre de données 
+n = length(x)
+
+# hypothèse testée theta0 = 10 ou 13 
+# theta0 = 10
+
+# pourcentage d'échantillons compatible avec des données observées 
+# pour l'hypothèse testée
+
+pgamma(remplace_mi, shape = remplace_moi, rate = theta0,  lower = FALSE)
+```
+
+ 
+
+

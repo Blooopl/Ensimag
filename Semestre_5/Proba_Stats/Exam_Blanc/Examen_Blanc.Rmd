@@ -1,0 +1,252 @@
+---
+title: "**UE Probabilités et statistique 1**"
+subtitle: "**Ensimag 1A -- Examen blanc**"
+lang: "fr"
+author: ""
+output:
+  pdf_document:
+
+
+date: "Décembre 2025 -- Durée 1h"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+**Nom Prénom :** Indiquez votre nom et votre prénom
+
+**Groupe :** Indiquez votre numéro de groupe
+
+---
+
+- Ce document **Rmd** constitue votre document de travail. Le devoir doit être **rendu au format PDF**, après avoir complété les espaces réservés aux sections **\textcolor{magenta}{Réponse.}**
+
+- Il est **fortement conseillé** de compiler (`Knit`) le document régulièrement afin de vérifier l’absence d’erreurs.
+
+- Pour valider une **\textcolor{blue}{Question}** comportant un code R à compléter, il est nécessaire de **modifier l’instruction**  `eval = FALSE` en `eval = TRUE` ou de la supprimer.
+
+- Les réponses attendues devront être clairement rédigées, si possible **en gras**, et ne pas être limitées aux codes informatiques à compléter.
+
+
+
+
+--- 
+
+##
+
+
+On dispose d’un jeu de données `x` contenant les résultats de **n = 94** épreuves d’un jeu de pile ("P") ou face ("F").  Le jeu de données est chargé en mémoire de la manière suivante :
+
+```{r, eval = TRUE}
+# On charge le jeu de données
+
+x <- scan(file = "pile_ou_face.txt", what = character())
+head(x)
+```
+
+
+  
+
+### \textcolor{blue}{Question 1} 
+
+1. À l’aide de commandes R, calculez le nombre de faces ("F") et de piles ("P") dans le jeu de données. 
+
+2. Représentez les effectifs observés à l’aide d’un diagramme en barres.
+ 
+**\textcolor{magenta}{Réponse}.** Complétez les codes suivants et décrivez brièvement les résultats obtenus.
+
+```{r, eval = FALSE}
+# Modifiez eval = FALSE en eval = TRUE
+# effectifs : nombres de "F" et de "P"
+
+completer
+```
+
+
+
+```{r, eval = FALSE}
+# Modifiez eval = FALSE en eval = TRUE 
+# Diagramme en barre 
+
+barplot(height = completer, 
+        col = c("orange", "skyblue"),
+        las = 1,
+        ylab = "Effectifs",
+        main = "Titre de la figure à compléter")
+```
+
+
+### \textcolor{blue}{Question 2} 
+
+On suppose que le jeu n’est pas truqué, c’est-à-dire que la probabilité d’obtenir "F" est $p_0 = 1/2$. Pour chaque épreuve $i$, on définit la variable aléatoire $X_i$ indiquant la réalisation de l’événement “obtenir F” :
+
+$$
+ X_i =
+ \begin{cases}
+ 1 & \text{si le résultat est F} \\
+ 0 & \text{sinon.}
+ \end{cases}
+$$
+Les épreuves sont supposées indépendantes. Justifiez que la loi de la statistique 
+
+$$
+ Z = \frac{1}{\sqrt{n}} \left( 2\sum_{i=1}^{n} X_i - n \right)
+$$
+peut être approchée par la loi normale $\mathcal{N}(0,1)$.
+
+**\textcolor{magenta}{Réponse}.**  Commencez par déterminer la moyenne et la variance de $Z$, puis invoquez un théorème du cours. 
+
+
+
+### \textcolor{blue}{Question 3} 
+
+À partir des données observées, calculez la valeur observée de la statistique
+
+$$
+z = \frac{1}{\sqrt{n}}\left( 2\sum_{i=1}^{n} x_i - n \right),
+$$
+ainsi que la valeur correspondante $z^2$. (On rappelle que $x_i = 1$ si le résultat est "F" et $x_i = 0$ sinon.)
+
+**\textcolor{magenta}{Réponse}.** Incluez un code R pour calculer les valeurs demandées arrondies à 4 décimales et décrivez brièvement les résultats obtenus.
+
+
+
+
+
+
+### \textcolor{blue}{Question 4} 
+
+On suppose que la statistique $Z$ suit la loi normale standard $\mathcal{N}(0,1)$. 
+
+À partir de la valeur observée $z$ obtenue à la \textcolor{blue}{Question 3}, calculez numériquement à l’aide de R la probabilité
+
+$$
+P = \mathbb{P}(|Z| > |z|) \, .
+$$
+
+
+**\textcolor{magenta}{Réponse}.** Utilisez la fonction `pnorm` pour calculer cette probabilité (arrondie à 4 décimales) et décrivez brièvement le résultat obtenu.
+
+
+
+
+
+### \textcolor{blue}{Question 5} 
+
+
+Interprétez la valeur de $P$ obtenue à la \textcolor{blue}{Question 4} dans le cadre d’un test d’hypothèse sur la probabilité d’obtenir “Face”. Précisez :
+
+- l’hypothèse nulle et l’hypothèse alternative testées,
+
+- la décision que vous prenez au seuil de 5 %.
+
+
+**\textcolor{magenta}{Réponse}.**  Formulez votre réponse en deux phrases concises.
+
+
+### \textcolor{blue}{Question 6} 
+
+1. Calculez la $p$-valeur du test de l’hypothèse nulle “le jeu est équilibré” contre l’hypothèse alternative “le jeu est truqué” à l’aide de la commande R `prop.test`. 
+
+2. Comparez le résultat à celui obtenu précédemment et précisez quelle loi statistique est utilisée pour le calcul du test dans `prop.test`.
+
+
+
+**\textcolor{magenta}{Réponse}.** Complétez, exécutez le code suivant et répondez à la seconde partie de la \textcolor{blue}{Question 6}.
+
+
+```{r, eval = FALSE}
+# Modifiez eval = FALSE en eval = TRUE
+# On utilise prop.test sans la correction de continuité
+
+test_trucage <- prop.test(x = completer,
+                          p = completer,
+                          correct = "FALSE")
+test_trucage
+```
+
+
+
+
+
+
+### \textcolor{blue}{Question 7} 
+
+1. À quoi correspond la statistique `X-squared = 2.7234` affichée dans la sortie de la commande `prop.test` ? 
+
+2. Le test effectué à la \textcolor{blue}{Question 6} est-il équivalent au test réalisé à la \textcolor{blue}{Question 5}  ?
+
+**\textcolor{magenta}{Réponse}.** Justifiez brièvement votre réponse à l’aide d’un argument de probabilité.
+
+
+
+### \textcolor{blue}{Question 8} 
+
+1. Déterminez, à l’aide de R, un intervalle de confiance à 95 % pour la fréquence de “Face” ("F") observée dans les données (arrondir à 4 décimales). 
+
+2. Indiquez la commande utilisée et interprétez brièvement le résultat.
+
+
+**\textcolor{magenta}{Réponse}.** Pas d'indication. 
+
+
+### \textcolor{blue}{Question 9} 
+
+
+1. Sous l’hypothèse d’un jeu équilibré, calculez les effectifs attendus de "F" et de "P" pour $n = 94$ observations. 
+
+
+2. On note $E_F$ et $E_P$ les effectifs attendus et $O_F$ et $O_P$ les effectifs observés. Calculez la statistique du Chi-deux 
+
+$$
+\chi^2 = \frac{(E_F - O_F)^2}{E_F} + \frac{(E_P - O_P)^2}{E_P} \, .
+$$
+
+3. À l'aide d'une commande R, effectuez un test du Chi-deux et calculez la $p$-valeur. 
+
+4. Commentez le résultat obtenu.
+
+
+**\textcolor{magenta}{Réponse}.** Complétez le code suivant et commentez le résultat en deux phrases.
+
+```{r, eval = FALSE}
+# Modifiez eval = FALSE en eval = TRUE
+# 1. effectifs attendus 
+E <- completer
+
+# 1. effectifs observés 
+O <- table(x) 
+
+# 2. statistique du Chi-deux
+completer
+
+# 3. Test du Chi-deux
+completer
+```
+
+
+### \textcolor{blue}{Question 10} 
+
+On révèle que le jeu de données provient en réalité de la simulation suivante :
+
+```{r, eval = TRUE}
+set.seed(2025)
+x_sim <- sample(x = c("F", "P"), 
+                size = 94, 
+                replace = TRUE, 
+                prob = c(0.4, 0.6))
+
+# Verification
+identical(x, x_sim)
+```
+
+
+1. Sachant que la probabilité réelle d’obtenir “F” est $p = 0,40$, que peut-on conclure sur les valeurs de significativité ($p$-valeurs) obtenues dans les questions précédentes ? 
+
+2. Commentez brièvement la validité de l’analyse statistique (expliquez votre réponse).
+
+**\textcolor{magenta}{Réponse}.** Pas d'indication. 
+
+ 

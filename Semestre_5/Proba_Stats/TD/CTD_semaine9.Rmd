@@ -1,0 +1,454 @@
+---
+title: "Régression linéaire"
+lang: fr
+date: "Semaine 9"
+output:
+  pdf_document:
+    toc: true
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=8, fig.height=4)
+```
+
+
+
+# Objectif
+
+
+L’objectif de cette séance est de se familiariser avec la manipulation des modèles de régression linéaire, à la fois simples et multiples.
+
+Dans une première partie, on analysera un jeu de données réelles portant sur les émissions de CO2 observées dans 169 pays, en lien avec différents facteurs démographiques et indicateurs de développement économique.
+
+La seconde partie sera consacrée à l’étude théorique d’un modèle de régression linéaire comportant deux variables explicatives, pour en dériver et interpréter les formules des coefficients de régression.
+
+
+--
+
+
+## Exercice 1. Quels facteurs démographiques ou économiques expliquent les émissions de CO2 des nations ?
+
+
+### Contexte
+
+Dans cet exercice, on cherche à étudier la relation entre les émissions de CO2 des pays et différents facteurs démographiques et économiques susceptibles de les influencer.
+
+Pour cela, on utilise le jeu de données `co2.per.capita`, qui rassemble des informations sur les émissions de CO2 par habitant (per capita) pour 169 pays à travers le monde.
+
+Les données utilisées dans cet exercice sont extraites de la base **Our World in Data** (<https://ourworldindata.org/>) qui regroupe des informations mondiales sur les émissions de CO2 et les gaz à effet de serre. Ce jeu de données inclut également des indicateurs provenant du Programme des Nations Unies pour le développement (PNUD), relatifs à la démographie et au développement économique des différents pays.
+
+
+On lit les données dans le tableau `df` de la manière suivante
+
+```{r}
+df = read.csv2("./data/co2_per_capita.csv")
+View(df)
+```
+
+Chaque ligne représente un pays. Les colonnes contiennent les variables suivantes :
+
+1.  "**country**" : Nom du pays
+
+2.  "**population**" : Taille de la population
+
+3.  "**co2.per.capita**" : Émissions annuelles de dioxyde de carbone (CO2) par habitant basées sur la production, mesurées en tonnes exprimées sur une échelle logarithmique (log10). Ce chiffre est basé sur les émissions territoriales et ne tiennent pas compte des émissions provenant des biens échangés.
+
+4.  "**gni.per.capita**" : Le revenu national brut (RNB/GNI) est la somme totale d'argent en milliards de dollars US gagnée par la population et les entreprises d'un pays divisée par le nombre d'habitants. Il est utilisé pour mesurer et suivre la richesse d'un pays d'une année sur l'autre. Ce chiffre comprend le produit intérieur brut (PIB) de la nation et les revenus qu'elle reçoit de l'étranger. Le RNB est exprimé sur une échelle logarithmique (log10).
+
+5.  "**life.expectancy**" : Espérance de vie d'un ressortissant.
+
+6.  "**hdi**" : Indice de développement humain. L'indice de développement humain (IDH/HDI) correspond à un indice calculé chaque année par le Programme des Nations unies pour le développement. L'IDH vise à évaluer le niveau de développement des pays en se fondant non pas sur des données strictement économiques, mais sur la qualité de vie de leurs ressortissants. L'indice prend en compte l'espérance de vie, le niveau d'éducation et le logarithme du revenu brut par habitant.
+
+
+ 
+
+### Question 1
+
+Représenter, à l’aide d’un diagramme en barres, les émissions de CO2 par habitant des 50 pays présentant les valeurs les plus élevées.
+
+Les pays devront être classés par ordre décroissant d’émissions, et leurs noms affichés en abscisse du graphique.
+
+
+**Solution.** 
+
+Les émissions annuelles de dioxyde de carbone par habitant sont exprimées en tonnes (les données sont en échelle logarithmique log10). Compléter le code ci-dessous (commandes utiles : `barplot`,`axis`)
+
+
+
+```{r, eval = FALSE}
+#  remplacer eval = FALSE par eval = TRUE
+## nombre de pays top émetteurs
+n_pays = 50
+
+## palette de couleur pour représenter les émissions les plus intenses en dégradé
+ma_palette <- colorRampPalette(c("red3", "lightblue")) 
+
+## trier les valeurs d'émissions des pays top émetteurs
+emission_n_pays <-  sort(remplace_moi, decreasing = TRUE)[1:n_pays]
+
+## Diagramme en barre
+barplot(emission_n_pays, 
+        col = ma_palette(n_pays),
+        space = 1,
+        las = 1,
+        main = "Emissions annuelles de CO2",
+        xlab = "",
+        ylab = "remets_l_unité_pour_voir_si_tu_lis_l_enonce.")
+
+## noms des pays sur l'axe horizontal
+axis(side = 1, at = 2*(1:n_pays) - 0.5, 
+     labels = df$country[order(remplace_moi_encore, decreasing = TRUE)[1:n_pays]],
+     tick = FALSE,
+     cex.axis = .5, las = 3)
+```
+
+### Question 2
+
+Identifier les pays dont les émissions de CO2 par habitant dépassent 15 tonnes. Les pays correspondants devront être présentés par ordre alphabétique.
+
+**Solution.**
+Compléter le code ci-dessous en précisant la condition appropriée (commande utile : `with`).
+
+```{r, eval = FALSE}
+#  remplacer eval = FALSE par eval = TRUE
+## Sélection des pays répondant à la condition
+with(df, country[condition_a_decrire])
+```
+
+
+### Question 3
+
+Identifier les pays dont les émissions de CO2 par habitant sont inférieures à 100 kg, soit 0,1 tonne.
+
+**Solution.**
+Inclure un code R permettant de sélectionner et d’afficher les pays correspondant à cette condition.
+
+
+
+### Question 4
+
+Ajuster un modèle de régression linéaire simple pour étudier la relation entre les logarithmes (log10) des émissions de CO2 par habitant (`co2.per.capita`) et du revenu national brut par habitant (`gni.per.capita`). Afficher le résumé du modèle (`summary`). À partir de ce résumé, déterminer :
+
+1. l’équation de la droite de régression estimée,
+
+2. la proportion de la variance des émissions de CO2 qui est expliquée par le revenu national brut.
+
+**Solution.** Inclure le code R et répondre clairement aux deux points ci-dessus.
+
+
+### Question 5
+
+Tracer un graphique représentant les données et la droite de régression linéaire ajustée. Ajouter une légende en haut à gauche du graphique. La légende doit indiquer l’équation de la droite de régression et 
+le coefficient de détermination du modèle.
+
+**Solution.**  Compléter le code R permettant de produire le graphique et la légende.
+
+```{r, eval = FALSE}
+#  remplacer eval = FALSE par eval = TRUE
+## commentaire 1
+plot(df[,c("gni.per.capita", "co2.per.capita")], 
+     cex = .8, col = "blue", pch = 19, las = 1,
+     xlab = "RNB par habitant (Log M USD)",
+     ylab = "C02 par habitant (Log tonne)")
+     
+## commentaire 2   
+abline(mon_modele_a_changer, col = "orange2" , lwd = 2)
+
+## commentaire 2  
+legend("topleft", col = c("orange2",NA), lty = 1, cex = .8,
+       legend = c("y = -4.24 + 1.12x", 
+                  paste("R^2 = ", 
+                        round(summary(mon_modele)$cherche_ou_est_r2, 2))))
+       )
+```
+
+### Question 6
+
+À partir du modèle de régression ajusté : 
+
+1. Calculer l’augmentation prévue des émissions de CO2 par habitant lorsque le revenu national brut par habitant augmente de 10%.
+
+2. Calculer l’effet sur les émissions de CO2 si le revenu national brut est multiplié par 10.
+
+**Solution.**  Compléter le texte suivant avec les résultats numériques. 
+
+Une augmentation de 10% du revenu national brut correspond à une augmentation de **donner le résultat en pourcentage** des émissions de CO2 par habitant. Si le revenu national brut est multiplié par 10, les émissions de CO2 sont multipliées par un facteur **donner le facteur**.
+
+
+### Question 7
+
+L’indice de développement humain (IDH/HDI) d’un pays est un indice composite qui prend en compte l’espérance de vie, le niveau d’éducation et le logarithme du revenu brut par habitant.
+
+1. Vérifier si l’IDH est fortement corrélé au logarithme du revenu brut par habitant.
+
+2. Ajuster un modèle de régression linéaire pour expliquer l’IDH à partir du logarithme du revenu brut par habitant.
+
+Interpréter l’erreur résiduelle dans ce modèle.
+
+**Solution.** Pour interpréter l’erreur résiduelle, noter que le logarithme du revenu brut par habitant apparaît à la fois dans la variable explicative et dans le calcul de l’IDH. Réfléchir donc à la part de variation de l’IDH qui n’est pas expliquée par ce logarithme.
+
+### Question 8
+
+Réfléchir aux facteurs autres que la richesse d’un pays (RNB) qui pourraient expliquer les émissions de CO2 (le RNB est la somme totale d'argent gagnée par la population et les entreprises d'un pays).  Dans le modèle qui relie le logarithme des émissions de CO2 par habitant au logarithme du revenu brut par habitant, proposer une interprétation de l’erreur résiduelle du modèle.
+
+**Solution.**  L’erreur résiduelle représente la partie de la variation des émissions de CO2 (échelle log10) qui n’est pas expliquée par le logarithme du RNB. 
+
+
+### Question 9
+
+On considère :
+
+* les résidus des émissions de CO2 (log10) expliquées par le logarithme du RNB.
+
+* les résidus de l’indice de développement humain (IDH) expliqué par le logarithme du RNB.
+
+Ajustez un modèle de régression linéaire où les émissions résiduelles (log10) sont expliquées par les indices de développement résiduels.
+
+Interpréter les résultats : ce modèle suggère-t-il que la consommation et la richesse industrielle (représentées par le RNB) sont les principaux facteurs des émissions de CO2, comparés aux efforts pour la santé ou l’éducation ? Si c’est le cas, comment cela se traduit-il en termes de significativité statistique ?
+
+**Solution.**  Pour répondre, définir clairement les variables utilisées (résidus des émissions de CO2 et résidus de l’IDH corrigé pour la richesse) et analyser le modèle.
+
+
+```{r, eval = FALSE}
+#  remplacer eval = FALSE par eval = TRUE
+residus_emission <-  mon_modele_a_changer$residuals 
+residus_hdi <-  mod_hdi$residuals
+```
+
+et ajuster le nouveau modèle 
+
+```{r, eval = FALSE}
+#  remplacer eval = FALSE par eval = TRUE
+mod_residuals <-  lm(residus_emission ~  residus_hdi)
+summary(mod_residuals)
+```
+
+
+ 
+### Question 10
+
+Observer les résultats obtenus avec le modèle suivant à deux prédicteurs :
+
+```{r}
+summary(lm(co2.per.capita ~ gni.per.capita + hdi , data = df))
+```
+
+Identifiez les points remarquables concernant les effets estimés pour chaque prédicteur et leur significativité statistique.
+
+**Solution.** Interpréter le résumé et commenter les observations pertinentes.
+
+
+
+
+
+
+
+## Exercice 2. Formules des coefficients de régression $(d = 2)$
+
+
+### Contexte 
+
+On considère le modèle
+
+$$
+Y = b_0 + b_1 X_1 + b_2 X_2 + \epsilon \, ,
+$$ 
+où $(X_1, X_2)$ sont des variables aléatoires indépendantes de $\epsilon$, mais pas nécessairement indépendantes entre elles. On note $K_{\bf x}$ la matrice de covariance du vecteur $(X_1, X_2)$, que l'on suppose de déterminant non nul. 
+
+$$
+K_{\bf x} = \left( 
+\begin{array}{cc}
+{\rm Var}(X_1) & {\rm Cov}(X_1,X_2) \\
+{\rm Cov}(X_1,X_2) & {\rm Var}(X_2) \\
+\end{array}
+\right).
+$$
+
+L'objectif de l'exercice est d'obtenir des formules mathématiques pour les coefficients de régression, similaires à celles obtenues dans le cas de la régression linéaire simple. 
+
+
+### Question 1 
+
+Dans le cas d’une régression linéaire simple, rappeler la formule permettant de calculer la pente de la droite de régression.
+
+**Solution.** Se souvenir que si le prédicteur est standardisé (écart-type égal à 1), alors la pente de la régression est égale à la covariance entre les deux variables.
+
+
+### Question 2
+Montrer que 
+
+$$
+\left( 
+\begin{array}{c}
+b_1 \\
+b_2 \\
+\end{array}
+\right) = K_{\bf x}^{-1} 
+\left( 
+\begin{array}{c}
+{\rm Cov}(Y, X_1) \\
+{\rm Cov}(Y, X_2) \\
+\end{array}
+\right)
+$$
+
+et que 
+$$
+       b_0 = \mathbb{E}[Y] - b_1\mathbb{E}[X_1] - b_2\mathbb{E}[X_2] \, .
+$$
+
+**Solution.** Pour la première équation, développer les expressions des covariances Cov$(X_1, Y)$ et Cov$(X_2,Y)$. On obtient alors un système linéaire à deux inconnues que l'on peut inverser facilement. 
+
+
+
+### Question 3
+
+On reprend les données du fichier `co2_per_capita.csv`. L’objectif est d’expliquer l’indice de développement humain (HDI/IDH) d’un pays à partir de deux variables explicatives : le revenu national brut par habitant (`gni.per.capita`, log10), et l’espérance de vie à la naissance (`life.expectancy`).
+
+À partir du modèle suivant :
+
+
+```{r}
+mod_hdi <-  lm(hdi ~ gni.per.capita  + life.expectancy, data = df)
+```
+
+Estimez les coefficients $b_1$ et $b_2$ à l’aide des valeurs empiriques correspondant à la question 2.
+
+**Solution.** Pour estimer les tailles d'effet $b_1$ et $b_2$, les fonctions utiles sont `cov`, `solve` et le produit martriciel. 
+
+
+```{r, eval = FALSE}
+# remplacer eval = FALSE par eval = TRUE
+## definition des variables
+
+## commentaire
+y <- df[,"hdi"]
+
+## commentaire
+x_1 <- df[,"gni.per.capita"]
+x_2 <-  df[,"life.expectancy"]
+x <- cbind(x_1, x_2)
+```
+
+Calculer la formule obtenue 
+
+```{r, eval = FALSE}
+# remplacer eval = FALSE par eval = TRUE
+## la formule est b = K_x^(-1) cov(y,x)
+## definition de K_x
+K_x <- cov(x)
+
+## completer en verifiant les dimensions des matrices
+## produit de 2 matrices : %*% 
+## inversion matricielle : solve()
+b <-  Kha_moins_un %*% cov_y_x
+
+b <- t(b)
+colnames(b) <- c("gni.per.capita","life.expectancy")
+b
+```
+
+
+### Question 4
+
+Vérifier les résultats obtenus en comparant les calculs avec les coefficients de régression estimés par la fonction `lm`.
+
+**Solution.** Inclure le code R correspondant.
+Utiliser la commande `coefficients(mod_hdi)` ou consulter le résumé du modèle avec `summary(mod_hdi)`.
+
+### Question 5
+
+À partir des colonnes `Estimate` et `Std. Error` du résumé du modèle, calculer les valeurs des statistiques $t$ associées aux coefficients des prédicteurs `gni.per.capita` et `life.expectancy`. 
+
+**Solution.** On peut extraire les coefficients de régression et leurs écarts-types à partir du résumé du modèle, puis calculer les $t$-scores demandés (hypothèses $b_1 = 0$ et  $b_2 = 0$).
+
+```{r, eval = FALSE}
+# remplacer eval = FALSE par eval = TRUE
+summary_tab <-  coef(summary(mod_hdi))[, c("Estimate", "Std. Error")]
+summary_tab
+```
+
+Vérification : On retrouvera cette valeur dans la colonne "t value" du résumé. 
+
+
+### Question 6
+
+Calculer la $p$-valeur du test de l'hypothèse nulle "$H_0 : b_1 = 0$" en utilisant la commande `pt`. Vérifier le résultat à l'aide du résumé du modèle.
+
+
+**Solution :** La $p$-valeur du test bilatéral correspond à
+
+$$
+p = \mathbb{P}( | T_{n-3}| > |t|) = 2   \mathbb{P}( T_{n-3} > |t|)
+$$ 
+
+où $T_{n-3}$ suit la loi de Student à $n-3$ degrés de libertés. 
+
+
+### Question 7. Test de pertinence de la régression
+
+Calculer la $p$-valeur du test de l'hypothèse nulle "$H_0 : b_1 = b_2 = 0$" en utilisant la commande `pf`. Vérifier le résultat à l'aide du résumé du modèle.
+
+**Solution :** D'après le cours, la $p$-valeur du test correspond à
+
+$$
+p = \mathbb{P}( F_{2, n-3} > f_{2, n-3}) 
+$$ 
+
+où $F_{2, n-3}$ est de loi de Fisher $F(2, n-3)$ et
+
+$$
+f_{2, n-3} = \frac{n-3}{2} \frac{R^2}{1 - R^2} = \frac{n-3}{2} \frac{{\rm TSS} - {\rm RSS}}{{\rm RSS}} \, .
+$$
+
+
+### Question 8. Interprétation du coefficient de détermination. 
+
+On considère à nouveau le modèle probabiliste de la régression multiple
+
+$$
+Y = b_0 + b_1 X_1 + b_2 X_2 + \epsilon \, ,
+$$ 
+
+où $X = (X_1, X_2)$ forme un couple de variables aléatoires indépendantes de $\epsilon$. La loi de $\epsilon$ est d'espérance nulle et de variance $\sigma^2$. 
+
+ - Déterminer l'espérance conditionnelle 
+
+$$
+Z = \mathbb{E}[Y | X] \, .
+$$
+
+Vérifier que $Z$ est constante si et seulement si $b_1 = b_2 = 0$. 
+
+
+- Montrer que la part de variance de $Y$ expliquée par $X$ vérifie 
+
+$$
+\rho^2 = \frac{\text{Var}(\mathbb{E}[Y | X])}{\text{Var}(Y)} = 1 - \frac{\sigma^2}{\text{Var}(Y)} \,.
+$$
+Vérifier que $\rho^2 = 0$ si et seulement si $b_1 = b_2 = 0$.
+
+
+**Solution :** Rappeler l'interprétation de $R^2$ lorsque $d = 1$. Remarquer que les calculs probabilistes sont très simples (la variance de $Y$ expliquée par $X$ est égale à la variance de $Y$ expliquée par $Z$).
+
+
+
+
+### Question 9. Interprétation du coefficient de détermination. 
+
+
+- Expliquer pourquoi, comme dans la régression linéaire simple, la part de variance de $Y$ expliquée par $X$ peut être estimée par le coefficient de détermination 
+
+$$
+R^2 = 1 - \frac{\text{RSS}}{\text{TSS}}  \, .
+$$
+
+- Calculer la  part de la variation de la variable `hdi` expliquée par les prédicteurs  `gni.per.capita`  et  `life.expectancy`
+
+
+
+**Solution :** Reprendre le résumé du modèle `mod_hdi`
+

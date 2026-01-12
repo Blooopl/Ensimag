@@ -1,0 +1,366 @@
+---
+title: "Séance 7 - Couples et conditionnement"
+lang: "fr"
+output:
+  html_document: 
+    toc: true
+    toc_float: true
+date: "Semaine 7"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=8, fig.height=4)
+```
+
+
+
+
+## Objectif 
+
+L' objectif est dans un premier temps de comprendre les définitions liées à la dépendance de variables aléatoires. Ensuite, il s'agit d'introduire des exemples permettant d'appréhender le lien entre les notions de corrélation et de variance expliquée (formule d'Eve).  
+
+
+
+## Exercice 1
+
+On considère un couple de variables aléatoires $(X,Y)$ tel que la loi de $X$ est la loi Gamma(2,1). Pour tout $x > 0$, la loi conditionnelle de la variable aléatoire $Y$ de sachant $X = x$ est la loi exponentielle de paramètre $x$.
+
+### Question 1
+
+Déterminer la densité de la loi du couple $(X,Y)$.
+
+**Solution.** On ne reportera que le résultat. On rappelle que la loi Gamma(2,1) admet pour densité 
+
+$$
+f_X(x) =  xe^{-x} \, , \quad x > 0 \, .
+$$
+
+### Question 2
+
+Déterminer la densité de la loi de la variable $Y$.
+
+**Solution.** On ne reportera que le résultat.
+
+
+### Question 3
+
+Vérifier le calcul précédent à l'aide de la simulation d'un échantillon de taille $n = 1000$. Afficher un graphe quantile-quantile pour vérifier que la simulation est correcte. 
+
+
+**Solution.** Pour afficher un graphe quantile-quantile, on montre d'abord que la fonction de répartition de la loi de $Y$ est égale à
+
+$$
+ \mathbb{P}( Y \leq t) = 1 - \frac{1}{(1+t)^2}  \, , \quad t  > 0 \, .
+$$ 
+Puis on inverse cette fonction, pour obtenir la fonction quantile théorique. Compléter et commenter les codes suivants.
+
+```{r}
+set.seed(10101)
+# taille de l'échantillon
+n = 200
+
+# simulation du couple (x,y)
+# loi marginale
+x = rgamma(n, 2, rate = 1)
+# loi conditionnelle
+#y = rexp_qui_que_quoi
+
+# fonction quantile
+Q_Y <- function(u){ 
+  return(la_valeur_de_la_fonction)
+}
+
+# commenter
+u = (1:n)/n
+plot(quantiles_théoriques_imhotep, sort(y), 
+     xlab = "Quantiles théoriques", 
+     ylab = "Quantiles observés", 
+     pch = 19, 
+     col = "red4", las = 1,
+     cex = .3)
+abline(0,1, col = "blue", lty = 2)
+
+```
+
+
+### Question 4 
+
+Calculer l'espérance conditionnelle $\mathbb{E}[Y|X]$.  En déduire l'espérance de la variable $Z = 1/X$ à l'aide de la formule de l'espérance totale. Vérifier le calcul par une simulation et en calculant directement $\mathbb{E}[Z]$.
+
+
+**Solution.** L'espérance de $Y$ se calcule en intégrant la fonction de survie : $S(t) = {\rm P}(Y > t)$. Pour la vérification, reprendre le code de simulation de la question précédente. Pour une vérification fiable par la méthode de Monte-Carlo, on doit considérer un grand échantillon.
+
+
+
+## Exercice 2 
+
+Une population fictive de chats domestiques contient une proportion $1 - p$ d'individus de race A (européenne, $X = 0$) et une proportion $p$ d'individus de race B (maine coon, $X = 1$). 
+
+On suppose que le poids corporel d'un animal, $Y$, peut être modélisé par une loi normale $N(m_0, \sigma^2)$ pour la race européenne et par une loi normale $N(m_1, \sigma^2)$ pour la race main coon. Pour justifier les lois normales, on suppose que les coefficients de variation rendent les valeurs négatives improbables.
+
+
+Un objectif de cet exercice est d'interpréter la variance expliquée et la variance non-expliquée en terme de variance inter-groupe et variance intra-groupe. 
+
+
+### Question 0
+
+Dans la formule de la variance totale, rappeler le terme correspondant à la variance de $Y$ expliquée par $X$ et le terme correspondant à la variance non-expliquée. 
+
+**Solution.** Reprendre le cours ou consulter la page wikipédia correspondant à la formule de la variance totale. 
+
+
+### Question 1
+
+Montrer que la loi de la variable $Y$ est une loi dont la densité est égale à
+
+$$
+p_Y(y) = (1- p) \times p_0(y) +  p \times p_1(y) \, , \quad y \in \mathbb{R} \, , 
+$$
+
+où $p_0$ est la densité de la loi normale $N(m_0, \sigma^2)$ et $p_1$ la densité de la loi normale $N(m_1, \sigma^2)$. Cette forme de loi est parfois appelée *loi de mélange* (de chats, dans ce cas).
+
+**Solution.** Utiliser la formule des probabilités totales appliquée
+à la fonction de répartition de la loi de $Y$, puis on dérive.
+
+
+### Question 2
+
+Soit $X$ une variable aléatoire de loi de Bernoulli ($X \in \{0,1\}$, $\mathbb{P}(X = 1) = p$) et $Y^*$ une variable aléatoire liée à $X$ de la manière suivante
+
+$$
+Y^* = a_0 + a_1 X + \epsilon
+$$
+où $\epsilon$ est une variable aléatoire de loi normale $N(0,\sigma^2)$ indépendante de $X$. 
+
+Calculer l'espérance conditionnelle $\mathbb{E}[Y^* | X = 0]$ et  l'espérance conditionnelle $\mathbb{E}[Y^* | X = 1]$. Sous quelles conditions, l'équation décrit-elle le même modèle que dans le début de l'énoncé.
+
+**Solution.** On rapportera uniquement les résultats et les conditions demandées.  
+
+### Question 3
+
+On dispose d'un échantillon $(y_1,\dots,y_n)$ de taille $n$ de cette population de chats pour laquelle vous connaissez la race des chats $(x_1,\dots,x_n)$.
+Proposer des estimateurs des paramètres $a_0$ et $a_1$ du modèle de la question précédente.
+
+**Solution.** On rapportera uniquement les résultats.
+
+
+### Question 4 - Variance intra-groupe
+
+Dans le modèle décrit dans l'énoncé, quel paramètre décrit la variance du poids au sein d'une race de chat ? Quelle hypothèse a-t-on fait sur cette variance ? 
+
+**Solution.** On répondra aux deux questions. 
+
+
+
+### Question 5 - Variance inter-groupe
+
+On considère une variable aléatoire $G$ égale à $m_0$ avec la probabilité $(1-p)$ et égale à $m_1$ avec la probabilité $p$.  Calculer la variance de $G$, que l'on appelle *variance inter-groupe*. Expliquer ce que signifie ce terme. 
+
+**Solution.**  Pour indication, on peut écrire
+
+$$
+G = m_0 + (m_1-m_0) X \, .
+$$ 
+Ne pas omettre l'explication.
+
+
+### Question 6
+
+Calculer la variance de $Y$. Montrer que cette variance se décompose en la somme de la variance inter-groupe et de la variance intra-groupe.  Réinterpréter le résultat en terme de variance expliquée par $X$.
+
+**Solution.** En identifiant $Y$ et $Y^*$, montrer qu'on peut écrire
+
+$$
+Y = m_0 + (m_1-m_0) X + \epsilon \, .
+$$ 
+En déduire la variance de $Y$. Bien répondre aux trois questions. 
+
+
+
+### Question 7
+
+On suppose que le poids moyen des chats européens est $m_0 = 5$kg, et que le poids moyen des chats maine coon est $m_1 = 8$kg, $\sigma = 1$kg et la proportion de maine coon est $p = 0.2$. Calculer la part de la variance du poids expliquée par la race de chat. Vérifier que cela correspond au carré du coefficient de corrélation linéaire entre $Y$ et $X$.
+
+**Solution.** D'après la question précédente, on calcule
+
+$$
+ {\rm Part~ de ~variance ~expliquée} 
+ = \frac{\mathbb{V}[G]}}{\mathbb{V}[G] + \mathbb{V}[\epsilon]}  
+ =  {\rm faire ~le ~calcul}
+$$ 
+**Rappel** : le carré du coefficient de corrélation est égal à
+
+$$
+\rho^2 = \frac{{\rm Cov}^2(X,Y)}{\mathbb{V}[Y]\mathbb{V}[X]} = {\rm calculer} \, .
+$$
+Le carré du coefficient de corrélation s'interprète donc la part de
+variation du poids dans la population expliquée par la race du chat.
+
+
+### Question 8
+
+On suppose que les paramètres de la population sont égaux à $m_0 = 5$kg, $m_1 = 8$kg, $\sigma = 1$kg et $p = 0.2$. Montrer que le code suivant simule l'échantillonnage des poids de $n = 100$ individus de la population.
+
+
+```{r}
+set.seed(1789)
+
+# taille de l'échantillon
+ n = 100
+
+# groupes/races 0 et 1
+ x = rbinom(n, 1, p = .2)
+ 
+# simulation des poids corporels
+ y = 5 + 3 * x + rnorm(n, sd = 1)
+```
+
+**Solution.** Traduire le code en langage mathématique.
+
+
+### Question 9
+
+Afficher un histogramme de l'échantillon. Afficher des boites a moustaches (`boxplot`)  séparées pour les poids des deux races. 
+
+
+
+**Solution.** L'histogramme est
+
+```{r}
+hist(remplace_moi_imhotep , col = "coral")
+```
+On peut obtenir les boxplots des sous-échantillons de la manière
+suivante
+
+```{r}
+boxplot(la_bonne_formule, 
+        col = c("palegreen", "pink2"), 
+        las = 1,
+        names = c("Européen", "Maine coon"),
+        xlab = "races")
+```
+
+
+### Question 10
+
+ On suppose que les paramètres intervenant dans ce problème sont inconnus. À partir des échantillons obtenus question 8 (`x` et `y`), estimer les paramètres $m_0$, $m_1$, $a_0$, $a_1$, ainsi que la part de variance du poids expliquée par la race du chat (commenter la valeur estimée à celle prédite théoriquement). 
+
+
+**Solution.** Compléter le bout de code en utilisant les questions précédentes.
+
+```{r}
+cat("Estimation de m_0 et a_0 : ", complete_la,"\n")
+cat("Estimation de m_1 : ", complete_ici,"\n")
+cat("Estimation de a_1 : ", complete_encore_ici ,"\n")
+```
+
+Pour calculer la variance expliquée, insère un bout de code. N'oublie pas de commenter la valeur numérique obtenue.
+
+
+### Question 11
+
+La différence entre les moyennes des deux races est elle significativement différente de zéro au seuil 1% ?
+
+**Solution.** Justifier quel test statistique doit être effectué. Insèrer un bout de code.
+
+
+
+
+## Exercice 3 
+
+Cet exercice est destiné aux plus tenaces de la semaine. On y apprend toutefois de belles choses sur les lois normales. 
+
+
+Soit $\rho \in (0,1)$. On considère un couple de variables aléatoires $(X,Y)$ de densité jointe
+
+$$
+f(x,y) = \frac{1}{2\pi\sqrt{1 - \rho^2}} \exp \left(- \frac{q(x,y)}{2(1 - \rho^2)}  \right) \, , \quad x,y \in \mathbb{R} \, ,
+$$
+où $q(x,y)$ est la forme quadratique suivante
+
+$$
+q(x,y) =  x^2 - 2\rho xy + y^2 \, .
+$$
+
+
+### Question 1 
+
+Pour tout $x,y \in \mathbb{R}$, vérifier que   
+$$
+q(x,y) =  (1-\rho^2)x^2 + (y - \rho x)^2 \, .
+$$
+En déduire la loi marginale de $X$ et la loi conditionnelle de $Y$ sachant $X = x$.
+
+
+**Solution.** On identifie les lois marginales et conditionnelles en factorisant la densité (et sa constante de normalisation).
+
+
+### Question 2
+
+Soit $\epsilon$ une variable aléatoire de loi normale $N(0, 1 - \rho^2)$ indépendante de $X$. On définit la variable $Y^*$ de la manière suivante
+
+$$
+Y^* = \rho X + \epsilon \, .
+$$ 
+Démontrer que les couples $(X,Y)$ et $(X,Y^*)$ ont même loi jointe.
+
+
+**Solution.**  Utiliser la question précédente et éviter les calculs (la solution ne demande qu'une espérance et une variance). 
+
+
+À cette occasion, on notera que les variables aléatoires sont toujours notées à l'aide d'une majuscule.
+
+
+### Question 3 
+
+En utilisant la formule de la variance totale, calculer la variance de la variable $Y$.
+
+
+**Solution.** Suivre l'indication donnée dans l'énoncé. 
+
+
+Commentaire final : Dans cette équation, la variance de $Y$ expliquée par $X$ est égale à $\rho^2$ et la variance non-expliquée est égale à $1 - \rho^2$.
+
+### Question 4 
+
+Montrer que le coefficient de corrélation linéaire des variables $X$ et $Y$ est égal à
+
+$$
+{\rm Cor}(X,Y) \equiv 
+\frac{{\rm Cov}(X,Y)}{\sqrt{\mathbb{V}[X]} \sqrt{\mathbb{V}[Y]}} 
+= \rho \, .
+$$
+**Solution.**  D'après les questions précédentes,
+
+$$
+{\rm Cor}(X,Y) = {\rm Cov}(X,Y^*) \, .
+$$ 
+
+
+### Question 5 
+
+On pose $\rho = .8$. Simuler un échantillon de taille $n = 100$ du couple $(X,Y)$. Représenter le nuage de points et la courbe de l'espérance conditionnelle $x \mapsto \mathbb{E}[Y | X = x]$ dans un graphique. Commenter.
+
+
+**Solution.** Compléter le code suivant
+
+```{r}
+rho = 0.8
+
+# taille de l'échantillon
+n = 100
+
+# loi de x
+x = rimhotep(n)
+
+# loi de y|x
+y = depend_de_x + rimhotep(n, sd = depend_pas_de_x)
+
+plot(x, y, col = "red3", pch = 19)
+
+# quelle fonction de x est affichée ci dessous 
+abline(0, rho, col = "blue")
+```
+
+N'oublie pas de commenter (ca compte des points).

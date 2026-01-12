@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap2">Chapitre 2</a> : <a href="index.html#Chap2Seance05">Séance 05</a> : <a href="s05_4.html">Calculs</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s05_4.go">s05_4.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<p>Dans cet exercice, on va utiliser des itérations pour effectuer des
+calculs mathématiques simples.</p>
+<p>Traditionnellement en programmation, les fonctions mathématiques ne
+lèvent pas d’erreurs (dans le sens du type <code>error</code> pour Go)
+lorsqu’on les appelle avec des paramètres incorrects, mais renvoie
+plutôt une valeur non significative. Vous devez bien sûr toujours
+vérifier les paramètres des fonctions que l’on vous demande d’écrire et
+renvoyer la valeur précisée dans l’énoncé en cas d’erreur.</p>
+<h3 id="somme-des-n-premiers-entiers">Somme des N premiers entiers</h3>
+<p>Écrire une fonction <code>somme(n int) int</code> qui prend en
+paramètre un entier <code>n</code> et renvoie la somme des entiers dans
+l’intervalle
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mi>.</mi><mi>.</mi><mi>n</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[0..n]</annotation></semantics></math>.
+Si <code>n</code> est négatif, la fonction doit renvoyer 0.</p>
+<p>Écrire une fonction <code>testSomme()</code> qui teste la fonction
+précédente sur tous les entiers dans
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mi>−</mi><mn>1</mn><mi>.</mi><mn>.5</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[-1..5]</annotation></semantics></math>.</p>
+<h3 id="factorielle">Factorielle</h3>
+<p>Écrire une fonction <code>fact(n uint) uint</code> qui calcule
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>!</mi></mrow><annotation encoding="application/x-tex">n!</annotation></semantics></math>.
+La fonction doit être écrite avec une boucle, donc <strong>ne pas être
+une fonction récursive</strong>.</p>
+<p>Écrire une fonction <code>testFact</code> qui teste la fonction
+<code>fact</code> sur tous les entiers dans
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mi>.</mi><mn>.5</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[0..5]</annotation></semantics></math>.</p>
+<h3 id="plus-grand-commun-diviseur">Plus Grand Commun Diviseur</h3>
+<p>Écrire une fonction <code>pgcd(a, b uint) int</code> qui calcule le
+PGCD des deux paramètres, en utilisant l’algorithme d’Euclide (<a
+href="https://fr.wikipedia.org/wiki/Euclide">page Wikipédia</a>) par
+soustractions successives que l’on décrit informellement ci-dessous.
+Cette fonction renvoie un entier signé, car on posera par convention
+qu’elle renvoie -1 si au moins un des deux paramètres est nul.</p>
+<p>L’algorithme d’Euclide consiste à soustraire <code>a</code> de
+<code>b</code> ssi <code>b</code> est supérieur à <code>a</code>, ou
+réciproquement <code>b</code> de <code>a</code> ssi <code>a</code> est
+supérieur à <code>b</code>, à chaque tour de boucle, tant que
+<code>a</code> est différent de <code>b</code>. À la fin de la boucle
+<code>a</code> et <code>b</code> contiennent la valeur du PGCD.</p>
+<p>Écrire une fonction <code>testPGCD</code> qui teste la fonction
+<code>pgcd</code> sur des valeurs intéressantes (notamment zéro, pour
+vérifier que la gestion d’erreur est correcte).</p>
+<h3 id="racine-carrée">Racine carrée</h3>
+<p>Écrire une fonction <code>racine(x float64) float64</code> qui
+calcule une approximation de
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msqrt><mi>x</mi></msqrt><annotation encoding="application/x-tex">\sqrt  x</annotation></semantics></math>,
+en utilisant la méthode de Héron d’Alexandrie (<a
+href="https://fr.wikipedia.org/wiki/Héron_d%27Alexandrie">page
+Wikipédia</a>) décrite informellement ci-dessous. Cette fonction
+renverra la valeur spéciale <em>Not a Number</em> ssi <code>x</code> est
+négatif : on peut obtenir cette valeur spéciale en appelant la fonction
+<code>math.NaN()</code> (<a
+href="https://pkg.go.dev/math#NaN">documentation</a>).</p>
+<p>La méthode de Héron est basée sur le calcul d’approximations de plus
+en plus précises au fur et à mesure des itérations. Ainsi, si on pose
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mn>0</mn></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">r_0 = 1</annotation></semantics></math>,
+on calculera la nouvelle approximation de la racine
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">r_{i+1}</annotation></semantics></math>
+grâce à la formule</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mfrac><mrow><msub><mi>r</mi><mi>i</mi></msub><mo>+</mo><mfrac><mi>x</mi><msub><mi>r</mi><mi>i</mi></msub></mfrac></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">r_{i+1} = \frac{r_i + \frac{x}{r_i}}{2}</annotation></semantics></math></p>
+<p>On pourra fixer le nombre d’itérations à 10 pour obtenir de bons
+résultats : n’hésitez pas à afficher les valeurs de
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mi>i</mi></msub><annotation encoding="application/x-tex">r_i</annotation></semantics></math>
+au fur et à mesure pour voir le résultat s’affiner.</p>
+<p>Écrire une fonction <code>testRacine()</code> qui calcule la racine
+carrée de tous les entiers dans
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mi>−</mi><mn>1</mn><mi>.</mi><mn>.9</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[-1..9]</annotation></semantics></math>,
+en affichant le résultat à côté de celui obtenu en appelant la fonction
+<code>math.Sqrt</code> (<a
+href="https://pkg.go.dev/math#Sqrt">documentation</a>) fournie par
+Go.</p>
+<figure>
+<img src="s05_4_heron.jpg"
+title="TODO: arrêter de cacher des commentaires débiles dans les photos"
+alt="Ceci n’est pas Héron d’Alexandrie" />
+<figcaption aria-hidden="true">Ceci n’est pas Héron
+d’Alexandrie</figcaption>
+</figure>
+
+</main>
+<div><br></div>
+</body>
+</html>

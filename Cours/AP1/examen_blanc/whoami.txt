@@ -1,5 +1,0 @@
-# generated on 2025-10-15 10:15:51
-Firstname: Bastien
-Lastname: Pichet
-Login: pichetb
-Ensipc: ensipc320

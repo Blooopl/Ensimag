@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap1">Chapitre 1</a> : <a href="index.html#Chap1Seance02">Séance 02</a> : <a href="s02_1.html">Entrées-sorties</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s02_1.go">s02_1.go</a>
+</div>
+<h2 id="entrées-sorties">Entrées-sorties</h2>
+<p>On rappelle que vous devez systématiquement créer un répertoire dédié
+pour chaque exercice.</p>
+<p>On vous recommande d’implanter les réponses aux questions dans le
+même fichier <code>age_du_capitaine.go</code> en commentant (pour les
+conserver) les réponses aux questions précédentes.</p>
+<h3 id="flux-dentrées-et-sorties-standards">Flux d’entrées et sorties
+standards</h3>
+<p>Les systèmes Unix utilisent traditionnellement trois flux d’entrées
+et de sorties pour permettre à l’utilisateur d’interagir avec le
+programme :</p>
+<ol start="0" type="1">
+<li><code>stdin</code> (en Go : <code>os.Stdin</code>) correspond au
+flux d’entrée standard, par défaut ce que l’utilisateur tape au clavier
+;</li>
+<li><code>stdout</code> (en Go : <code>os.Stdout</code>) correspond au
+flux de sortie standard, par défaut ce que le programme affiche dans le
+terminal ;</li>
+<li><code>stderr</code> (en Go : <code>os.Stderr</code>) correspond au
+flux d’erreur standard, c’est également un flux de sortie qui sert à
+dissocier les traces prévues dans le code d’un programme d’éventuels
+messages d’erreur.</li>
+</ol>
+<p>Lorsque l’on utilise la fonction <code>fmt.Println</code> (<a
+href="https://pkg.go.dev/fmt#Println">documentation</a>) pour produire
+une trace, elle affiche par défaut sur <code>stdout</code> sans qu’on
+ait besoin de le préciser. Si on veut être explicite ou afficher une
+erreur sur <code>stderr</code>, il faut utiliser la fonction
+<code>fmt.Fprintln</code> (<a
+href="https://pkg.go.dev/fmt#Fprintln">documentation</a>) qui fonctionne
+de façon très similaire à <code>fmt.Println</code>, mais prend en
+premier paramètre le flux de sortie souhaité. Par exemple,
+<code>fmt.Fprintln(os.Stdout, "Bonjour Toto")</code> produira le même
+affichage que <code>fmt.Println("Bonjour Toto")</code>, et
+<code>fmt.Fprintln(os.Stderr, "Toto a fait une erreur !")</code>
+affichera le message d’erreur sur <code>stderr</code>.</p>
+<p>On peut se demander l’intérêt d’avoir deux flux de sortie s’ils
+affichent finalement tous les deux dans le terminal. Cette dissociation
+prend son sens quand on souhaite rediriger les flux de sortie dans des
+fichiers, via les redirections Unix que l’on a déjà utilisé.</p>
+<p>Écrire un programme Go <code>age_du_capitaine.go</code> qui affiche «
+J’écris sur stdout. » sur stdout puis « J’écris sur stderr. » sur
+stderr. Exécuter ce programme directement avec
+<code>go run age_du_capitaine.go</code> : on voit bien les deux traces
+successives dans le terminal.</p>
+<p>Exécuter maintenant le même programme en redirigeant la sortie
+standard dans le fichier <code>out.txt</code> via la commande
+<code>go run age_du_capitaine.go &gt; out.txt</code>. Qu’observez-vous
+dans le terminal et en regardant le contenu du fichier
+<code>out.txt</code> avec VSCode ou <code>cat</code> ? Refaire la même
+manipulation pour rediriger cette fois-ci <code>stderr</code> vers un
+fichier <code>err.txt</code>, en utilisant l’opérateur de redirection
+<code>2&gt;</code> au lieu de <code>&gt;</code>. Refaire enfin la même
+manipulation en redirigeant les deux flux de sorties vers un fichier
+<code>les_deux.txt</code> en utilisant l’opérateur
+<code>&amp;&gt;</code> dont c’est justement le rôle.</p>
+<h3 id="lâge-du-capitaine">L’âge du capitaine</h3>
+<p>À nouveau, pour cet exercice, on utilisera plusieurs versions
+différentes : on vous recommande d’implanter les différentes versions
+dans des fonctions séparées que vous pourrez appeler ensuite dans la
+fonction <code>main</code>.</p>
+<p>On va écrire maintenant un programme Go qui demande à l’utilisateur
+son nom et son année de naissance et calcule son âge.</p>
+<p>Un peu comme ci-dessus pour les sorties, il existe plusieurs façons
+de lire sur <code>stdin</code> : on choisit de présenter celle qui
+paraît la plus simple à utiliser, en donnant le petit bout de code
+commenté ci-dessous à lire attentivement pour bien comprendre comme il
+fonctionne :</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Exemple de scanner</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Print fonctionne comme Println mais sans aller a la ligne a la fin</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        fmt<span class="op">.</span>Print<span class="op">(</span><span class="st">&quot;Entrez votre nom : &quot;</span><span class="op">)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        <span class="co">// La fonction NewScanner cree un scanner, c&#39;est a dire un objet fourni par Go</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">//   et qui permet de lire du texte aussi bien dans un fichier qu&#39;au clavier.</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Elle prend en parametre la source des donnees, ici stdin pour lire au clavier.</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Elle renvoie un object de type scanner qu&#39;on va utiliser ensuite pour faire les</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        <span class="co">//   lectures.</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        lecteur <span class="op">:=</span> bufio<span class="op">.</span>NewScanner<span class="op">(</span>os<span class="op">.</span>Stdin<span class="op">)</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">// La methode Scan appelée directement sur la variable lecteur effectue la lecture et stocke</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="co">//   la chaine de caracteres lue dans une variable interne.</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        lecteur<span class="op">.</span>Scan<span class="op">()</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="co">// On peut recuperer la chaine lue precedement en appelant la methode Text qui la renvoie</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="co">//   pour qu&#39;on puisse la stocker dans une variable de notre programme.</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        nom <span class="op">:=</span> lecteur<span class="op">.</span>Text<span class="op">()</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        fmt<span class="op">.</span>Println<span class="op">(</span><span class="st">&quot;Bonjour&quot;</span><span class="op">,</span> nom<span class="op">,</span> <span class="st">&quot;!&quot;</span><span class="op">)</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        fmt<span class="op">.</span>Print<span class="op">(</span><span class="st">&quot;Entrez maintenant votre couleur preferee : &quot;</span><span class="op">)</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Si on veut lire une nouvelle chaine, il faut rappeler Scan (mais pas NewScanner !)</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        lecteur<span class="op">.</span>Scan<span class="op">()</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Puis de nouveau appeler Text pour recuperer la chaine</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        coul <span class="op">:=</span> lecteur<span class="op">.</span>Text<span class="op">()</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        fmt<span class="op">.</span>Println<span class="op">(</span><span class="st">&quot;Le&quot;</span><span class="op">,</span> coul<span class="op">,</span> <span class="st">&quot;est une tres jolie couleur !&quot;</span><span class="op">)</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Toutes les fonctions utilisées sont détaillées dans la <a
+href="https://pkg.go.dev/bufio#Scanner">documentation du type
+<code>Scanner</code></a>.</p>
+<p>Vous noterez que les fonctions <code>Scan</code> et <code>Text</code>
+présentées dans cet exemple semblent un peu particulières, car elles ne
+sont pas appelées en les préfixant par le nom du <em>package</em>
+<code>bufio</code> dans lequel elles sont définies, mais par l’objet
+<code>lecteur</code> renvoyé par <code>NewScanner</code>. On parle dans
+ce cas de <strong>méthodes</strong> et on vous en dira beaucoup plus à
+ce sujet en 2A : dans le cadre de notre cours, ça ne change en fait rien
+du tout.</p>
+<p>En vous inspirant de l’exemple ci-dessus, écrivez une fonction qui
+demande à l’utilisateur son nom puis son année de naissance, et affiche
+son âge (approximatif, on ne tiendra pas compte du jour et du mois de
+naissance) en fonction de l’année courante qu’on stockera dans une
+constante pour pouvoir la changer facilement chaque année !</p>
+<p>Vous aurez besoin pour cela de la fonction <code>Atoi</code> (<a
+href="https://pkg.go.dev/strconv#Atoi">documentation</a>) qui permet de
+convertir une chaîne de caractères en entier.</p>
+<p>Dans une première version de votre code, vous ignorerez le fait que
+<code>Atoi</code> peut renvoyer une erreur, en affectant l’erreur
+renvoyée à l’identifiant anonyme <code>_</code>.</p>
+<p>Tester votre programme en entrant d’abord une année valide, puis dans
+un deuxième temps une chaîne de caractères ne représentant pas un
+entier, pour voir ce qui se passe dans ce cas.</p>
+<p>Dans une deuxième version, vous gérerez l’erreur en affichant un
+message approprié sur <code>stderr</code> et en tuant le programme à
+l’aide de la fonction <code>os.Exit</code> (<a
+href="https://pkg.go.dev/os#Exit">documentation</a>). Pour détecter
+l’erreur, il faut tester si l’erreur (type en Go : <code>error</code>)
+potentiellement renvoyée par <code>Atoi</code> n’est pas nulle
+(<code>nil</code> en Go) comme indiquée dans la documentation.</p>
+<p>Enfin, vous implanterez une troisième version qui utilise la fonction
+<code>log.Fatal</code> (<a
+href="https://pkg.go.dev/log#Fatal">documentation</a>) pour gérer
+l’erreur sans avoir à écrire vous-même le message et la terminaison du
+programme.</p>
+<p>Vous remarquerez que par défaut, cette fonction <code>Fatal</code>
+n’affiche pas le nom du fichier, ni le numéro de la ligne où se produit
+l’erreur, ce qui pourrait faciliter la mise au point. Il est néanmoins
+facile d’obtenir ces informations en ajoutant la ligne
+<code>log.SetFlags(log.Flags() | log.Lshortfile)</code> avant l’appel à
+<code>Fatal</code>, comme détaillé dans la <a
+href="https://pkg.go.dev/log">documentation du module
+<code>log</code></a>.</p>
+<p>Pour rappel, on vous recommande d’implanter les différentes versions
+dans des fonctions séparées que vous pourrez appeler ensuite dans la
+fonction <code>main</code>.</p>
+
+</main>
+<div><br></div>
+</body>
+</html>

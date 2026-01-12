@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap1">Chapitre 1</a> : <a href="index.html#Chap1Seance04">Séance 04</a> : <a href="s04_1.html">Logo</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s04_1_logo.go">s04_1_logo.go</a> <a href="s04_1_test_logo.go">s04_1_test_logo.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<p>Dans cet exercice, nous allons jouer avec un très vieux langage de
+programmation que tous les écoliers des années 80 ont bien connu : le
+LOGO (<a href="https://fr.wikipedia.org/wiki/Logo_%28langage%29">page
+Wikipédia</a>).</p>
+<figure>
+<img src="s04_1_logo.jpg" title="LOGO" alt="LOGO" />
+<figcaption aria-hidden="true">LOGO</figcaption>
+</figure>
+<p>Ce langage, qui existe dans de très nombreuses versions différentes,
+permet de produire facilement des petits dessins vectoriels en utilisant
+la métaphore d’une tortue tenant un crayon dans sa bouche, pouvant
+baisser ou lever ce crayon, tourner à gauche ou à droite d’un angle
+donné, et avancer d’une distance donnée : si le crayon est baissé quand
+la tortue avance alors elle trace un trait, sinon elle ne fait que se
+déplacer.</p>
+<p>L’animation ci-dessous illustre l’exécution d’une version purement
+textuelle du LOGO où <code>F</code> voulait dire <code>avancer</code>
+(d’une distance visiblement fixe), <code>+</code> tourner à gauche (d’un
+angle fixe) et <code>-</code> tourner à droite.</p>
+<figure>
+<img src="s04_1_logo.gif" title="Exemple de programme LOGO"
+alt="Exemple de programme LOGO" />
+<figcaption aria-hidden="true">Exemple de programme LOGO</figcaption>
+</figure>
+<p>On va réutiliser le fichier SVG vu précédemment pour générer les
+dessins. Comme tous les fichiers <code>.go</code> composant un programme
+Go doivent être dans le même répertoire, une solution simple serait de
+recopier le fichier <code>svg.go</code> dans le répertoire courant : ce
+n’est pas une bonne idée de dupliquer des fichiers identiques, car cela
+gâche de l’espace disque.</p>
+<p>La bonne solution sous Unix est d’utiliser un lien symbolique (<a
+href="https://fr.wikipedia.org/wiki/Lien_symbolique">page
+Wikipédia</a>). Par exemple, si le fichier <code>svg.go</code> est dans
+le répertoire <code>../TP_SVG/</code>, il suffit de taper dans le
+terminal : <code>ln -s ../TP_SVG/svg.go</code> pour créer un lien
+symbolique que l’on peut visualiser en exécutant <code>ls -al</code> :
+le lien s’affiche sous la forme
+<code>svg.go -&gt; ../TP_SVG/svg.go</code>. Une fois le lien créé, toute
+lecture ou modification de <code>svg.go</code> depuis le répertoire
+courant sera appliquée au fichier original de façon transparente.</p>
+<p>Écrire un fichier <code>logo.go</code> contenant :</p>
+<ol type="1">
+<li>une variable globale <code>positionTortue</code> de type
+<code>pointSVG</code> initialisée à <code>{0, 0}</code> ;</li>
+<li>une variable globale <code>angleTortue</code> de type flottant sur
+64 bits et initialisée à <code>90.0</code>.</li>
+<li>une variable globale <code>crayonEnBas</code> de type booléen
+initialisée à <code>false</code> ;</li>
+</ol>
+<p>Ces variables vont représenter l’état interne de notre programme
+:</p>
+<ol type="1">
+<li>où se situe la tortue dans le repère orthonormé dont l’origine (0,
+0) est positionnée « en haut à gauche » de l’image, ce qui implique que
+<strong>les ordonnées sont croissantes vers le bas</strong> ;</li>
+<li>dans quelle direction regarde la tortue, c’est-à-dire son angle
+actuel dans le sens trigonométrique habituel (inverse des aiguilles
+d’une montre) ;</li>
+<li>est-ce que la tortue va écrire quand on l’avance, ou simplement se
+déplacer.</li>
+</ol>
+<p>On rappelle qu’on ne peut pas utiliser la syntaxe condensée avec
+<code>:=</code> quand on déclare des variables globales, on doit
+utiliser la syntaxe avec le mot-clé <code>var</code>. Par exemple :
+<code>var angleTortue float64 = 90.0</code> ou pour une structure
+<code>var positionTortue = pointSVG{0, 0}</code> (qui est une façon
+condensée d’écrire
+<code>var positionTortue pointSVG = pointSVG{0, 0}</code> pour ceux qui
+se poseraient la question).</p>
+<p>Compléter ce fichier en implantant les fonctions suivantes :</p>
+<ul>
+<li><code>avanceTortue(distance float64)</code> : cette fonction fait
+avancer la tortue en ligne droite du nombre de points passé en paramètre
+: elle doit donc mettre à jour <code>positionTortue</code>. Cette
+fonction doit également tracer un trait si le crayon est baissé au
+moment où l’on avance ;</li>
+<li><code>tourneTortueGauche(deltaAngle float64)</code> : cette fonction
+fait tourner la tortue vers la gauche (c’est-à-dire dans le sens
+trigonométrique) de l’angle passé en paramètre et exprimé en degrés :
+elle doit donc mettre à jour <code>angleTortue</code> ;</li>
+<li><code>tourneTortueDroite(deltaAngle float64)</code> : comme la
+précédente, mais dans l’autre sens ;</li>
+<li><code>baisseCrayon()</code> et <code>leveCrayon()</code> : ces
+fonctions affectent le booléen <code>crayonEnBas</code> avec la valeur
+appropriée.</li>
+</ul>
+<p>On aura surement besoin des fonctions <code>math.Cos</code> (<a
+href="https://pkg.go.dev/math#Cos">documentation</a>),
+<code>math.Sin</code> (<a
+href="https://pkg.go.dev/math#Sin">documentation</a>) ainsi que de la
+constante <code>math.Pi</code> (<a
+href="https://pkg.go.dev/math#Pi">documentation</a>) pour écrire
+<code>avanceTortue</code>, et on notera que <strong>sinus et cosinus
+attendent des paramètres exprimés en radians</strong>. On rappelle que
+:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>α</mi><mrow><mi>r</mi><mi>a</mi><mi>d</mi></mrow></msub><mo>=</mo><mfrac><mrow><msub><mi>α</mi><mrow><mi>d</mi><mi>e</mi><mi>g</mi></mrow></msub><mo>×</mo><mi>π</mi></mrow><mn>180</mn></mfrac></mrow><annotation encoding="application/x-tex">
+\alpha_{rad} = \frac{\alpha_{deg}\times\pi}{180}
+</annotation></semantics></math></p>
+<p>Écrire maintenant un fichier <code>test_logo.go</code> contenant la
+fonction <code>main</code> qui va permettre de tester les fonctions
+précédentes en générant des petits dessins SVG en utilisant la tortue
+dessinatrice. Vous créerez une fonction séparée pour chaque test. Pour
+vous aider, on vous donne la fonction générant le premier dessin :</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> trait<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>debutImageSVG<span class="op">(</span><span class="dv">100</span><span class="op">,</span> <span class="dv">100</span><span class="op">))</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>debutGroupeSVG<span class="op">(</span><span class="st">&quot;black&quot;</span><span class="op">,</span> <span class="st">&quot;white&quot;</span><span class="op">,</span> <span class="dv">3</span><span class="op">))</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    tourneTortueDroite<span class="op">(</span><span class="dv">135</span><span class="op">)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    baisseCrayon<span class="op">()</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    avanceTortue<span class="op">(</span>math<span class="op">.</span>Sqrt2 <span class="op">*</span> <span class="fl">100.0</span><span class="op">)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>finGroupeSVG<span class="op">())</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>finImageSVG<span class="op">())</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Images SVG à produire (ou du moins pour la dernière, quelque chose
+qui y ressemble) :</p>
+<style>
+    img {background-color: #FFFFFF;}
+</style>
+<p><img src="s04_1_trait.svg" title="Trait" alt="Trait" /> <img
+src="s04_1_carre.svg" title="Carré" alt="Carré" /> <img
+src="s04_1_triangle.svg" title="Triangle" alt="Triangle" /> <img
+src="s04_1_etoile.svg" title="Étoile" alt="Étoile" /> <img
+src="s04_1_smiley.svg" title="Smiley" alt="Smiley" /></p>
+
+</main>
+<div><br></div>
+</body>
+</html>

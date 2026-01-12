@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap3">Chapitre 3</a> : <a href="index.html#Chap3Seance20">Séance 20</a> : <a href="s20_1.html">Examen de 2023-24 - exercice 1</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s20_1_tab.go">s20_1_tab.go</a> <a href="s20_1_liste.go">s20_1_liste.go</a>
+</div>
+<h2 id="le-tri-du-cocktail-shaker-10-pts">Le tri du cocktail shaker (10
+pts)</h2>
+<h3 id="consignes-générales-pour-lexercice">Consignes générales pour
+l’exercice</h3>
+<p>On va implanter dans cet exercice l’algorithme préféré de James Bond
+: le tri du <em>cocktail shaker</em>.</p>
+<p>Si on suppose qu’on veut trier un tableau d’entiers par ordre
+croissant, le principe de cet algorithme peut être résumé simplement
+comme suit.</p>
+<ol type="1">
+<li>On parcourt le tableau de la première à la dernière case, en
+échangeant deux à deux les cases qui ne sont pas dans le bon ordre
+(croissant) : dit autrement, si <code>tab[i] &gt; tab[i+1]</code> alors
+on échange <code>tab[i]</code> et <code>tab[i+1]</code> ;</li>
+<li>une fois arrivé à la fin du tableau, si aucun échange n’a eu lieu
+pendant le parcours précédent, alors le tableau est trié donc la
+fonction est terminée ;</li>
+<li>sinon, on re-parcourt le tableau cette fois-ci en sens inverse, en
+partant de la fin pour remonter vers le début, en échangeant là-aussi
+les cases consécutives qui ne sont pas dans l’ordre croissant ;
+précision : consécutives veut dire qu’on compare bien
+<code>tab[i]</code> et <code>tab[i+1]</code> (pas <code>tab[i-1]</code>)
+;</li>
+<li>une fois revenu au début du tableau, si aucun échange n’a eu lieu
+pendant le parcours précédent, alors le tableau est trié donc la
+fonction est terminée ;</li>
+<li>sinon, on repart à l’étape 1 pour re-parcourir le tableau du début à
+la fin, et ainsi de suite.</li>
+</ol>
+<p>On fournit trois fichiers pour cet exercice :</p>
+<ul>
+<li><a href="cocktail_tab.go">cocktail_tab.go</a> contient la version
+tableau du tri ;</li>
+<li><a href="cocktail_liste.go">cocktail_liste.go</a> contient la
+version liste chaînée du tri ;</li>
+<li><a href="cocktail.go">cocktail.go</a> contient le programme
+principal et des tests, vous n’avez pas besoin de le modifier.</li>
+</ul>
+<p>Si vous appelez le programme simplement sans paramètre
+(<code>go run cocktail*.go</code>), il lancera une série de tests sur
+des tableaux et listes de petites tailles pour vous aider à repérer
+visuellement vos erreurs.</p>
+<p>Si vous appelez le programme avec l’option <code>--brut</code>
+(<code>go run cocktail*.go --brut</code>), il lancera des tests bruts
+sur beaucoup de tableaux et de listes de plus grandes tailles, pour vous
+convaincre que vos fonctions sont correctes.</p>
+<p>On va implanter cet algorithme d’abord avec des tableaux puis avec
+des listes doublement chaînées.</p>
+<h3 id="implantation-avec-des-tableaux">Implantation avec des
+tableaux</h3>
+<p>Toutes les fonctions demandées dans cette partie doivent être
+complétées dans le fichier <code>cocktail_tab.go</code>.</p>
+<p>On fournit dans ce fichier une fonction <code>initTab</code> qui
+initialise un tableau d’entiers d’une taille donnée en le remplissant
+avec des chiffres aléatoires, vous n’avez pas besoin de modifier cette
+fonction.</p>
+<h4 id="question-1-3-pts">Question 1 <em>(3 pts)</em></h4>
+<p>Complétez la fonction
+<code>parcourirEchangerTab(tab []int, inv bool) bool</code> qui prend en
+paramètre le tableau d’entiers <code>tab</code> qu’on veut parcourir,
+ainsi qu’un booléen <code>inv</code> qui vaut <code>true</code> ssi on
+veut parcourir le tableau en « sens inverse » (c’est-à-dire en partant
+de la fin et en remontant vers le début).</p>
+<p>Cette fonction doit parcourir le tableau case par case dans le sens
+dépendant de <code>inv</code> et échanger deux à deux les éléments
+consécutifs qui ne sont pas par ordre croissant.</p>
+<p>Elle renvoie un booléen valant <code>true</code> ssi il y a eu au
+moins un échange pendant le parcours.</p>
+<h4 id="question-2-2-pts">Question 2 <em>(2 pts)</em></h4>
+<p>Compléter la fonction <code>trierTab(tab []int)</code> qui prend en
+paramètre le tableau d’entiers à trier.</p>
+<p>Cette fonction doit appeler <code>parcourirEchangerTab</code> tant
+qu’il y a eu au moins un échange lors du parcours.</p>
+<p>Cette fonction n’a aucun effet si le tableau contient moins de 2
+éléments.</p>
+<p>On doit alterner le sens du parcours à chaque appel en passant la
+valeur appropriée pour <code>inv</code>.</p>
+<p>La fonction doit s’arrêter dès qu’un parcours n’a donné lieu à aucun
+échange.</p>
+<h3 id="implantation-avec-des-listes-chaînées">Implantation avec des
+listes chaînées</h3>
+<p>On va maintenant implanter exactement le même tri sur des listes
+doublement chaînées d’entiers à la place des tableaux d’entiers.</p>
+<p>Toutes les fonctions demandées dans cette partie doivent être
+complétées dans le fichier <code>cocktail_liste.go</code>.</p>
+<p>On définit dans ce fichier le type <code>cellule</code> comme suit
+:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> cellule <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    val  <span class="dt">int</span>           <span class="co">// une cellule contient une valeur entière</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    prec <span class="op">*</span>cellule      <span class="co">// ainsi qu&#39;un pointeur vers la cellulle précédente</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    suiv <span class="op">*</span>cellule      <span class="co">// et un pointeur vers la cellule suivante</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Ensuite, on définit le type <code>liste</code> comme une structure
+contenant deux pointeurs :</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> liste <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    tete  <span class="op">*</span>cellule    <span class="co">// pointeur vers l&#39;élément fictif en tête</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    queue <span class="op">*</span>cellule    <span class="co">// pointeur vers l&#39;élément fictif en queue</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Chaque liste sera donc équipée d’un élément fictif (sentinelle) en
+tête et d’un élément fictif en queue : <strong>vous ne devez jamais
+accéder ni à <code>liste.tete.val</code> ni à
+<code>liste.queue.val</code> dans les fonctions qu’on vous demande
+d’écrire</strong>, mais toujours comparer les pointeurs avec
+<code>liste.tete</code> et <code>liste.queue</code> pour savoir si vous
+êtes au bout de la liste.</p>
+<p>On peut donc représenter une liste doublement chaînée par le schéma
+suivant :</p>
+<p><img src="s20_1_liste.svg" alt="s20_1_liste.svg" /> (où Ø symbolise
+la « valeur » <code>nil</code>).</p>
+<p>On donne une fonction <code>initListe</code> qui crée une liste
+doublement chaînée vide, c’est-à-dire avec uniquement les éléments
+fictifs en tête et en queue, qui sont chaînés entre eux.</p>
+<p>On fournit également une fonction <code>remplirListe</code> qui prend
+en paramètre une liste vide et un tableau contenant des entiers et qui
+remplit la liste avec les mêmes valeurs dans le même ordre : par
+exemple, le schéma ci-dessus représente une liste complétée après avoir
+appelé <code>remplirListe</code> avec le tableau
+<code>[3, 1, 4, 2, 7]</code> comme paramètre.</p>
+<p>On donne aussi une fonction <code>afficherListe</code> qui affiche le
+contenu de la liste sous le format
+<code>T &lt;-&gt; 3 &lt;-&gt; 1 &lt;-&gt; 4 &lt;-&gt; 2 &lt;-&gt; 7 &lt;-&gt; Q</code>,
+où <code>T</code> et <code>Q</code> représentent les éléments fictifs en
+tête et en queue.</p>
+<p>On fournit enfin une fonction
+<code>echangerCellules(cell *cellule) *cellule</code> dont le but est
+d’échanger la cellule <code>cell</code> avec sa suivante
+<code>cell.suiv</code>, par modification des chaînages (donc sans
+toucher aux valeurs), et qui renvoie un pointeur vers la « nouvelle »
+cellule <code>cell</code> (pour être plus clair : vers la cellule qui
+était <code>cell.suiv</code> au début de la fonction).</p>
+<p>On considère comme prérequis que <code>cell</code> et
+<code>cell.suiv</code> sont des cellules significatives (c’est-à-dire
+pas les éléments fictifs en tête et en queue).</p>
+<p>Par exemple, si on appelle <code>echangerCellules(cell)</code> avec
+<code>cell</code> pointant sur la cellule contenant la valeur 4 dans la
+liste exemple ci-dessous :</p>
+<p><img src="s20_1_liste_avant_echange.svg"
+alt="s20_1_liste_avant_echange.svg" /> (où Ø symbolise la « valeur »
+<code>nil</code>).</p>
+<p>Alors, après l’exécution de la fonction, on a échangé les cellules
+contenant 4 et 2, et on renvoie une référence vers la cellule contenant
+2, comme illustré dans la figure ci-dessous :</p>
+<p><img src="s20_1_liste_apres_echange.svg"
+alt="s20_1_liste_apres_echange.svg" /> (où Ø symbolise la « valeur »
+<code>nil</code>).</p>
+<h4 id="question-3-1-pt">Question 3 <em>(1 pt)</em></h4>
+<p>Compléter la fonction
+<code>listeVideOuSingleton(ldc liste) bool</code> qui renvoie
+<code>true</code> ssi la liste ne contient aucun ou qu’un seul élément
+significatif (c’est-à-dire sans compter les éléments fictifs en tête et
+queue).</p>
+<h4 id="question-4-3-pts">Question 4 <em>(3 pts)</em></h4>
+<p>Compléter la fonction
+<code>parcourirEchangerListe(ldc liste, inv bool) bool</code> qui prend
+en paramètre une liste et un booléen <code>inv</code> qui vaut
+<code>true</code> ssi on veut parcourir la liste en « sens inverse »
+(c’est-à-dire en partant de la queue et en remontant vers la tête).</p>
+<p>Cette fonction doit parcourir la liste cellule par cellule dans le
+sens dépendant de <code>inv</code> et échanger deux à deux les cellules
+consécutives qui ne sont pas par ordre croissant. On utilisera
+évidemment la fonction <code>echangerCellules</code> de la question
+précédente pour échanger des cellules <strong>par modification des
+chaînages, sans changer les valeurs</strong>.</p>
+<p>Elle renvoie un booléen valant <code>True</code> ssi il y a eu au
+moins un échange pendant le parcours.</p>
+<h4 id="question-5-1-pt">Question 5 <em>(1 pt)</em></h4>
+<p>Compléter la fonction <code>trierListe(ldc liste)</code> qui doit
+trier la liste en appelant la fonction
+<code>parcourirEchangerListe</code> de la question précédente tant qu’il
+y a eu au moins un échange lors du parcours.</p>
+<p>Cette fonction n’a aucun effet si la liste contient moins de 2
+éléments.</p>
+<p>On doit alterner le sens du parcours à chaque appel en passant la
+valeur appropriée pour <code>inv</code>.</p>
+<p>La fonction doit s’arrêter dès qu’un parcours n’a donné lieu à aucun
+échange.</p>
+
+</main>
+<div><br></div>
+</body>
+</html>

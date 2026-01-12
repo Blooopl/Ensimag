@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap1">Chapitre 1</a> : <a href="index.html#Chap1Seance02">Séance 02</a> : <a href="s02_2.html">Structures</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s02_2.go">s02_2.go</a>
+</div>
+<h2 id="soyons-structurés">Soyons structurés</h2>
+<p>On va utiliser dans cet exercice un modèle de structures de données
+classiques typiquement appelé simplement : structure (mot clé
+<code>struct</code> en Go).</p>
+<p>Une structure est un type construit qu’on peut définir par exemple
+comme :</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> nombreComplexe <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    reel <span class="dt">float64</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">imag</span> <span class="dt">float64</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>On dira que cette structure <code>nombreComplexe</code> contient deux
+<strong>champs</strong> nommés <code>reel</code> et
+<code>imag</code>.</p>
+<p><strong>Attention</strong> : si vous déclarez un type dans une
+fonction (par exemple <code>main</code>), ce type ne sera visible que
+dans cette fonction. Pour rendre le type global, il faut le déclarer à
+l’extérieur d’une fonction, par exemple sous le <code>import</code>.</p>
+<p>Une variable dont le type est une structure (comme
+<code>nombreComplexe</code> ci-dessus) peut être déclarée et initialisée
+comme n’importe-quelle variable de type scalaire. Pour rappel un type
+scalaire est un type contenant une valeur unique (<code>int32</code> ou
+<code>float64</code> sont deux exemples de types scalaires), par
+opposition aux types composés (comme les structures) qui en contiennent
+plusieurs.</p>
+<p>Par abus de langage, on utilise souvent le terme « structure » pour
+parler à la fois du type de données et des variables de ce type (comme
+c’est aussi le cas pour les entiers, les booléens, etc.).</p>
+<p>Voici comment déclarer et initialiser une variable <code>nbr</code>
+de type <code>nombreComplexe</code> :</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> nbr nombreComplexe</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>nbr<span class="op">.</span>reel <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>nbr<span class="op">.</span><span class="bu">imag</span> <span class="op">=</span> <span class="dv">4</span></span></code></pre></div>
+<p>Mais il existe aussi une syntaxe plus compacte :</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>nbr <span class="op">:=</span> nombreComplexe<span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    reel<span class="op">:</span> <span class="dv">5</span><span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">imag</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Attention :</strong> il n’est pas possible d’initialiser une
+structure comme ci-dessus en dehors du corps d’une fonction, vous devez
+soit écrire les initialisations dans la fonction <code>main</code>, soit
+créer une autre fonction d’initialisation que vous appellerez dans
+<code>main</code>.</p>
+<p>Écrire un programme <code>etat_civil.go</code> dans lequel vous
+définirez une structure <code>infos</code> contenant :</p>
+<ul>
+<li>le nom et prénom (une chaîne de caractères) ;</li>
+<li>la date de naissance (une date, définie elle-même par une structure)
+;</li>
+<li>la taille (un flottant 64 bits) ;</li>
+<li>un booléen indiquant si la personne est motarde.</li>
+</ul>
+<p>La date de naissance sera une structure contenant :</p>
+<ul>
+<li>le jour (un entier naturel sur 8 bits, qui s’appelle
+<code>uint8</code> en Go) ;</li>
+<li>le mois (du type <code>lesMois</code> défini ci-dessous) ;</li>
+<li>un entier signé.</li>
+</ul>
+<p>Vous définirez le type <code>lesMois</code> comme un type entier
+énuméré comme suit :</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> lesMois <span class="dt">int</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> <span class="op">(</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    janvier lesMois <span class="op">=</span> <span class="ot">iota</span> <span class="op">+</span> <span class="dv">1</span> <span class="co">// iota est une constante valant 0 et incrémentée automatiquement à chaque ligne de la déclaration const</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    février                    <span class="co">// si on ne precise pas de valeur, c&#39;est l&#39;expression de la ligne précédente qui est utilisée</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    mars</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// et ainsi de suite en listant tous les noms de mois</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="op">)</span></span></code></pre></div>
+<p>Vous pourrez ainsi utiliser les noms symboliques des mois lors de
+l’initialisation des variables de type <code>infos</code> (c’est-à-dire
+écrire <code>naissance.mois = aout</code> plutôt que
+<code>naissance.mois = 8</code>), ce qui évite d’entrer une valeur
+n’appartenant pas à l’intervalle.</p>
+<p>Écrire une fonction <code>main</code> qui déclare, initialise et
+affiche deux variables de type <code>infos</code>. L’affichage se fera
+simplement par un appel à <code>fmt.Println</code> et donnera par
+exemple le résultat suivant :</p>
+<pre class="text"><code>{Édouard Bracame {15 6 1950} 1.78 true}
+{Obelix {4 9 -70} 1.83 false}</code></pre>
+<figure>
+<img src="s02_2_jbt.png" title="Joe Bar Team" alt="Édouard Bracame" />
+<figcaption aria-hidden="true">Édouard Bracame</figcaption>
+</figure>
+<p>Écrire maintenant une fonction d’affichage plus détaillée, qui prend
+en paramètre une structure <code>infos</code> et affiche par exemple (si
+on reprend les valeurs ci-dessus) :</p>
+<pre class="text"><code>Je m&#39;appelle Édouard Bracame
+Je suis né le 15/6/1950
+Je mesure 1 mètre 78
+Gaaaaaz !
+
+Je m&#39;appelle Obelix
+Je suis né le 4/9/-70
+Je mesure 1 mètre 83
+C&#39;est quoi une moto ?</code></pre>
+<p>La fonction <code>math.Modf</code> (<a
+href="https://pkg.go.dev/math#Modf">documentation</a>) pourra vous être
+utile pour gérer facilement les tailles.</p>
+<figure>
+<img src="s02_2_obelix.png" title="Astérix le Gaulois" alt="Obélix" />
+<figcaption aria-hidden="true">Obélix</figcaption>
+</figure>
+
+</main>
+<div><br></div>
+</body>
+</html>

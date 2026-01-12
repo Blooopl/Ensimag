@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap2">Chapitre 2</a> : <a href="index.html#Chap2Seance09">Séance 09</a> : <a href="s09_1.html">Algorithme du pivot</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s09_1.go">s09_1.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<h3 id="introduction">Introduction</h3>
+<p>Dans cet exercice, on va travailler sur des algorithmes classiques
+qui servent de base à des tris plus efficaces que ceux que l’on a vus
+précédemment (comme le tri rapide (<a
+href="https://fr.wikipedia.org/wiki/Tri_rapide">page Wikipédia</a>)) et
+basés sur le principe du « diviser pour régner » (<a
+href="https://fr.wikipedia.org/wiki/Diviser_pour_régner_(informatique)">page
+Wikipédia</a>).</p>
+<p>À la différence de l’exercice sur les bases, on ne travaillera pas
+ici sur un tableau déclaré comme une variable globale, mais avec un
+tableau alloué comme une variable locale dans la fonction
+<code>main</code> et passé en paramètre des fonctions que l’on va
+écrire.</p>
+<p>Mais attention : le système de typage de Go est particulièrement
+strict, et ne permet pas par exemple de passer un tableau de 4 entiers
+(<code>[4]int</code>) en paramètre d’une fonction déclarée par
+<code>func fct(tab [3]int)</code>. Des tableaux de tailles différentes
+ont des types différents, même s’ils contiennent le même type de
+données.</p>
+<p>Comme on veut que nos fonctions fonctionnent avec des tableaux de
+tailles différentes, on déclarera nos fonctions sur le modèle
+<code>func fct(tab []int)</code>, qui ne précise pas la taille du
+tableau dans le type. Formellement, un <code>[]int</code> n’est pas un
+tableau statique : il s’agit d’un autre type fourni par Go et appelé un
+<em>slice</em>, que l’on présentera en détails plus tard dans ce
+cours.</p>
+<p><strong>Un point important à comprendre</strong> : en Go, les
+paramètres sont passés par copie. Cela veut dire que si on passe un
+tableau statique en paramètre d’une fonction qui est censée modifier le
+tableau, il crée une copie du tableau initial et la fonction modifie la
+copie ! C’est pour ça qu’on travaillait sur un tableau déclaré en
+variable globale dans l’exercice précédent.</p>
+<p>Mais les <em>slices</em> ne sont pas des tableaux statiques (on verra
+bientôt qu’il s’agit d’une structure contenant les valeurs à stocker,
+ainsi que la taille et la capacité) : donc on peut passer un
+<em>slice</em> en paramètre d’une fonction et ce sont bien les valeurs
+du <em>slice</em> initial qui seront modifiées. Par contre, on ne peut
+pas changer la taille ou la capacité d’un <em>slice</em> passé en
+paramètre d’une fonction, car ce sont bien des copies de ces deux champs
+qui sont passées.</p>
+<p>À part cette petite différence, on manipulera ces <em>slices</em>
+comme s’ils étaient des tableaux statiques, et on les nommera simplement
+« tableaux » dans les énoncés. Une autre différence concernera
+l’allocation du tableau dans la fonction <code>main</code> : on
+utilisera pour cela la syntaxe <code>tab := make([]int, taille)</code>,
+où <code>taille</code> sera un entier dans
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mi>.</mi><mi>.</mi><mi>t</mi><mi>a</mi><mi>i</mi><mi>l</mi><mi>l</mi><mi>e</mi><mi>M</mi><mi>a</mi><mi>x</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[1..tailleMax]</annotation></semantics></math>.
+On détaillera plus tard dans le cours ce que fait exactement cette
+fonction <code>make</code> (<a
+href="https://pkg.go.dev/builtin#make">documentation</a>).</p>
+<p><strong>Attention</strong> pour ceux qui connaissent la syntaxe
+Python permettant de manipuler des tranches de tableaux (par ex.
+<code>tab[2:5]</code>), <strong>ne l’utilisez pas en Go</strong> : elle
+existe, mais fonctionne très différemment, on en dira plus au prochain
+CTP.</p>
+<p>On va déclarer deux variables globales :</p>
+<ul>
+<li>une constante <code>valSup</code> qui fixe la borne supérieure
+exclue des éléments du tableau : comme on travaillera sur un tableau
+d’entiers, on pourra définir par exemple <code>valSup</code> à 10 pour
+remplir le tableau avec des chiffres dans
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mi>.</mi><mn>.9</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[0..9]</annotation></semantics></math>
+;</li>
+<li>une constante <code>tailleMax</code> qui définira la taille maximale
+(incluse) des tableaux sur lesquels on va travailler, et qu’on pourra
+faire varier pour tester notre code.</li>
+</ul>
+<p>Attention : les algorithmes qu’on va implanter dans cet exercice ne
+fonctionnent pas (et n’ont pas de sens en pratique) sur des tableaux de
+taille nulle.</p>
+<p>Écrire une fonction <code>remplir(tab []int)</code>, très similaire à
+celle implantée dans l’exercice sur les bases, qui parcours le tableau
+passé en paramètre pour affecter chaque case avec un entier aléatoire
+entre 0 inclus et <code>valSup</code> exclue : on aura surement besoin
+de la fonction <code>rand.Intn</code> (<a
+href="https://pkg.go.dev/math/rand#Intn">documentation</a>) qu’on a déjà
+vue.</p>
+<p>Écrire une fonction
+<code>afficherSousTab(tab []int, prem, dern int)</code> qui affiche le
+contenu du tableau passé en paramètre en précisant les indices de la
+première et dernière case à afficher. Par exemple, si on appelle cette
+fonction avec les paramètres 4 et 8, alors que le tableau contient
+<code>[ 9 8 2 9 0 0 4 7 8 7 9 0 ]</code>, on affichera
+<code>[ 0 0 4 7 8 ]</code>.</p>
+<p>Écrire une fonction <code>afficher(tab []int)</code> qui affiche le
+tableau complet avec le même format que la fonction précédente : on doit
+bien sûr utiliser la fonction qu’on vient d’écrire, en lui passant
+simplement les bons paramètres.</p>
+<h3 id="algorithme-du-pivot">Algorithme du pivot</h3>
+<p>Écrire une fonction <code>pivot(tab []int, ixPiv int) int</code> qui
+prend en argument l’indice d’une case du tableau qui contient la «
+valeur pivot », et qui réarrange les éléments du tableau de telle sorte
+qu’à la fin de la fin de la fonction :</p>
+<ul>
+<li>toutes les valeurs dans la partie gauche du tableau seront
+inférieures ou égales à la valeur pivot ;</li>
+<li>toutes les valeurs dans la partie droite du tableau seront
+strictement supérieures à la valeur pivot ;</li>
+<li>les deux zones seront séparées par la valeur pivot.</li>
+</ul>
+<p>Cette fonction renvoie le nouvel indice de la valeur pivot après la
+réorganisation du tableau.</p>
+<p>On vous recommande de réfléchir sur l’invariant de l’algorithme, qui
+peut être représenté visuellement par le schéma ci-dessous.</p>
+<figure>
+<img src="s09_1_inv_pivot.svg" title="Invariant du pivot"
+alt="Invariant du pivot" />
+<figcaption aria-hidden="true">Invariant du pivot</figcaption>
+</figure>
+<p>Vous pouvez commencer par mettre au point votre code visuellement, en
+créant un tableau d’une taille raisonnable (par exemple : 12 éléments),
+en appelant la fonction <code>pivot</code> dans la fonction
+<code>main</code> et en affichant avant et après l’appel le contenu du
+tableau ainsi que l’indice du pivot.</p>
+<h3 id="algorithme-du-drapeau">Algorithme du drapeau</h3>
+<p>Écrire une fonction
+<code>drapeau(tab []int, ixPiv int) (int, int)</code> qui fonctionne sur
+le même principe que la fonction <code>pivot</code>, mais cette fois-ci
+on doit réorganiser le tableau en trois zones :</p>
+<ul>
+<li>toutes les valeurs dans la partie gauche du tableau seront
+strictement inférieures à la valeur pivot ;</li>
+<li>toutes les valeurs dans la partie au milieu du tableau seront égales
+à la valeur pivot ;</li>
+<li>toutes les valeurs dans la partie droite du tableau seront
+strictement supérieures à la valeur pivot.</li>
+</ul>
+<p>La fonction renvoie les indices de la première et dernière cases de
+la zone du milieu.</p>
+<p>Là-encore, on vous suggère de réfléchir sur l’invariant de
+l’algorithme représenté ci-dessous.</p>
+<figure>
+<img src="s09_1_inv_drapeau.svg" title="Invariant du drapeau"
+alt="Invariant du drapeau" />
+<figcaption aria-hidden="true">Invariant du drapeau</figcaption>
+</figure>
+<p>Cet algorithme est une solution au « problème du drapeau hollandais »
+(<a
+href="https://fr.wikipedia.org/wiki/Problème_du_drapeau_hollandais">page
+Wikipédia</a>), nommé comme tel car son inventeur au nom difficile à
+prononcer (<a href="https://fr.wikipedia.org/wiki/Edsger_Dijkstra">page
+Wikipédia</a>) était originaire des Pays-Bas.</p>
+<p>Comme pour la fonction <code>pivot</code>, vous devez d’abord tester
+visuellement votre code sur une taille raisonnable.</p>
+<h3 id="tests-automatiques-sil-vous-reste-du-temps">Tests automatiques
+(s’il vous reste du temps)</h3>
+<p>On a testé nos algorithmes avec des petits tests visuels. Néanmoins,
+il est difficile de se convaincre que notre code fonctionne en
+effectuant seulement quelques tests à la main. Les techniques de
+validation formelles de programmes dépassant très largement le cadre de
+ce cours, on va se contenter d’une solution plus artisanale consistant à
+faire beaucoup de tests sur des tableaux de tailles différentes.</p>
+<p>Écrire une fonction
+<code>testAutoPivot(tabOrg, tabRes []int, ixPivOrg, ixPivRes int)</code>
+qui prend en paramètres :</p>
+<ul>
+<li>le tableau original avant l’appel à <code>pivot</code> ;</li>
+<li>le tableau résultat après l’appel à <code>pivot</code> ;</li>
+<li>l’indice du pivot original avant l’appel à <code>pivot</code> ;</li>
+<li>l’indice du pivot résultat après l’appel à <code>pivot</code>.</li>
+</ul>
+<p>Cette fonction devra effectuer les tests suivants :</p>
+<ul>
+<li>vérifier que le tableau résultat est de la même taille que
+l’original ;</li>
+<li>vérifier que la case d’indice <code>ixPivRes</code> du tableau
+résultat contient la valeur originale du pivot ;</li>
+<li>vérifier que le tableau résultat contient les mêmes valeurs que le
+tableau original : par exemple, si le tableau original contient quatre
+fois la valeur 2, on doit retrouver quatre fois la valeur 2 dans le
+tableau résultat (indice : l’intervalle des valeurs possibles
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mi>.</mi><mi>.</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>S</mi><mi>u</mi><mi>p</mi><mo stretchy="false" form="prefix">[</mo></mrow><annotation encoding="application/x-tex">[0..valSup[</annotation></semantics></math>
+étant ici très restreint, il suffit d’utiliser un tableau
+<code>nbrs</code> tel que <code>nbrs[i]</code> contient le nombre
+d’occurrences de la valeur <code>i</code>) ;</li>
+<li>vérifier que la partie gauche du tableau résultat (de l’indice
+<code>0</code> à l’indice <code>ixPivRes</code> inclus) ne contient que
+des valeurs inférieures ou égales au pivot ;</li>
+<li>vérifier que la partie droite du tableau résultat (de l’indice
+<code>ixPivRes</code> exclus à la fin) ne contient que des valeurs
+strictement supérieures au pivot.</li>
+</ul>
+<p>Dans la fonction <code>main</code>, on veut pour chaque taille de
+tableau possible dans
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mi>.</mi><mi>.</mi><mi>t</mi><mi>a</mi><mi>i</mi><mi>l</mi><mi>l</mi><mi>e</mi><mi>M</mi><mi>a</mi><mi>x</mi><mi>A</mi><mi>u</mi><mi>t</mi><mi>o</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[1..tailleMaxAuto]</annotation></semantics></math>,
+effectuer 100 fois le bout de code suivant (en fixant par exemple
+<code>tailleMaxAuto</code> à 3000) :</p>
+<ul>
+<li>allouer deux tableaux de la bonne taille (en utilisant
+<code>make([]int, taille)</code> comme expliqué plus haut) ;</li>
+<li>remplir un des deux tableaux avec des entiers aléatoires dans
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mi>.</mi><mi>.</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>S</mi><mi>u</mi><mi>p</mi><mo stretchy="false" form="prefix">[</mo></mrow><annotation encoding="application/x-tex">[0..valSup[</annotation></semantics></math>
+et recopier son contenu dans le deuxième (la fonction <code>copy</code>
+(<a href="https://pkg.go.dev/builtin#copy">documentation</a>) qui
+recopie le contenu d’un tableau dans un autre vous sera surement utile)
+;</li>
+<li>tirer aléatoirement l’indice du pivot et le sauvegarder ;</li>
+<li>appeler la fonction <code>pivot</code> sur un des deux tableaux et
+récupérer le nouvel indice du pivot qu’elle renvoie ;</li>
+<li>appeler la fonction <code>testAutoPivot</code> pour vérifier tout ce
+qu’il faut.</li>
+</ul>
+<p>Note : pour factoriser un peu, vous pouvez aussi utiliser la fonction
+<code>slices.Clone</code> (<a
+href="https://pkg.go.dev/slices#Clone">documentation</a>) qui :</p>
+<ul>
+<li>alloue un nouveau tableau (comme <code>make</code>) ;</li>
+<li>recopie dedans les éléments du tableau passé en paramètre (comme
+<code>copy</code>) ;</li>
+<li>et renvoie le tout.</li>
+</ul>
+<p>Faire ensuite de même pour le drapeau.</p>
+
+</main>
+<div><br></div>
+</body>
+</html>

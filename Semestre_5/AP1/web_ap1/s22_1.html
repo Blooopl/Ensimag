@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap4">Chapitre 4</a> : <a href="index.html#Chap4Seance22">Séance 22</a> : <a href="s22_1.html">Pointeurs en C</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="arithm_ptr.c">arithm_ptr.c</a> <a href="bug_mem.c">bug_mem.c</a> <a href="tabdyn.c">tabdyn.c</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<h3 id="arithmétique-des-pointeurs">Arithmétique des pointeurs</h3>
+<p>Une notion importante du C, qui n’existe pas en Go, est ce qu’on
+appelle l’arithmétique des pointeurs. Il s’agit en pratique des
+opérations que l’on peut appliquer à des variables de type pointeur et
+des règles détaillant comment ces opérations seront interprétées par le
+compilateur.</p>
+<p>Pour comprendre ce qui se passe, on peut partir de l’équivalence
+suivante : en C, si on a déclaré un tableau d’entiers signés codés sur
+32 bits <code>int32_t tab[N];</code> et qu’on cherche à accéder à son
+élément d’indice <code>i</code>, il est strictement équivalent d’écrire
+<code>tab[i]</code> et <code>*(tab + i)</code>.</p>
+<p>Cette équivalence a une conséquence importante : elle signifie que
+par exemple l’opération <code>tab + 3</code> ne renvoie pas un pointeur
+positionné 3 octets après <code>tab</code>, mais bien 3
+<strong>éléments</strong> après le début du tableau. Chaque élément
+étant ici un entier codé sur 32 bits (c’est-à-dire 4 octets),
+l’opération <code>tab + 3</code> nous amène à
+<code>3 * sizeof(int32_t) == 3 * 4 == 12</code> octets après le début de
+<code>tab</code>.</p>
+<p>Pour bien comprendre ce qui se passe, on va écrire un petit programme
+de test. Commencez par créer un fichier <code>arithm_ptr.c</code> dans
+votre répertoire : vous pouvez travailler dans le même répertoire que
+pour le TP précédent, ou bien dans un nouveau, mais dans ce cas il
+faudra récupérer le <code>Makefile</code> de la dernière fois. Ne le
+recopiez pas ! Utilisez la magie d’Unix pour créer un lien symbolique,
+par exemple avec la commande
+<code>ln -s ../TP_précédent/Makefile .</code>.</p>
+<p>Copiez-coller dans ce fichier le petit bout de code suivant :</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;inttypes.h&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> test_tab<span class="op">(</span><span class="dt">unsigned</span> taille<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Attention : on alloue le tableau dans la pile de la fonction test_tab, qui a une taille limitée (en général quelques méga-octets): ça ne marchera pas si la taille est grande !</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int32_t</span> tab<span class="op">[</span>taille<span class="op">];</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">unsigned</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> taille<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        tab<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> i <span class="op">*</span> i<span class="op">;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    test_tab<span class="op">(</span><span class="dv">10</span><span class="op">);</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Ce code ne présente pas de difficulté, on voit qu’on alloue
+simplement un tableau de 10 entiers signés sur 32 bits comme variable
+locale de la fonction <code>test_tab</code> et qu’on le remplit avec les
+valeurs <code>[ 0 1 4 9 16 25 36 49 64 81 ]</code>.</p>
+<p>Ajoutez maintenant le petit bout de code ci-dessous à la fin de
+<code>test_tab</code> :</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;[ &quot;</span><span class="op">);</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">unsigned</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> taille<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%u</span><span class="st"> &quot;</span><span class="op">,</span> <span class="op">*(</span>tab <span class="op">+</span> i<span class="op">));</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>puts<span class="op">(</span><span class="st">&quot;]&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>Compilez et exécutez le programme : on voit qu’on affiche simplement
+le contenu du tableau, mais au lieu d’afficher simplement
+<code>tab[i]</code> à chaque pas de l’itération, on a utilisé la forme
+équivalente <code>*(tab + i)</code>.</p>
+<p>Ajoutez enfin le bout de code suivant à la fin de
+<code>test_tab</code> :</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;Adresse de tab : </span><span class="sc">%p\n</span><span class="st">&quot;</span><span class="op">,</span> tab<span class="op">);</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int32_t</span> <span class="op">*</span>ptr <span class="op">=</span> tab<span class="op">;</span> ptr <span class="op">&lt;</span> tab <span class="op">+</span> taille<span class="op">;</span> ptr<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;*</span><span class="sc">%p</span><span class="st"> == </span><span class="sc">%u\n</span><span class="st">&quot;</span><span class="op">,</span> ptr<span class="op">,</span> <span class="op">*</span>ptr<span class="op">);</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Compilez et exécutez le programme : on voit que le programme commence
+par afficher l’adresse du tableau : nous travaillons sur des machines 64
+bits, donc un pointeur est tout simplement un entier non signé codé sur
+64 bits. Traditionnellement, les adresses sont affichées en hexadécimal
+: si vous ne maîtrisez pas totalement cette base 16, il suffit de se
+souvenir que :</p>
+<ul>
+<li>les chiffres entre 0 et 9 inclus ont la même signification qu’en
+décimal ;</li>
+<li>le chiffre hexadécimal A vaut 10 en décimal, B vaut 11, C vaut 12, D
+vaut 13, E vaut 14 et F vaut 15.</li>
+</ul>
+<p>Ensuite, on affiche pour chaque case du tableau son adresse et son
+contenu : notez que la case d’indice 0 a bien la même adresse que le
+tableau lui-même (ou dit autrement, l’adresse d’un tableau est l’adresse
+de sa première case), et qu’ensuite chaque case est à une adresse située
+4 octets après la précédente.</p>
+<h3 id="mise-au-point-de-programmes-utilisant-des-pointeurs">Mise au
+point de programmes utilisant des pointeurs</h3>
+<p>En C, il est très fréquent de se tromper lorsqu’on manipule des
+pointeurs, car le langage est très permissif, alors que Go nous
+empêchait justement de faire des bêtises. Il est important d’apprendre à
+localiser rapidement ce type d’erreurs, ce qui n’est pas toujours
+facile, mais nous avons heureusement des outils à notre disposition.</p>
+<p>Créez un fichier <code>bug_mem.c</code> et copiez-collez y le bout de
+code suivant :</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdint.h&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int32_t</span> tmp <span class="op">=</span> <span class="dv">5</span><span class="op">;</span> <span class="op">(</span><span class="dt">void</span><span class="op">)</span>tmp<span class="op">;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int32_t</span> val<span class="op">;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int32_t</span> <span class="op">*</span>ptr <span class="op">=</span> <span class="op">&amp;</span>val<span class="op">;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;val == </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">*</span>ptr<span class="op">);</span></span></code></pre></div>
+<p>On voit que ce programme commence par déclarer une variable
+<code>tmp</code> qu’on ne va pas utiliser en pratique : l’instruction
+<code>(void)tmp;</code> n’a en fait aucun effet, elle sert juste à
+éviter que le compilateur nous reproche d’avoir déclaré une variable
+inutile.</p>
+<p>Ensuite, on déclare un entier <code>val</code> et un pointeur
+<code>ptr</code> que l’on fait immédiatement pointer vers
+<code>val</code> (dit autrement, <code>*ptr == val</code> : si cela ne
+vous paraît pas évident, rappelez-vous que l’étoile dans une déclaration
+de variable veut dire un pointeur et pas son déréférencement !), puis on
+affiche la valeur de <code>val</code>.</p>
+<p>Compilez et exécuter ce code : la valeur affichée peut être en fait
+n’importe-quoi, car on a oublié d’initialiser la variable
+<code>val</code> ! Il est possible que sa case mémoire contienne un zéro
+ou une valeur totalement quelconque, et même que cette valeur change si
+vous exécutez plusieurs fois le programme.</p>
+<p>C’est une erreur courante et souvent difficile à localiser, car elle
+ne fait pas planter le programme, ou en tout cas pas au moment de la
+déclaration : on peut donc perdre beaucoup de temps à chercher pourquoi
+la valeur n’est pas celle attendue plus loin dans le programme.</p>
+<p>Lancez la commande
+<code>valgrind --track-origins=yes ./bug_mem</code> et observez les
+traces : le logiciel Valgrind détecte qu’une variable est utilisée sans
+avoir été initialisée, nous donne la ligne où elle est utilisée
+(<code>mem_bug.c:9</code>) et même la ligne où elle a été allouée
+(<code>mem_bug.c:4</code>, c’est-à-dire au début de <code>main</code>,
+car en C les variables locales sont toutes allouées lorsqu’on entre dans
+la fonction).</p>
+<p>Malheureusement, Valgrind n’est pas magique et ne peut pas tout
+détecter. Ajoutez ensuite le bout de code suivant dans votre
+<code>main</code> :</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ptr<span class="op">++;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;val == </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">*</span>ptr<span class="op">);</span></span></code></pre></div>
+<p>Compilez et exécutez le code : que comprenez-vous de l’affichage de
+<code>*ptr</code> ? Commentez le <code>printf</code> de la ligne 9 et
+relancez Valgrind avec la même commande : il ne trouve aucune erreur !
+En effet, en faisant <code>ptr++</code>, on a fait pointer
+<code>ptr</code> 4 octets après <code>val</code>, et il se trouve que
+cette adresse est celle de la variable <code>tmp</code> ! Valgrind ne
+peut pas considérer cela comme une erreur, car on accède à une zone
+mémoire qui est valide.</p>
+<p>Ajouter maintenant le bout de code suivant à la fin de
+<code>main</code> :</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ptr <span class="op">=</span> NULL<span class="op">;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;val == </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">*</span>ptr<span class="op">);</span></span></code></pre></div>
+<p>Compilez et exécutez : cette fois-ci, il se passe quelque-chose de
+visible ! L’erreur <em>segmentation fault</em> veut simplement dire «
+erreur d’accès mémoire ». Malheureusement, on ne nous donne même pas
+d’explication ni même le numéro de la ligne fautive quand on exécute
+notre programme…</p>
+<p>Lancez Valgrind avec la même commande que précédemment : le logiciel
+est capable de localiser la ligne où on a fait un accès mémoire à une
+adresse incorrecte (<code>NULL</code> pointe sur l’adresse 0). Bien sûr,
+l’erreur vient plutôt de la ligne précédente, mais cela nous permet au
+moins de savoir quelle variable est impliquée dans l’erreur. Vous
+apprendrez à utiliser plus tard dans l’année un logiciel appelé GDB qui
+vous permettra de tracer plus précisément les erreurs dans vos
+programmes C.</p>
+<h3 id="implantation-dun-tableau-dynamique">Implantation d’un tableau
+dynamique</h3>
+<p>On trouve des tableaux dynamiques en Go et dans la plupart des
+langages modernes (Java, Python, etc.) mais pas en C. On va implanter
+dans cet exercice un tableau dynamique d’une façon très semblable à leur
+implantation réelle en Go. On rappelle qu’un tableau dynamique est un
+tableau dont la taille peut changer en cours d’exécution du programme,
+en général pour l’agrandir au fur et à mesure qu’on y rajoute des
+éléments.</p>
+<p>Créez un fichier <code>tabdyn.c</code> et copiez-collez y le code
+suivant :</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;time.h&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;assert.h&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdbool.h&gt;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="pp">#define CAPACITE_INIT </span><span class="dv">1</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="pp">#define TAILLE_MAX_TRIER </span><span class="dv">10000</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="pp">#define TAILLE_MAX_REMPLIR </span><span class="op">(</span><span class="pp">TAILLE_MAX_TRIER </span><span class="op">*</span><span class="pp"> </span><span class="dv">50000</span><span class="op">)</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="pp">#define VAL_SUP </span><span class="dv">10</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> nbr_elem<span class="op">;</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> capacite<span class="op">;</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> <span class="op">*</span>valeurs<span class="op">;</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> tabdyn_t<span class="op">;</span></span></code></pre></div>
+<p>On voit qu’on commence par inclure des modules qui nous seront
+utiles, puis on définit des constantes qui nous serviront plus tard, et
+enfin on déclare le type qui va représenter un tableau dynamique comme
+une <code>struct</code> comprenant :</p>
+<ul>
+<li>un champ <code>nbr_elem</code> : c’est le nombre d’éléments actuels
+significatifs dans le tableau ;</li>
+<li>un champ <code>capacite</code> : c’est la capacité actuelle du
+tableau, c’est-à-dire le nombre total d’éléments qu’il peut contenir
+sans avoir besoin de l’agrandir ;</li>
+<li>un champ <code>valeurs</code> définit comme un pointeur sur un
+entier signé qui est en fait le tableau statique qui va contenir les
+valeurs (notre tableau dynamique stockera donc des
+<code>int</code>).</li>
+</ul>
+<p>Implantez une fonction <code>tabdyn_t *creer(void)</code> qui doit
+:</p>
+<ul>
+<li>allouer une structure de type <code>tabdyn_t</code> : vous
+<strong>devez</strong> utiliser ici la fonction <code>malloc</code>
+(<code>man 3 malloc</code>) (on expliquera pourquoi un peu plus bas) et
+bien renvoyer un pointeur vers un <code>tabdyn_t</code> : en C, on
+manipule en général des pointeurs vers des structures, plutôt que les
+structures elles-mêmes, car les paramètres sont passés par copie et il
+est moins lourd de passer et renvoyer un pointeur (c’est-à-dire un
+entier) que toute la structure ;</li>
+<li>initialiser les 3 champs de la structure avec des valeurs
+appropriées pour un tableau vide : la capacité sera fixée à
+<code>CAPACITE_INIT</code> et on doit bien penser à allouer de la
+mémoire pour les valeurs et initialiser le champ <code>valeurs</code>
+avec l’adresse de cette zone allouée, puis remplir la zone avec des
+zéros pour faire comme en Go (la fonction <code>calloc</code>
+(<code>man 3 calloc</code>) vous sera surement utile ici) ;</li>
+<li>renvoyer un pointeur vers le tableau dynamique qu’on vient de
+créer.</li>
+</ul>
+<p>En C, si <code>ptr</code> est défini comme un pointeur vers une
+structure contenant par exemple un champ <code>val</code> auquel on veut
+accéder, la syntaxe correcte serait d’écrire <code>(*ptr).val</code> :
+les parenthèses sont obligatoires ici, car l’opérateur <code>.</code>
+est prioritaire sur l’opérateur <code>*</code>. Comme c’est un peu lourd
+à écrire, le langage fournit un raccourci syntaxique qui consiste à
+écrire simplement <code>ptr-&gt;val</code>. Ces deux notations sont
+strictement équivalentes. On rappelle qu’en Go, l’opérateur
+<code>.</code> permettait aussi bien d’accéder à un champ d’une
+<code>struct</code> ou d’un pointeur vers une <code>struct</code> :
+c’est Go qui se débrouillait tout seul pour savoir si c’était vraiment
+un <code>.</code> ou un <code>-&gt;</code>.</p>
+<p>Il est important de comprendre pourquoi le bout de code ci-dessous
+serait complètement faux en C, alors qu’il serait valide en Go :</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>tabdyn_t <span class="op">*</span>creer<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// J&#39;alloue une variable locale de type tabdyn_t, c&#39;est-à-dire une struct.</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    tabdyn_t tab<span class="op">;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Ici je vais surement initialiser des choses...</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Et à la fin je renvoie l&#39;adresse de ma variable locale vu qu&#39;on me demande de renvoyer un pointeur sur un tabdyn_t.</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">&amp;</span>tab<span class="op">;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Une variable locale n’existe que dans le cadre de la fonction dans
+laquelle elle a été définie. Ici, la variable <code>tab</code> sera
+désallouée automatiquement lorsqu’on sortira de la fonction
+<code>creer</code> : on va donc renvoyer l’adresse d’une zone mémoire
+désallouée, ce qui est faux. En Go, le compilateur est suffisamment
+intelligent pour détecter ce problème et transformer la déclaration de
+variable locale en une allocation globale avec appel à la fonction
+<code>new</code>, mais en C il traduit bêtement ce qu’on a écrit, même
+quand c’est complètement faux.</p>
+<p>Implantez ensuite une fonction
+<code>void detruire(tabdyn_t *tab)</code> qui doit désallouer l’espace
+mémoire du tableau dynamique, c’est-à-dire non seulement la zone mémoire
+contenant les valeurs (la zone mémoire pointée par le champ
+<code>valeurs</code>), mais aussi la structure <code>tab</code>
+elle-même : la fonction <code>free</code> (<code>man 3 free</code>) sert
+justement à faire cela.</p>
+<p>Implantez une fonction <code>void afficher(tabdyn_t *tab)</code> dont
+le but est d’afficher le contenu du tableau dynamique ainsi que son
+nombre d’éléments et sa capacité actuels, par exemple sous le format
+suivant <code>(6/8) [ 0 1 2 3 4 5 ]</code> pour un tableau contenant 6
+éléments et ayant une capacité de 8.</p>
+<p>Implantez une fonction
+<code>void verifier_capacite(tabdyn_t *tab)</code> dont le rôle est de
+vérifier si la capacité maximale est atteinte, et si c’est le cas,
+d’agrandir le tableau. Par exemple, si on appelle cette fonction sur un
+tableau dynamique de 3 éléments pour une capacité de 4, elle se
+terminera immédiatement sans rien faire. Par contre, si le nombre
+d’éléments vaut déjà 4, on devra augmenter la capacité en la multipliant
+par deux, c’est-à-dire 8 (c’est une progression très classique).</p>
+<p>En plus de changer le champ <code>capacite</code>, on doit bien sûr
+aussi augmenter la taille du tableau <code>valeurs</code>. La
+bibliothèque C fournit pour cela une fonction <code>realloc</code>
+(<code>man 3 realloc</code>) dont le fonctionnement nécessite quelques
+explications :</p>
+<ul>
+<li><p>le tableau <code>valeurs</code> occupe une zone mémoire contigüe
+de N octets initialement ;</p></li>
+<li><p>si les N octets suivants dans la mémoire sont libres, le système
+va simplement les réserver et l’adresse de <code>valeurs</code> ne
+changera pas ;</p></li>
+<li><p>par contre, s’il n’y a pas assez de place après la zone contenant
+actuellement <code>valeurs</code> pour l’agrandir simplement, le système
+va :</p>
+<ul>
+<li>allouer une nouvelle zone mémoire de taille 2N octets ailleurs dans
+la mémoire ;</li>
+<li>recopier les N octets contenus actuellement dans
+<code>valeurs</code> au début de cette nouvelle zone ;</li>
+<li>désallouer l’ancienne zone mémoire et renvoyer un pointeur vers la
+nouvelle.</li>
+</ul></li>
+</ul>
+<p>La fonction <code>bzero</code> (<code>man 3 bzero</code>) vous sera
+utile pour initialiser à 0 les N octets de la fin de la nouvelle zone
+mémoire pointée par <code>valeurs</code>.</p>
+<p>Implanter la fonction
+<code>void inserer(tabdyn_t *tab, unsigned idx, int val)</code> qui doit
+insérer la valeur <code>val</code> à l’indice <code>idx</code> du
+tableau passé en paramètre. Cette fonction est similaire à la fonction
+<code>slices.Insert</code> (<a
+href="https://pkg.go.dev/slices#Insert">documentation</a>) en Go (qui
+est plus puissante, car elle permet d’insérer plusieurs valeurs d’un
+coup). Notamment, elle doit ;</p>
+<ul>
+<li>vérifier que l’indice donné est bien dans l’intervalle
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mi>.</mi><mi>.</mi><mi>n</mi><mi>b</mi><mi>r</mi><mi>_</mi><mi>e</mi><mi>l</mi><mi>e</mi><mi>m</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[0..nbr\_elem]</annotation></semantics></math>
+et arrêter le programme sinon : la macro <code>assert</code>
+(<code>man 3 assert</code>) sert exactement à ça ;</li>
+<li>vérifier la capacité et l’agrandir si nécessaire grâce à la fonction
+précédente ;</li>
+<li>décaler d’une case vers la droite toutes les valeurs significatives
+contenues dans le tableau entre l’indice <code>idx</code> et la fin : la
+fonction <code>memmove</code> (<code>man 3 memmove</code>) est faite
+pour ça ; attention : n’utilisez pas <code>memcpy</code> qui ne
+fonctionne pas quand les zones mémoires source et destination se
+recouvrent ;</li>
+</ul>
+<p>Implanter la fonction
+<code>void ajouter(tabdyn_t *tab, int val)</code> qui doit insérer la
+valeur à la fin du tableau : cette fonction est équivalente à la
+fonction <code>append</code> (<a
+href="https://pkg.go.dev/builtin#append">documentation</a>) en Go.
+Évidemment, elle peut s’écrire en une ligne en appelant la fonction
+<code>inserer</code> !</p>
+<p>Implanter la fonction
+<code>int extraire(tabdyn_t *tab, unsigned idx)</code> qui doit renvoyer
+la valeur à l’indice <code>idx</code> et décaler tous les éléments entre
+l’indice <code>idx + 1</code> et la fin d’une case vers la gauche. Vous
+procéderez de façon similaire à la fonction <code>inserer</code>
+notamment en ce qui concerne la vérification de l’indice passé en
+paramètre et la mise à jour des champs du tableau dynamique. Cette
+fonction n’a pas d’équivalente directe en Go, mais on pourrait
+l’implanter en utilisant la fonction <code>slices.Delete</code> (<a
+href="https://pkg.go.dev/slices#Delete">documentation</a>).</p>
+<p>Une fois toutes ces fonctions écrites, vous devez bien sûr les tester
+: vous pouvez simplement implanter une fonction de test visuel qui créer
+un tableau dynamique vide, y ajoute, insère et supprime des valeurs,
+affiche le tableau à chaque fois, et finit par le détruire à la fin.</p>
+<h3 id="performances-des-tableaux-dynamiques">Performances des tableaux
+dynamiques</h3>
+<p>On va tester de façon très informelle les performances de nos
+tableaux dynamiques pour bien comprendre le coût des opérations que l’on
+a implantées.</p>
+<p>On commence par fournir deux petites fonctions à ajouter dans votre
+programme :</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> remplir_tabdyn<span class="op">(</span>tabdyn_t <span class="op">*</span>tab<span class="op">,</span> <span class="dt">unsigned</span> nbr<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">unsigned</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> nbr<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        ajouter<span class="op">(</span>tab<span class="op">,</span> random<span class="op">()</span> <span class="op">%</span> VAL_SUP<span class="op">);</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> remplir_tabstat<span class="op">(</span><span class="dt">int</span> tab<span class="op">[],</span> <span class="dt">unsigned</span> nbr<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">unsigned</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> nbr<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        tab<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> random<span class="op">()</span> <span class="op">%</span> VAL_SUP<span class="op">;</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Ces deux fonctions ont pour but de remplir un tableau avec
+<code>nbr</code> entiers pseudo-aléatoires entre 0 et VAL_SUP inclus :
+la première fonctionne sur un tableau dynamique en appelant la fonction
+<code>ajouter</code> ci-dessus, la deuxième fonctionne sur un tableau
+statique en affectant simplement les valeurs dans les cases. N’oubliez
+pas d’ajouter un appel à <code>srandom(time(NULL));</code> au début de
+votre fonction <code>main</code> pour initialiser correctement le
+générateur de nombres pseudo-aléatoires. <strong>Attention</strong> :
+tableau statique veut dire « tableau de taille statique » (donc une
+taille qui n’évolue pas), mais il faut bien l’allouer aussi avec
+<code>malloc</code> : si vous l’allouer comme une variable locale à une
+fonction, il y aura surement une erreur à l’exécution, car la taille des
+tableaux manipulés dépasse largement la taille de la pile d’exécution
+!</p>
+<p>Écrivez maintenant une fonction de test qui va comparer les temps
+d’exécution de ces deux fonctions en leur passant le bon type de tableau
+(à allouer / créer avant bien sûr) et <code>TAILLE_MAX_REMPLIR</code>
+comme paramètre <code>nbr</code>. Pour tester le temps d’exécution d’un
+bout de code en C, il suffit d’utiliser la fonction <code>clock</code>
+(<code>man 3 clock</code>) dont le fonctionnement est très simple à
+comprendre en regardant l’exemple suivant :</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>clock_t debut <span class="op">=</span> clock<span class="op">();</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Ici il faut mettre le code dont on veut mesurer le temps d&#39;exécution.</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>clock_t fin <span class="op">=</span> clock<span class="op">();</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;=&gt; temps d&#39;execution = </span><span class="sc">%f</span><span class="st"> sec.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">(</span><span class="dt">double</span><span class="op">)(</span>fin <span class="op">-</span> debut<span class="op">)</span> <span class="op">/</span> CLOCKS_PER_SEC<span class="op">);</span></span></code></pre></div>
+<p>Sur une vieille machine de 2018, on obtient les temps d’exécution
+suivants :</p>
+<pre class="text"><code>Remplissage d&#39;un tableau de taille fixe de 500000000 éléments...
+=&gt; temps d&#39;execution = 9.188618 sec.
+Remplissage d&#39;un tableau dynamique de 500000000 éléments...
+=&gt; temps d&#39;execution = 15.939539 sec.</code></pre>
+<p>Ces temps d’exécution sont du même ordre : le surcoût du
+redimensionnement du tableau dynamique est <em>amorti</em>, car on
+multiplie à chaque fois la taille du tableau par deux, ce qui veut dire
+qu’on aura besoin d’agrandir de moins en moins souvent, car on atteindra
+vite une grande taille.</p>
+<p>Vous pouvez jouer sur la constante <code>TAILLE_MAX_REMPLIR</code> si
+les temps d’exécution sont trop rapides sur votre machine.</p>
+<p>On va maintenant tester les fonctions d’insertion et de suppression
+dans nos tableaux dynamiques. Pour cela, on va implanter deux versions
+du célèbre tri à bulles (<a
+href="https://fr.wikipedia.org/wiki/Tri_à_bulles">page
+Wikipédia</a>).</p>
+<p>L’idée de ce tri est tout simplement de parcourir le tableau de la
+gauche vers la droite, en comparant à chaque fois l’élément courant avec
+son prédécesseur, et en inversant ces deux éléments s’ils ne sont pas
+dans le bon ordre (croissant). Une fois le premier parcours effectué, on
+a donc forcément la valeur maximale tout à droite du tableau, et on peut
+donc recommencer à parcourir le tableau de la gauche vers la droite,
+mais en s’arrêtant cette fois-ci sur l’avant-dernière case, et ainsi de
+suite. On s’arrête dès qu’on a fait un parcours complet sans effectuer
+aucune inversion, ce qui veut dire que le tableau est trié.</p>
+<p>Écrivez d’abord une version implantant directement cet algorithme en
+échangeant l’élément courant et son prédécesseur via une variable
+temporaire. Cet algorithme devra avoir un coût en
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>N</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(N^2)</annotation></semantics></math>.</p>
+<p>Implanter une autre version volontairement bête : au lieu d’échanger
+les deux éléments d’indices <code>idx - 1</code> et <code>idx</code>,
+vous devez :</p>
+<ul>
+<li><code>extraire</code> l’élément à l’indice <code>idx - 1</code> et
+stocker sa valeur dans une variable temporaire ;</li>
+<li><code>inserer</code> cette valeur à l’indice <code>idx</code>.</li>
+</ul>
+<p>Bien sûr, ces deux fonctions vont décaler les éléments d’une case
+vers la gauche (pour l’extraction) ou vers la droite (pour l’insertion)
+à chaque appel : cet algorithme aura alors un coût en
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>N</mi><mn>3</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(N^3)</annotation></semantics></math>.</p>
+<p>Écrivez enfin une fonction de test pour comparer les temps
+d’exécution des deux versions du tri. Sur une vielle machine de 2018, on
+obtient :</p>
+<pre class="text"><code>Tri à bulles classique sur 10000 éléments...
+=&gt; temps d&#39;execution = 0.376513 sec.
+Tri à bulles très bête sur 10000 éléments...
+=&gt; temps d&#39;execution = 97.033516 sec.</code></pre>
+<p>Ces temps d’exécution ne sont pas du même ordre : on comprend donc
+bien qu’il peut être inefficace d’utiliser les fonctions d’insertion et
+d’extraction des tableaux dynamiques, a fortiori dans deux boucles
+imbriquées comme c’est le cas ici.</p>
+
+</main>
+<div><br></div>
+</body>
+</html>

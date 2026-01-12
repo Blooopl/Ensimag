@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap1">Chapitre 1</a> : <a href="index.html#Chap1Seance04">Séance 04</a> : <a href="s04_3.html">Exercice bonus (si vous êtes en avance)</a></h1>
+</header>
+<main>
+<h2 id="le-tic-tac-toe">Le tic-tac-toe</h2>
+<p>Cet exercice est un exercice bonus, pour ceux qui auraient fini le
+chapitre 1 en avance : il n’est pas obligatoire !</p>
+<p>Le but est de développer un petit système pour jouer au tic-tac-toe
+(<a href="https://fr.wikipedia.org/wiki/Tic-tac-toe">page
+Wikipédia</a>), souvent appelé aussi le morpion.</p>
+<figure>
+<img src="s04_3_tic-tac-toe.gif" title="Tic-tac-toe"
+alt="Tic-tac-toe" />
+<figcaption aria-hidden="true">Tic-tac-toe</figcaption>
+</figure>
+<p>L’énoncé est volontairement très peu détaillé, car c’est à vous de
+concevoir votre programme comme vous l’entendez !</p>
+<p>On attend un jeu qui permet à deux joueurs humains de jouer au
+tic-tac-toe et capable de détecter automatiquement quand l’un des deux a
+gagné, ou de dire qu’il y a un match nul à la fin.</p>
+<p>Le défi est de faire ce programme <strong>sans utiliser de boucle ni
+de tableau</strong> vu qu’on n’en est pas encore là dans le cours ! On
+s’en sort facilement (même si c’est un peu laborieux à coder) en se
+rappelant que le jeu contient forcément 9 cases, donc au plus 9 coups
+possibles. On pourra numéroter les cases de 0 à 8 inclus, comme suit
+:</p>
+<pre class="text"><code>012
+345
+678</code></pre>
+<p>On donne un exemple du genre d’affichage qu’on attend :</p>
+<pre class="text"><code>Bienvenu dans le jeu du tic-tac-toe !
+
+État actuel du plateau :
+  |   |  
+---------
+  |   |  
+---------
+  |   |  
+
+JoueurX : entrez un numéro de case entre 0 et 8 &gt; 4
+
+État actuel du plateau :
+  |   |  
+---------
+  | X |  
+---------
+  |   |  
+
+JoueurO : entrez un numéro de case entre 0 et 8 &gt; 6
+
+État actuel du plateau :
+  |   |  
+---------
+  | X |  
+---------
+O |   |  
+
+JoueurX : entrez un numéro de case entre 0 et 8 &gt; 0
+
+État actuel du plateau :
+X |   |  
+---------
+  | X |  
+---------
+O |   |  
+
+JoueurO : entrez un numéro de case entre 0 et 8 &gt; 8
+
+État actuel du plateau :
+X |   |  
+---------
+  | X |  
+---------
+O |   | O
+
+JoueurX : entrez un numéro de case entre 0 et 8 &gt; 7
+
+État actuel du plateau :
+X |   |  
+---------
+  | X |  
+---------
+O | X | O
+
+JoueurO : entrez un numéro de case entre 0 et 8 &gt; 2
+
+État actuel du plateau :
+X |   | O
+---------
+  | X |  
+---------
+O | X | O
+
+JoueurX : entrez un numéro de case entre 0 et 8 &gt; 1
+
+État actuel du plateau :
+X | X | O
+---------
+  | X |  
+---------
+O | X | O
+
+Bravo, JoueurX a gagné !</code></pre>
+<p>Si vous avez envie d’améliorer encore votre système, vous pouvez
+implanter une intelligence artificielle pour qu’un joueur humain puisse
+jouer contre l’ordinateur… ce qui peut être assez compliqué ! Ou assez
+simple si vous considérez que cette IA n’a pas besoin d’être vraiment
+intelligente et pourrait jouer des coups au hasard !</p>
+<p>Ou alors, si vous adorez le SVG, vous pouvez dessiner une interface
+graphique plus jolie !</p>
+
+</main>
+<div><br></div>
+</body>
+</html>

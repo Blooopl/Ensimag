@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap3">Chapitre 3</a> : <a href="index.html#Chap3Seance17">Séance 17</a> : <a href="s17_1.html">Tableaux de listes chaînées</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s17_1.go">s17_1.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<p>Dans cet exercice, on va travailler sur une structure de données
+classique qu’on appellera ici un tableau de listes chaînées. Il s’agit
+en pratique d’une version naïve d’une table de hachage (<a
+href="https://fr.wikipedia.org/wiki/Table_de_hachage">page
+Wikipédia</a>).</p>
+<p>Le principe du tableau de listes est de fractionner une liste chaînée
+qui contiendrait un ensemble de valeurs en sous-listes, organisées en
+fonction d’une propriété implantée dans une fonction de hachage.</p>
+<p>Si on prend l’exemple d’une liste contenant les valeurs 0, 1, 2, 3,
+4, 6, 7, 7, 8 et 9, et de la fonction de hachage ci-dessous (où
+<code>taille</code> est le nombre de cases du tableau) :</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> hachage<span class="op">(</span>val <span class="dt">int</span><span class="op">)</span> <span class="dt">int</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> val <span class="op">%</span> taille</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>on obtiendrait le tableau de listes représenté dans le schéma
+ci-dessous.</p>
+<figure>
+<img src="s17_1_tab_listes.svg" title="Tableau de listes"
+alt="Tableau de listes" />
+<figcaption aria-hidden="true">Tableau de listes</figcaption>
+</figure>
+<p>Les indices des cases du tableau correspondent aux valeurs de hachage
+de toutes les valeurs dans la sous-liste associée. Par exemple, les
+valeurs <code>1</code> et <code>9</code> ont une valeur de hachage de 1,
+donc ces valeurs sont forcément stockées dans la sous-liste stockée dans
+la case 1 du tableau.</p>
+<p>On note que dans cette implantation, les valeurs ne sont pas
+forcément stockées dans les sous-listes dans le même ordre que dans la
+liste initiale.</p>
+<p>L’intérêt de cette structure de données est d’accélérer certaines
+opérations de base comme la suppression d’une valeur par exemple : si on
+voulait supprimer la première occurrence de la valeur <code>9</code>
+dans la liste initiale, on devrait potentiellement parcourir toute la
+liste si cette valeur était stockée à la fin. Alors qu’avec un tableau
+de listes, on sait que si <code>9</code> est dans le tableau, elle sera
+forcément dans la sous-liste stockée dans la case <code>1</code> du
+tableau et cette sous-liste est vraisemblablement plus courte que la
+liste initiale.</p>
+<p>Évidemment, les performances du tableau de listes dépendent beaucoup
+de la qualité de la fonction de hachage : une bonne fonction de hachage
+répartira les valeurs dans des sous-listes de tailles comparables, pour
+garantir que les temps de parcours des différentes sous-listes seront
+équivalents. La fonction modulo qu’on utilisera dans cet exercice n’est
+pas une très bonne fonction de hachage, mais elle a l’avantage d’être
+très simple à utiliser.</p>
+<p>On va définir les types suivants dans cet exercice :</p>
+<ul>
+<li>le type <code>tabListes</code> sera une structure contenant :
+<ul>
+<li>le nombre total d’éléments dans le tableau de listes ;</li>
+<li>un tableau statique de <code>taille</code> (quatre par exemple)
+cases et contenant des <code>listes</code> ;</li>
+</ul></li>
+<li>le type <code>liste</code> sera une structure contenant :
+<ul>
+<li>le nombre d’éléments dans la sous-liste ;</li>
+<li>un pointeur vers la première <code>cellule</code> de la sous-liste,
+qui sera en l’occurrence un élément fictif en tête ;</li>
+</ul></li>
+<li>le type <code>cellule</code> sera une structure contenant :
+<ul>
+<li>une valeur entière (un chiffre dans
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mi>.</mi><mn>.9</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[0..9]</annotation></semantics></math>)
+;</li>
+<li>un pointeur vers la <code>cellule</code> suivante.</li>
+</ul></li>
+</ul>
+<p>Écrire une fonction <code>créerTabListe() *tabListes</code> qui crée
+et renvoie un pointeur vers un tableau de listes. Il faudra allouer le
+tableau de listes lui-même, mais aussi les éléments fictifs en tête de
+chaque sous-liste.</p>
+<p>Écrire une fonction <code>afficherTabListes(tabL *tabListes)</code>
+qui affiche le contenu du tableau de listes, sous le format :</p>
+<pre class="text"><code>Nombre total d&#39;éléments = 8
+[0] nombre d&#39;éléments = 0, valeurs = FIN
+[1] nombre d&#39;éléments = 3, valeurs = 9 -&gt; 1 -&gt; 9 -&gt; FIN
+[2] nombre d&#39;éléments = 1, valeurs = 6 -&gt; FIN
+[3] nombre d&#39;éléments = 4, valeurs = 3 -&gt; 7 -&gt; 3 -&gt; 3 -&gt; FIN</code></pre>
+<p>Écrire une fonction
+<code>insérerTabListes(tabL *tabListes, val int)</code> qui insère la
+valeur dans le tableau de liste dont on passe un pointeur en
+paramètre.</p>
+<p>Écrire une fonction
+<code>supprimerTabListes(tabL *tabListes, val int) bool</code> qui
+supprime la première occurrence de la valeur dans le tableau de liste
+dont on passe un pointeur en paramètre. La fonction renvoie un booléen
+indiquant si une suppression a bien eu lieu (c’est-à-dire qu’elle
+renvoie <code>false</code> ssi la valeur n’était pas dans la liste).</p>
+<p>Tester enfin toutes ces fonctions en insérant un nombre raisonnable
+(par exemple huit) de valeurs tirées aléatoirement dans le tableau de
+listes, puis en supprimant des valeurs tirées aléatoirement jusqu’à ce
+que le tableau de listes soit vide.</p>
+
+</main>
+<div><br></div>
+</body>
+</html>

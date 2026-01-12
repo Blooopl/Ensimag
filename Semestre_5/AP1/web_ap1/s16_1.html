@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap3">Chapitre 3</a> : <a href="index.html#Chap3Seance16">Séance 16</a> : <a href="s16_1.html">Listes chaînées simples</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s16_1.go">s16_1.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<p>Dans cet exercice, on va travailler sur des listes simplement
+chaînées contenant des chiffres dans
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mi>.</mi><mn>.9</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[0..9]</annotation></semantics></math>
+en définissant les types <code>cellule</code> et <code>liste</code> les
+plus basiques possible.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> valSup <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> cellule <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    val  <span class="dt">int</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    suiv <span class="op">*</span>cellule</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> liste <span class="op">*</span>cellule</span></code></pre></div>
+<p>Une liste est donc concrètement un pointeur vers la cellule de tête
+et chaque cellule contient un chiffre et un pointeur vers la cellule
+suivante.</p>
+<figure>
+<img src="s16_1_liste_simple.svg" title="Liste simplement chaînée"
+alt="Liste simplement chaînée" />
+<figcaption aria-hidden="true">Liste simplement chaînée</figcaption>
+</figure>
+<p>Dans tous les exercices sur les listes chaînées, on posera une
+consigne implicite : les manipulations demandées doivent se faire par
+modification des chaînages, et <strong>sans allocation de nouvelles
+cellules</strong>. Sauf éventuellement un élément fictif en tête (on
+verra plus bas ce que cela veut dire) et bien sûr sauf indication
+explicite dans l’énoncé.</p>
+<p>Toutes les fonctions à implanter ci-dessous doivent être testées au
+moins visuellement sur des listes de tailles raisonnables (par exemple
+dans
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mi>.</mi><mn>.5</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[0..5]</annotation></semantics></math>).
+Vous pouvez aussi ajouter des tests automatiques pour l’inversion et les
+tris.</p>
+<p>Écrire une fonction <code>afficher(lsc liste)</code> qui affiche le
+contenu de la liste simplement chaînée passée en paramètre, sous le
+format <code>3 -&gt; 1 -&gt; 4 -&gt; 2 -&gt; 7 -&gt; FIN</code>.</p>
+<p>Écrire une fonction
+<code>insérerTête(lsc liste, val int) liste</code> qui ajoute une
+<code>cellule</code> contenant la valeur <code>val</code> en tête de la
+liste passée en paramètre et renvoie la nouvelle liste. Il faut bien sûr
+ici allouer une nouvelle <code>cellule</code> pour y stocker la valeur :
+vous utiliserez pour ça la fonction <code>new</code> (<a
+href="https://pkg.go.dev/builtin#new">documentation</a>).</p>
+<p>Écrire une fonction
+<code>insérerQueue(lsc liste, val int) liste</code> qui ajoute ces
+fois-ci la nouvelle <code>cellule</code> à la fin de la liste passée en
+paramètre et renvoie la nouvelle liste. Là encore, il faut bien sûr
+allouer une nouvelle <code>cellule</code>. Notez bien que nos listes
+<strong>ne sont pas équipées d’un pointeur de queue</strong> : vous
+devez donc parcourir toute la liste pour trouver la dernière
+cellule.</p>
+<p>Écrire une fonction
+<code>supprimerPremièreOccurrence(lsc liste, val int) (liste, bool)</code>
+qui supprime la première occurrence de la valeur donnée dans la liste
+passée en paramètre et renvoie la nouvelle liste. La fonction renvoie
+aussi un booléen indiquant ssi on a bien supprimé une valeur (donc
+<code>false</code> si la valeur était absente de la liste initiale).</p>
+<p>Vous constaterez qu’on doit dissocier certains cas particuliers dans
+la fonction précédente, ce qui alourdit (un peu) le code : écrire
+maintenant une fonction
+<code>supprimerPremièreOccurrenceFictif(lsc liste, val int) (liste, bool)</code>
+qui fait exactement la même chose que la précédente, mais en utilisant
+la technique de l’élément fictif en tête vu en TD et rappelé
+ci-dessous.</p>
+<p>Le principe de cette technique consiste à allouer une nouvelle
+cellule sans valeur significative (désignée par le symbole
+<code>?</code> dans le schéma ci-dessous) et de la chaîner en tête de la
+liste : cela permet d’éviter d’avoir à dissocier les cas de la liste
+vide et de la première <code>cellule</code> en créant une cellule
+précédente de toutes les autres. En Go, il n’est en fait pas possible de
+ne pas initialiser le champ <code>val</code> d’une cellule : il sera par
+défaut égal à 0, mais on doit raisonner comme si cette cellule n’avait
+pas de valeur.</p>
+<figure>
+<img src="s16_1_fictif.svg" title="Fictif en tête"
+alt="Fictif en tête" />
+<figcaption aria-hidden="true">Fictif en tête</figcaption>
+</figure>
+<p>Écrire une fonction <code>créer(taille int) liste</code> qui renvoie
+une liste chaînée composée de cellules contenant des valeurs tirées
+aléatoirement dans
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mi>.</mi><mi>.</mi><mi>v</mi><mi>a</mi><mi>l</mi><mi>S</mi><mi>u</mi><mi>p</mi><mo stretchy="false" form="prefix">[</mo></mrow><annotation encoding="application/x-tex">[0..valSup[</annotation></semantics></math>
+: vous utiliserez vraisemblablement la fonction <code>insérerTête</code>
+pour ça, ainsi que la fonction <code>rand.Intn</code> (<a
+href="https://pkg.go.dev/math/rand#Intn">documentation</a>).</p>
+<p>Écrire une fonction <code>inverser(lsc liste) liste</code> qui
+inverse le contenu de la liste passée en paramètre et renvoie la
+nouvelle liste. Par exemple, la liste
+<code>3 -&gt; 1 -&gt; 4 -&gt; 2 -&gt; 7 -&gt; FIN</code> deviendra
+<code>7 -&gt; 2 -&gt; 4 -&gt; 1 -&gt; 3 -&gt; FIN</code>. On rappelle
+que vous devez travailler uniquement par réorganisation des chaînages et
+sans allocation de nouvelle <code>cellule</code>, ce qui
+<strong>interdit d’utiliser la fonction
+<code>insérerTête</code></strong>.</p>
+<p>Écrire une fonction <code>trierMax(lsc liste) liste</code> qui
+renvoie la liste passée en paramètre triée par <strong>ordre
+croissant</strong> de ses éléments, en utilisant l’algorithme du tri par
+sélection du maximum (<a
+href="https://fr.wikipedia.org/wiki/Tri_par_sélection">page
+Wikipédia</a>).</p>
+<p>Écrire une fonction <code>trierIns(lsc liste) liste</code> qui
+renvoie la liste passée en paramètre triée par <strong>ordre
+décroissant</strong> de ses éléments, en utilisant l’algorithme du tri
+par insertion (<a
+href="https://fr.wikipedia.org/wiki/Tri_par_insertion">page
+Wikipédia</a>).</p>
+<p>S’il vous reste du temps : implanter l’algorithme du pivot et celui
+du lièvre et de la tortue vus en TD et écrivez une petite fonction de
+tests visuels pour vérifier qu’ils fonctionnent correctement.</p>
+
+</main>
+<div><br></div>
+</body>
+</html>

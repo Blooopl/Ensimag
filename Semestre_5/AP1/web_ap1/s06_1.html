@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap2">Chapitre 2</a> : <a href="index.html#Chap2Seance06">Séance 06</a> : <a href="s06_1.html">Extremums locaux</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s06_1.go">s06_1.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<p>On va travailler dans cet exercice sur la notion de « traitement à la
+volée » d’une suite de données. Le principe consiste à considérer que la
+suite est potentiellement infinie, ou en tout cas très longue, et qu’il
+n’est pas réaliste de la stocker entièrement avant de commencer à la
+traiter. On ne mémorisera donc que le minimum de données nécessaire pour
+effectuer le traitement.</p>
+<h3 id="définitions">Définitions</h3>
+<p>On veut ici compter les extrémums locaux dans une suite d’entiers. On
+définit un extrémum local comme une valeur
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_i</annotation></semantics></math>
+telle que :</p>
+<ul>
+<li>soit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>&lt;</mo><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_{i-1} &lt; x_i</annotation></semantics></math>
+et
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∃</mo><mi>j</mi><mo>&gt;</mo><mi>i</mi></mrow><annotation encoding="application/x-tex">\exists j &gt; i</annotation></semantics></math>
+tel que
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>&gt;</mo><msub><mi>x</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">x_i &gt; x_j</annotation></semantics></math>
+et
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>=</mo><msub><mi>x</mi><mi>k</mi></msub><mo>∀</mo><mi>k</mi><mo>∈</mo><mo stretchy="false" form="prefix">{</mo><mi>i</mi><mo>+</mo><mn>1</mn><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">x_i = x_k \forall k \in \{i+1,...,j-1\}</annotation></semantics></math>
+(il s’agit d’un maximum local, qui peut être suivi d’un plateau avant la
+descente, comme par exemple 3 dans la suite 1 3 3 3 2)</li>
+<li>soit
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>&gt;</mo><msub><mi>x</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_{i-1} &gt; x_i</annotation></semantics></math>
+et
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∃</mo><mi>j</mi><mo>&gt;</mo><mi>i</mi></mrow><annotation encoding="application/x-tex">\exists j &gt; i</annotation></semantics></math>
+tel que
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>&lt;</mo><msub><mi>x</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">x_i &lt; x_j</annotation></semantics></math>
+et
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>=</mo><msub><mi>x</mi><mi>k</mi></msub><mo>∀</mo><mi>k</mi><mo>∈</mo><mo stretchy="false" form="prefix">{</mo><mi>i</mi><mo>+</mo><mn>1</mn><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">x_i = x_k \forall k \in \{i+1,...,j-1\}</annotation></semantics></math>
+(il s’agit d’un minimum local, qui peut être suivi d’un plateau avant la
+descente, comme par exemple 3 dans la suite 5 3 3 3 7)</li>
+</ul>
+<p>On ajoute les contraintes suivantes :</p>
+<ul>
+<li>la suite vide n’a aucun extrémum ;</li>
+<li>la suite constante a un seul extrémum ;</li>
+<li>les autres types de suites ont au moins deux extrémums, car on
+considère que les bornes de la suite (c’est-à-dire la première et la
+dernière valeur) sont des extrémums locaux.</li>
+</ul>
+<h3 id="implantation">Implantation</h3>
+<p>Le programme qu’on doit écrire devra donc lire les entiers un par un
+sur <em>stdin</em>, chaque valeur étant suivie d’un retour-chariot, et
+s’arrêter lorsqu’il rencontre le caractère spécial « fin de fichier »
+(<em>End Of File</em>) que l’on peut produire au clavier en pressant
+simultanément les touches <code>control</code> et <code>d</code>.</p>
+<p>On recommande d’écrire une fonction
+<code>estExtremum(xim1, xi, xip1 int) bool</code> qui détermine si
+<code>xi</code> est un extrémum local et affiche une trace du type
+<code>=&gt; extremum : xi</code> pour faciliter la mise au point. Cette
+fonction ne fait aucune lecture : elle teste juste si le paramètre
+<code>xi</code> est bien plus grand (resp. plus petit) que
+<code>xim1</code> et <code>xip1</code>.</p>
+<p>On donne quelques exemples pour illustrer ce que doit faire
+exactement le programme :</p>
+<ul>
+<li>la suite vide n’a pas d’extrémum local ;</li>
+<li>la suite (constante) 5 5 5 5 5 5 5 a un seul extrémum local ;</li>
+<li>la suite (monotone) 1 1 2 2 2 3 4 5 5 5 6 a deux extrémums locaux
+;</li>
+<li>la suite 4 4 4 5 5 5 6 6 6 5 4 3 a trois extrémums locaux ;</li>
+<li>la suite 4 5 6 5 4 5 6 a quatre extrémums locaux ;</li>
+<li>la suite 7 8 9 8 7 8 7 a cinq extrémums locaux.</li>
+</ul>
+<p>Pour vous faciliter la vie, on fournit des fichiers contenant ces
+suites : <a href="s06_1_suite1.txt">suite1.txt</a> <a
+href="s06_1_suite2.txt">suite2.txt</a> <a
+href="s06_1_suite3.txt">suite3.txt</a> <a
+href="s06_1_suite4.txt">suite4.txt</a> <a
+href="s06_1_suite5.txt">suite5.txt</a>. On rappelle que vous pouvez
+facilement créer un fichier vide en tapant la commande
+<code>touch suite0.txt</code> dans le terminal.</p>
+<h3 id="pour-vous-aider-à-aborder-le-problème">Pour vous aider à aborder
+le problème</h3>
+<p>On comprend facilement qu’il faudra mémoriser trois valeurs de la
+suite : la précédente, la courante et la « suivante » : bien sûr, il
+n’est pas possible de connaître le futur, donc on détectera les
+extrémums locaux avec un coup de retard. On aura donc besoin de trois
+variables locales à <code>main</code> qu’on pourra appeler
+<code>prec</code> (pour
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">x_{i-1}</annotation></semantics></math>),
+<code>cour</code> (pour
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_i</annotation></semantics></math>)
+et <code>suiv</code> (pour
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">x_{i+1}</annotation></semantics></math>)
+et on fera « glisser » à chaque tour de boucle (<code>suiv</code>
+deviendra <code>cour</code> et <code>cour</code> deviendra
+<code>prec</code>, l’ancienne valeur de <code>prec</code> n’étant plus
+intéressante). <strong>On recommande très fortement de ne lire qu’une
+seule valeur à chaque tour de boucle</strong> : cela simplifie le
+raisonnement.</p>
+<p>En réfléchissant au problème et analysant les exemples ci-dessus, on
+remarque :</p>
+<ul>
+<li>que la suite vide et la suite constante ne sont pas régulières, car
+on ne peut pas considérer qu’il y a systématiquement au moins 2
+extrémums (les bornes) ;</li>
+<li>les répétitions consécutives de valeurs (bégaiements) doivent être
+ignorées (1 1 2 2 3 3 est équivalent à 1 2 3) ;</li>
+<li>que les suites de tailles 1 ou 2 sont aussi problématiques, car on
+ne peut pas lire systématiquement les trois premières valeurs pour
+initialiser l’algorithme.</li>
+</ul>
+<p><strong>On recommande de commencer par écrire une première version du
+programme qui ne gèrent pas les cas particuliers ci-dessus, de vérifier
+qu’elle fonctionne dans le cas général, puis de compléter le programme
+pour gérer les cas particuliers un par un.</strong></p>
+<p>On rappelle aussi deux mots clés Go qui seront vraisemblablement
+utiles dans les boucles qu’on va écrire :</p>
+<ul>
+<li><code>break</code> provoque la sortie immédiate de la boucle, par
+exemple avec le code suivant :</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    debut<span class="op">()</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> cond <span class="op">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    fin<span class="op">()</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>on sortira de la boucle sans exécuter <code>fin()</code> ssi
+<code>cond</code> ;</p>
+<ul>
+<li><code>continue</code> provoque le redémarrage immédiat du corps de
+la boucle, par exemple avec le code suivant :</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    debut<span class="op">()</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> cond <span class="op">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">continue</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    fin<span class="op">()</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>on recommencera un nouveau tour de boucle à <code>debut()</code> sans
+exécuter <code>fin()</code> ssi <code>cond</code>.</p>
+<p>On n’oubliera pas de traiter proprement les erreurs, par exemple si
+on saisit autre chose d’un entier.</p>
+<p>On donne une trace d’exécution possible du programme pour préciser ce
+qui est attendu :</p>
+<pre class="text"><code>Entrez chaque valeur de la suite suivie d&#39;un retour-chariot (ctrl-d pour finir) :
+7
+8
+9
+8
+=&gt; extremum : 9
+7
+8
+=&gt; extremum : 7
+9
+Nombre d&#39;extremums : 4</code></pre>
+
+</main>
+<div><br></div>
+</body>
+</html>

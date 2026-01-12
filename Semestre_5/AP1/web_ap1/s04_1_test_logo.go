@@ -1,0 +1,123 @@
+package main
+
+import (
+	"fmt"
+	"math"
+)
+
+func trait() {
+	fmt.Println(debutImageSVG(100, 100))
+	fmt.Println(debutGroupeSVG("black", "white", 3))
+	tourneTortueDroite(135)
+	baisseCrayon()
+	avanceTortue(math.Sqrt2 * 100.0)
+	fmt.Println(finGroupeSVG())
+	fmt.Println(finImageSVG())
+}
+
+func carre() {
+	fmt.Println(debutImageSVG(100, 100))
+	fmt.Println(debutGroupeSVG("black", "white", 3))
+	tourneTortueDroite(180)
+	avanceTortue(25)
+	tourneTortueGauche(90)
+	avanceTortue(25)
+	baisseCrayon()
+	avanceTortue(50)
+	tourneTortueDroite(90)
+	avanceTortue(50)
+	tourneTortueDroite(90)
+	avanceTortue(50)
+	tourneTortueDroite(90)
+	avanceTortue(50)
+	fmt.Println(finGroupeSVG())
+	fmt.Println(finImageSVG())
+}
+
+func triangle() {
+	fmt.Println(debutImageSVG(100, 100))
+	fmt.Println(debutGroupeSVG("black", "white", 3))
+	tourneTortueDroite(180)
+	avanceTortue(70)
+	tourneTortueGauche(90)
+	avanceTortue(25)
+	baisseCrayon()
+	avanceTortue(50)
+	tourneTortueGauche(120)
+	avanceTortue(50)
+	tourneTortueGauche(120)
+	avanceTortue(50)
+	fmt.Println(finGroupeSVG())
+	fmt.Println(finImageSVG())
+}
+
+func etoile() {
+	fmt.Println(debutImageSVG(100, 100))
+	fmt.Println(debutGroupeSVG("black", "white", 3))
+	tourneTortueDroite(180)
+	avanceTortue(45)
+	tourneTortueGauche(90)
+	avanceTortue(25)
+	baisseCrayon()
+	avanceTortue(50)
+	tourneTortueDroite(144)
+	avanceTortue(50)
+	tourneTortueDroite(144)
+	avanceTortue(50)
+	tourneTortueDroite(144)
+	avanceTortue(50)
+	tourneTortueDroite(144)
+	avanceTortue(50)
+	fmt.Println(finGroupeSVG())
+	fmt.Println(finImageSVG())
+}
+
+func smiley() {
+	fmt.Println(debutImageSVG(100, 100))
+	fmt.Println(debutGroupeSVG("black", "white", 3))
+	tourneTortueDroite(180)
+	avanceTortue(50)
+	tourneTortueGauche(90)
+	avanceTortue(60)
+	tourneTortueGauche(90)
+	baisseCrayon()
+	avanceTortue(20)
+	tourneTortueDroite(90)
+	avanceTortue(20)
+	tourneTortueDroite(90)
+	avanceTortue(20)
+	tourneTortueDroite(90)
+	avanceTortue(20)
+	leveCrayon()
+	avanceTortue(20)
+	baisseCrayon()
+	avanceTortue(20)
+	tourneTortueDroite(90)
+	avanceTortue(20)
+	tourneTortueDroite(90)
+	avanceTortue(20)
+	tourneTortueDroite(90)
+	avanceTortue(20)
+	leveCrayon()
+	tourneTortueDroite(90)
+	avanceTortue(26)
+	tourneTortueGauche(90)
+	avanceTortue(10)
+	baisseCrayon()
+	tourneTortueGauche(45)
+	avanceTortue(30)
+	tourneTortueGauche(45)
+	avanceTortue(30)
+	tourneTortueGauche(45)
+	avanceTortue(30)
+	fmt.Println(finGroupeSVG())
+	fmt.Println(finImageSVG())
+}
+
+func main() {
+	//trait()
+	//carre()
+	//triangle()
+	//etoile()
+	smiley()
+}

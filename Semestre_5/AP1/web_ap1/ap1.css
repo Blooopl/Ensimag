@@ -1,0 +1,155 @@
+
+
+body.light {
+    background-color: white;
+    color: rgb(66, 66, 66);
+
+	a {
+		text-decoration: none;
+		color: #ff8000;
+	}
+
+	a:hover {
+		color: #cc6600;
+	}
+
+	h2 {
+		color: rgb(33, 33, 33);
+		font-size: 2rem;
+		font-weight: 400;
+		margin: 50px 0px;
+	}
+
+	h3 {
+		color: rgb(33, 33, 33);
+		font-size: 1.5rem;
+		font-weight: 400;
+		margin: 30px 0px;
+	}
+
+	h2, h3 {
+		background-color: white;
+		padding: 0px;
+	}
+	
+	code, pre {
+		background-color: #fafafa;
+		color: rgb(33, 33, 33);
+	}
+
+	pre {
+		box-shadow: 2px 2px 10px #ccc;
+	}
+	
+	figure {
+		background-color: white;
+		padding: 20px;
+		border: 0px;
+		box-shadow: 2px 2px 10px #ccc;
+		margin: 50px 0px;
+	}
+
+	a#theme-switcher {
+		color: rgb(66, 66, 66);
+	}
+
+	header {
+		background-image: url(ensimag.svg);
+	}
+
+	strong, b {
+		color: rgb(33, 33, 33);
+	}
+}
+
+a#theme-switcher {
+	font-size: 1.5em;
+	color: white;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:link, a:hover, a:active {
+	color: DeepSkyBlue;
+}
+
+a:visited {
+	color: LightSkyBlue;
+}
+
+body {
+	background-color: #121212;
+	color: #999;
+	line-height: 1.5em;
+	font-size: 16px;
+	font-weight: 400;
+	font-family: Roboto, sans-serif;
+	padding: 2px;
+}
+
+h2 {
+	border-radius: 4px;
+	background-color: DarkSlateGray;
+	color: Gainsboro;
+	margin: 20px 0;
+	padding: 20px;
+}
+
+h3 {
+	border-radius: 4px;
+	background-color: DarkSlateGray;
+	color: Gainsboro;
+	margin: 10px 0;
+	padding: 10px;
+}
+
+code, pre {
+	padding: 2px;
+	background-color: #282c34;
+	color: #ddd;
+	font-family: "Lucida Console", Monaco, monospace;
+	font-size: 10pt;
+}
+
+pre {
+	border-radius: 4px;
+	display: block;
+	padding: 10px;
+}
+
+strong, b {
+	color: #fff;
+}
+
+header {
+	padding: 10px;
+	margin: 10px auto;
+	max-width: 1200px;
+	background-image: url(ensimag-grey.svg);
+	background-position: 100% 0;
+	background-repeat: no-repeat;
+	background-size: auto auto;
+}
+
+main {
+	margin: 10px auto;
+	max-width: 1200px;
+}
+
+figcaption {
+	text-align: center;
+	font-weight: bold;
+	padding-top: 10px;
+}
+
+figure {
+	border-radius: 4px;
+	margin: 20px 0;
+	display: table;
+	background-color: #222;
+	padding: 20px;
+	border: 1px solid #333;
+}
+

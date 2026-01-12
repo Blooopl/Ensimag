@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap3">Chapitre 3</a> : <a href="index.html#Chap3Seance19">Séance 19</a> : <a href="s19_1.html">Tableaux associatifs (maps)</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s19_1.go">s19_1.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<p>Dans cet exercice, on va découvrir une structure de données classique
+fournie par de nombreux langages, sous des noms différents, et qui
+s’appelle une <em>map</em> en Go. On va aussi voir une utilisation
+particulière des boucles <code>for</code> adaptée à cette structure.</p>
+<p>Une <em>map</em> implante le concept de table de hachage (<a
+href="https://fr.wikipedia.org/wiki/Table_de_hachage">page
+Wikipédia</a>) d’une façon plus sophistiquée que le tableau de listes
+qu’on a vu précédemment.</p>
+<p>En résumé, une <em>map</em> permet d’associer une clé à une valeur
+donnée pour faciliter la recherche de la valeur dans la table. Le petit
+bout de code suivant illustre simplement comme on va manipuler cette
+structure.</p>
+<figure>
+<img src="s19_1_tuto_maps.png"
+title="Exemple d&#39;utilisation des maps"
+alt="Exemple d’utilisation des maps" />
+<figcaption aria-hidden="true">Exemple d’utilisation des
+maps</figcaption>
+</figure>
+<p>On voit qu’on utilise ici une <em>map</em> <code>notes</code> dont
+les clés sont des chaînes de caractères et les valeurs des flottants et
+qu’on initialise à l’aide de la fonction <code>make</code> (<a
+href="https://pck.go.dev/builtin#make">documentation</a>) qu’on avait
+déjà utilisée sur les <em>slices</em>.</p>
+<p>Ensuite, on peut affecter des valeurs aux clés grâce à la syntaxe
+<code>notes[cle] = val</code> : si la clé existe déjà, sa valeur sera
+simplement remplacée par la nouvelle.</p>
+<p>Enfin, on peut récupérer la valeur associée à une clé simplement par
+<code>notes[cle]</code> mais attention, cet accès renvoie en fait deux
+choses : la première est la valeur (ssi elle existe dans la
+<em>map</em>) et la deuxième est un booléen indiquant justement si la
+valeur existe. Dans le cas où le booléen renvoyé est <code>false</code>,
+la valeur renvoyée sera toujours la valeur nulle du type des valeurs
+(ici par exemple : <code>0.0</code> vu que les valeurs sont des
+flottants). Cette valeur nulle pourrait d’ailleurs être une valeur
+associée à une clé présente dans la <em>map</em> (si Agecanonix a eu
+0/20 en AP1 par exemple) : il faut donc vérifier le booléen si on veut
+être sûr.</p>
+<figure>
+<img src="s19_1_alesia.jpg"
+title="Ceux qui disent le contraire sont des romains"
+alt="Alésia n’existe pas et n’a jamais existée" />
+<figcaption aria-hidden="true">Alésia n’existe pas et n’a jamais
+existée</figcaption>
+</figure>
+<p>Si on a besoin d’itérer sur toutes les valeurs stockées dans la
+<em>map</em>, il suffit d’utiliser une boucle <code>for range</code>
+qu’on avait déjà vu pour les <em>slices</em> :</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> cle<span class="op">,</span> val <span class="op">:=</span> <span class="kw">range</span> dico <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// on fait quelque-chose avec la cle et la valeur</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Attention : il n’y a aucune garantie que les couples
+clé+valeur seront renvoyés dans un ordre quelconque</strong>.</p>
+<p>Comme vu dans les TP précédents, ce type de boucles fonctionne aussi
+sur les <em>slices</em> et même sur les chaînes de caractères, mais dans
+le cas de ces structures on est sûr que les valeurs seront renvoyées
+dans l’ordre de leurs indices dans le <em>slice</em> ou la chaîne.</p>
+<p>Écrire un programme qui prend en argument sur la ligne de commande le
+nom d’un fichier texte, le lit ligne par ligne et stocke dans une
+<em>map</em> le nombre d’occurrences de chaque caractère, avant
+d’afficher ces nombres d’occurrences selon le format ci-dessous.</p>
+<pre class="text"><code>Affichage dans un ordre aléatoire :
+&#39;N&#39; : 01    &#39;.&#39; : 06    &#39;V&#39; : 01    &#39;s&#39; : 31    &#39;u&#39; : 31
+&#39;J&#39; : 05    &#39;x&#39; : 03    &#39;é&#39; : 04    &#39;m&#39; : 15    &#39;a&#39; : 36
+&#39;&#39;&#39; : 07    &#39;o&#39; : 25    &#39;ù&#39; : 01    &#39;j&#39; : 05    &#39;T&#39; : 01
+&#39;f&#39; : 04    &#39;,&#39; : 16    &#39;y&#39; : 02    &#39;H&#39; : 01    &#39;U&#39; : 01
+&#39;à&#39; : 01    &#39;r&#39; : 41    &#39;g&#39; : 04    &#39;S&#39; : 02    &#39;v&#39; : 05
+&#39;n&#39; : 29    &#39; &#39; : 92    &#39;è&#39; : 02    &#39;c&#39; : 09    &#39;t&#39; : 25
+&#39;E&#39; : 01    &#39;e&#39; : 61    &#39;l&#39; : 21    &#39;d&#39; : 14    &#39;-&#39; : 01
+
+Affichage dans l&#39;ordre des caractères :
+&#39; &#39; : 92    &#39;&#39;&#39; : 07    &#39;,&#39; : 16    &#39;-&#39; : 01    &#39;.&#39; : 06
+&#39;E&#39; : 01    &#39;H&#39; : 01    &#39;J&#39; : 05    &#39;N&#39; : 01    &#39;S&#39; : 02
+&#39;U&#39; : 01    &#39;V&#39; : 01    &#39;a&#39; : 36    &#39;b&#39; : 08    &#39;c&#39; : 09
+&#39;e&#39; : 61    &#39;f&#39; : 04    &#39;g&#39; : 04    &#39;h&#39; : 05    &#39;i&#39; : 34
+&#39;l&#39; : 21    &#39;m&#39; : 15    &#39;n&#39; : 29    &#39;o&#39; : 25    &#39;p&#39; : 09
+&#39;r&#39; : 41    &#39;s&#39; : 31    &#39;t&#39; : 25    &#39;u&#39; : 31    &#39;v&#39; : 05
+&#39;y&#39; : 02    &#39;à&#39; : 01    &#39;è&#39; : 02    &#39;é&#39; : 04    &#39;ê&#39; : 01</code></pre>
+<p>On vous fournit un fichier texte pour tester votre programme (<a
+href="s19_1_victor.txt">télécharger</a>), qui correspond à l’affichage
+ci-dessus.</p>
+<p>Les caractères Unicode contenant les caractères français sont
+numérotés entre le code <code>\u0000</code> et la constante
+<code>unicode.MaxLatin1</code>.</p>
+
+</main>
+<div><br></div>
+</body>
+</html>

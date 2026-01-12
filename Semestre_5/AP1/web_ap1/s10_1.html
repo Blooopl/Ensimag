@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap2">Chapitre 2</a> : <a href="index.html#Chap2Seance10">Séance 10</a> : <a href="s10_1.html">Tris quadratiques</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s10_1.go">s10_1.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<h3 id="tris-quadratiques">Tris quadratiques</h3>
+<p>Dans cet exercice, on va implanter des algorithmes de tris
+classiques. Tous les tris que l’on va écrire dans cette séance ont un
+coût moyen en
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(n^2)</annotation></semantics></math>,
+ce qui signifie qu’ils ne sont pas du tout efficaces : la plupart des
+tris fournis dans les langages modernes ont un coût moyen en
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>×</mo><mi>l</mi><mi>o</mi><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(n \times log(n))</annotation></semantics></math>
+(formellement il s’agit d’un
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><msub><mi>g</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">log_2</annotation></semantics></math>,
+mais la notation
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>O</mi><annotation encoding="application/x-tex">O</annotation></semantics></math>
+représente une comparaison asymptotique, donc la base du logarithme ne
+change rien).</p>
+<p>Comme dans l’exercice sur le pivot, on aura besoin des constantes
+<code>valSup = 10</code> et <code>tailleMax = 6</code>, ainsi que la
+fonction <code>remplir(tab []int)</code> que vous pouvez simplement
+recopier. Pour afficher nos tableaux, on utilisera simplement
+<code>Println</code> (et oui, ça marche, mais on voulait vous faire
+implanter l’affichage à la main).</p>
+<p>Écrire une fonction <code>trierNain(tab []int)</code> qui trie le
+tableau par ordre croissant en implantant l’algorithme du tri du nain de
+jardin dont on donne le principe :</p>
+<ul>
+<li>un nain de jardin doit trier des pots de fleur par taille
+croissante, les pots sont alignés en file de gauche à droite, espacés
+d’un pas les uns des autres ;</li>
+<li>le nain est initialement positionné devant le premier pot de la file
+;</li>
+<li>il compare la taille de ce pot avec celui immédiatement à sa droite
+;</li>
+<li>si le pot de droite est strictement plus petit que celui devant lui,
+le nain échange les deux pots, puis recule d’un pas vers la gauche ssi
+il n’est pas déjà devant le pot le plus à gauche ;</li>
+<li>si le pot de droite est de taille plus grande ou égale que celui
+devant lui, le nain avance d’un pas vers la droite ;</li>
+<li>il s’arrête de travailler quand il se retrouve devant le pot le plus
+à droite de la file.</li>
+</ul>
+<p>Intuitivement, dans quelle configuration initiale du tableau est-ce
+que cet algorithme sera le plus performant (meilleur cas) ? Et le moins
+performant (pire cas) ?</p>
+<p>Écrire une fonction <code>trierMax(tab []int)</code> qui trie le
+tableau par ordre <strong>décroissant</strong> en utilisant l’algorithme
+du tri par sélection qu’on a vu en TD : attention, il s’agit ici d’une
+sélection du maximum (et pas du minimum).</p>
+<p>Écrire une fonction <code>trierIns(tab []int)</code> qui trie le
+tableau par ordre croissant en utilisant l’algorithme du tri par
+insertion qu’on a vu en TD.</p>
+<h3 id="tests-automatiques">Tests automatiques</h3>
+<p>Comme pour le pivot, vous pouvez commencer par vérifier vos tris
+visuellement sur une taille raisonnable, mais vous devez ensuite écrire
+une fonction <code>testAuto()</code> qui va là encore tester les trois
+fonctions beaucoup de fois (100 par exemples) sur des tableaux de
+tailles différentes (entre 0 et <code>tailleMaxAuto</code> que vous
+pouvez fixer à 1000 par exemple).</p>
+<p>Dans le cas de tris, c’est plus facile que pour le pivot, car Go
+fournit bien sûr une fonction de tri : <code>slices.Sort()</code> (<a
+href="https://pkg.go.dev/slices#Sort">documentation</a>) qui prend
+simplement en paramètre le tableau qu’on veut trier.</p>
+<p>Votre fonction de test automatique pourra donc simplement :</p>
+<ul>
+<li>remplir un tableau <code>tabOrg</code> d’entiers aléatoires ;</li>
+<li>en faire deux copies (<code>tabGo</code> et <code>tabRes</code>)
+grâce à la fonction <code>slices.Clone</code> (<a
+href="https://pkg.go.dev/slices#Clone">documentation</a>) ;</li>
+<li>trier <code>tabGo</code> avec la fonction de tri de Go qui nous
+servira de référence ;</li>
+<li>appeler chacune de nos trois fonctions de tri sur
+<code>tabRes</code>, qu’on restaurera à chaque fois avant de trier
+depuis <code>tabOrg</code>, grâce à <code>copy</code> (<a
+href="https://pkg.go.dev/builtin#copy">documentation</a>) ;</li>
+<li>comparer à chaque fois le résultat de notre tri avec celui de Go, en
+utilisant la fonction <code>slices.Equal</code> (<a
+href="https://pkg.go.dev/slices#Equal">documentation</a>) qui prend
+simplement les deux tableaux à comparer en paramètre et renvoie un
+booléen indiquant s’ils sont égaux ;</li>
+<li>attention : on rappelle que notre tri par sélection ordonne les
+éléments par ordre décroissant : la fonction <code>slices.Reverse</code>
+(<a href="https://pkg.go.dev/slices#Reverse">documentation</a>) devrait
+permettre de résoudre facilement ce petit problème.</li>
+</ul>
+<p>Un observateur critique pourrait remarquer qu’on passe notre temps à
+recopier des tableaux et à faire des parcours, ce qui est très loin
+d’être efficace : ça n’a pas vraiment d’importance, car il s’agit d’une
+fonction de test interne, et pas d’un code destiné à tourner en
+production.</p>
+<p><strong>Précision</strong> : on veut faire beaucoup de tests sur des
+tableaux de tailles différentes, on devra donc écrire deux boucles
+imbriquées sur le modèle :</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> taille <span class="op">:=</span> <span class="dv">0</span><span class="op">;</span> taille <span class="op">&lt;=</span> tailleMaxAuto<span class="op">;</span> taille<span class="op">++</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> cpt <span class="op">:=</span> <span class="dv">0</span><span class="op">;</span> cpt <span class="op">&lt;</span> nombreItérationsTest<span class="op">;</span> cpt<span class="op">++</span> <span class="op">{</span></span></code></pre></div>
+<p>où <code>nombreItérationsTest = 100</code> et
+<code>tailleMaxAuto = 1000</code> par exemple.</p>
+<h3 id="évaluation-des-performances">Évaluation des performances</h3>
+<p>Une fois qu’on est convaincu que nos fonctions fonctionnent, il est
+intéressant de mesurer leurs performances pour les comparer entre elles
+et avec de nous comparer avec le tri de Go pour voir si on ne serait pas
+aussi forts qu’eux par hasard (<em>spoiler</em> : non, ou plutôt pas
+encore).</p>
+<p>Pour mesurer les performances d’une fonction, le schéma peut être
+tout simplement du type :</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>debut <span class="op">=</span> heureCourante<span class="op">()</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ma_fonction<span class="op">()</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>fin <span class="op">=</span> heureCourante<span class="op">()</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>afficher<span class="op">(</span>fin <span class="op">-</span> debut<span class="op">)</span></span></code></pre></div>
+<p>La fonction <code>heureCourante</code> peut s’écrire très facilement
+en Go en utilisant la fonction <code>time.Now</code> (<a
+href="https://pkg.go.dev/time#Now">documentation</a>) et la méthode
+<code>UnixMilli</code> (<a
+href="https://pkg.go.dev/time#Time.UnixMilli">documentation</a>), une
+précision du temps à la milliseconde sera largement suffisante pour nous
+:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Récupère l&#39;heure courante sous la forme d&#39;un entier long de 64 bits</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> heureCourante<span class="op">()</span> <span class="dt">int64</span> <span class="op">{</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> time<span class="op">.</span>Now<span class="op">().</span>UnixMilli<span class="op">()</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Mais comme cette fonction renvoie un entier, on va arrondir si on
+divise par 1000 pour avoir des secondes, et on risque de se retrouver
+avec des temps égaux à 0 ! Il faut donc travailler sur des flottants,
+comme avec la fonction ci-dessous :</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Soustrait deux temps en les convertissant en float64 pour ne pas perdre en précision</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> diffTemps<span class="op">(</span>deb<span class="op">,</span> fin <span class="dt">int64</span><span class="op">)</span> <span class="dt">float64</span> <span class="op">{</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">(</span><span class="dt">float64</span><span class="op">(</span>fin<span class="op">)</span> <span class="op">-</span> <span class="dt">float64</span><span class="op">(</span>deb<span class="op">))</span> <span class="op">/</span> <span class="fl">1000.0</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Attention : il est important que chaque fonction trie exactement le
+même tableau que les autres (car on a vu que certains tris ont des
+meilleurs et pires cas différents selon la configuration initiale des
+données), donc n’hésitez pas à utiliser la fonction <code>copy</code>
+pour sauvegarder et restaurer le tableau rempli aléatoirement.</p>
+<p>Plus concrètement, on veut écrire une fonction qui va faire
+quelque-chose de ce genre (avec <code>tailleMinPerfs = 100_000</code> et
+<code>tailleMaxPerfs = 400_000</code> par exemple) :</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> testPerfs<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> deb<span class="op">,</span> fin <span class="dt">int64</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> taille <span class="op">:=</span> tailleMinPerfs<span class="op">;</span> taille <span class="op">&lt;=</span> tailleMaxPerfs<span class="op">;</span> taille <span class="op">*=</span> <span class="dv">2</span> <span class="op">{</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        fmt<span class="op">.</span>Println<span class="op">(</span><span class="st">&quot;Tris d&#39;un tableau de&quot;</span><span class="op">,</span> taille<span class="op">,</span> <span class="st">&quot;éléments&quot;</span><span class="op">)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        tabOrg <span class="op">:=</span> <span class="bu">make</span><span class="op">([]</span><span class="dt">int</span><span class="op">,</span> taille<span class="op">)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        remplir<span class="op">(</span>tabOrg<span class="op">)</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="co">// On sauvegarde le tableau avant de le trier pour le réutiliser dans les tris suivants</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        tabSav <span class="op">:=</span> slices<span class="op">.</span>Clone<span class="op">(</span>tabOrg<span class="op">)</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        fmt<span class="op">.</span>Print<span class="op">(</span><span class="st">&quot;- tableau trié par le nain   : &quot;</span><span class="op">)</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        deb <span class="op">=</span> heureCourante<span class="op">()</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        trierNain<span class="op">(</span>tabOrg<span class="op">)</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        fin <span class="op">=</span> heureCourante<span class="op">()</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        fmt<span class="op">.</span>Println<span class="op">(</span>diffTemps<span class="op">(</span>deb<span class="op">,</span> fin<span class="op">),</span> <span class="st">&quot;secondes&quot;</span><span class="op">)</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="co">// On restaure le tableau initial pour être sûr qu&#39;on donne bien le même tableau à chaque tri</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        <span class="bu">copy</span><span class="op">(</span>tabOrg<span class="op">,</span> tabSav<span class="op">)</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        fmt<span class="op">.</span>Print<span class="op">(</span><span class="st">&quot;- tableau trié par sélection : &quot;</span><span class="op">)</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Et ainsi de suite pour les autres tris</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Voilà un exemple d’affichage que votre fonction pourra produire (sur
+une vieille machine de 2018, les machines des salles TP devraient être
+plus rapides) :</p>
+<pre class="text"><code>Tris d&#39;un tableau de 100000 éléments
+- tableau trié par le nain   : 8.847 secondes
+- tableau trié par sélection : 7.743 secondes
+- tableau trié par insertion : 3.297 secondes
+- tableau trié par Go        : 0.002 secondes
+Tris d&#39;un tableau de 200000 éléments
+- tableau trié par le nain   : 33.457 secondes
+- tableau trié par sélection : 35.186 secondes
+- tableau trié par insertion : 12.321 secondes
+- tableau trié par Go        : 0.005 secondes
+Tris d&#39;un tableau de 400000 éléments
+- tableau trié par le nain   : 152.829 secondes
+- tableau trié par sélection : 143 secondes
+- tableau trié par insertion : 43.199 secondes
+- tableau trié par Go        : 0.007 secondes</code></pre>
+<p>On peut conclure que :</p>
+<ul>
+<li>le tri par sélection et le tri du nain sont les pires, ils ont des
+performances similaires en pratique (même si le nain peut parfois être
+plus rapide, car il a un coût linéaire dans le meilleur cas d’un tableau
+déjà trié par ordre croissant) ;</li>
+<li>le tri par insertion se comporte étonnamment bien pour un tri en
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(n^2)</annotation></semantics></math>
+: il est d’ailleurs souvent utilisé quand on doit trier des tableaux
+contenant très peu d’éléments et pour lesquels les tris efficaces
+seraient trop lourds à mettre en place ;</li>
+<li>le tri de Go est un tri efficace en
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>×</mo><mi>l</mi><mi>o</mi><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(n \times log(n))</annotation></semantics></math>
+: la différence d’ordre de grandeur est flagrante dès qu’on travaille
+sur des tableaux de tailles réalistes.</li>
+</ul>
+<p>Note : la version de Go installée en salle de TP est la 1.22, celle
+utilisée pour les tests ci-dessus est la 1.25 : il est possible que le
+tri de Go soit moins performants sur les machines de TP car le tri peut
+avoir été encore optimisé dans une version récente du langage.</p>
+<figure>
+<img src="s10_1_nain.jpg"
+title="Et après on s&#39;étonne que son tri soit tout pourri..."
+alt="L’inventeur du tri du nain de jardin en pleine réflexion…" />
+<figcaption aria-hidden="true">L’inventeur du tri du nain de jardin en
+pleine réflexion…</figcaption>
+</figure>
+
+</main>
+<div><br></div>
+</body>
+</html>

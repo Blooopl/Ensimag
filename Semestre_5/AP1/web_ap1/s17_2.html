@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap3">Chapitre 3</a> : <a href="index.html#Chap3Seance17">Séance 17</a> : <a href="s17_2.html">Listes circulaires triées</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s17_2.go">s17_2.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<p>On va travailler dans cet exercice sur des listes chaînées
+circulaires, c’est-à-dire tout simplement que le suivant de la dernière
+<code>cellule</code> de la liste est la première <code>cellule</code>,
+plutôt que <code>nil</code>. En pratique, il y aura un élément fictif en
+tête de liste qui sépare donc la dernière <code>cellule</code> de la
+première.</p>
+<p>De plus, ces listes circulaires seront triées par ordre croissant des
+valeurs qu’elles contiennent : on devra maintenir cette propriété dans
+toutes les fonctions que l’on va implanter.</p>
+<p>On définira le type <code>cellule</code> comme une structure
+contenant une valeur entière (un chiffre dans
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mi>.</mi><mn>.9</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[0..9]</annotation></semantics></math>)
+et un pointeur vers la <code>cellule</code> suivante. Le type
+<code>liste</code> sera simplement un pointeur vers une
+<code>cellule</code>.</p>
+<p>Écrire une fonction <code>créer() liste</code> qui alloue l’élément
+fictif en tête, le chaine à lui-même et renvoie son adresse.</p>
+<p>Écrire une fonction <code>estVide(lct liste) bool</code> qui renvoie
+un booléen indiquant si la <code>liste</code> passée en paramètre est
+vide, c’est-à-dire ne contient que l’élément fictif.</p>
+<p>Écrire une fonction <code>afficher(lct liste)</code> qui affiche le
+contenu de la <code>liste</code> sous le format
+<code>4 -&gt; 5 -&gt; 8 -&gt; 9 -&gt; 9 -&gt; FIN</code>, donc sans
+l’élément fictif.</p>
+<p>Écrire une fonction
+<code>insérerListeCircTriée(lct liste, val int)</code> qui insère la
+valeur donnée <strong>à sa place</strong> dans la <code>liste</code>
+triée. On notera que cette fonction n’a pas besoin de renvoyer la
+nouvelle <code>liste</code> car on ne modifie pas le pointeur vers
+l’élément fictif.</p>
+<p>Écrire une fonction
+<code>supprimerListeCircTriée(lct liste, val int) bool</code> qui
+supprime la première occurrence de la valeur dans la <code>liste</code>
+triée passée en paramètre et renvoie un booléen indiquant si une valeur
+a bien été supprimée. Cette fonction doit exploiter le caractère trié de
+la <code>liste</code> pour arrêter de rechercher l’élément dès qu’on est
+sûr qu’il n’est pas dans la <code>liste</code>.</p>
+<p>Écrire une fonction
+<code>supprimerDoublonsListeCircTriée(lct liste)</code> qui supprime les
+doublons dans la <code>liste</code> triée. Par exemple, si la
+<code>liste</code> contient initialement les valeurs
+<code>1 -&gt; 1 -&gt; 2 -&gt; 3 -&gt; 3 -&gt; 3 -&gt; 4</code>, elle
+contiendra <code>1 -&gt; 2 -&gt; 3 -&gt; 4</code> après l’exécution de
+la fonction. On rappelle que la liste est triées par ordre croissant, ce
+qui simplifie beaucoup les choses.</p>
+<p>Écrire une fonction
+<code>découperListeCircTriée(lct liste) (liste, liste)</code> qui
+découpe la <code>liste</code> passée en deux sous-listes contenant les
+mêmes éléments dans le même ordre, en les répartissant un sur deux dans
+chaque <code>liste</code>. Par exemple, si la liste initiale contient
+<code>1 -&gt; 2 -&gt; 3 -&gt; 4 -&gt; 4 -&gt; 5</code>, les deux
+<code>listes</code> résultats seront
+<code>1 -&gt; 3 -&gt; 4 -&gt; FIN</code> et
+<code>2 -&gt; 4 -&gt; 5</code> : ces listes résultats seront donc
+également triées.</p>
+<p>Toutes ces fonctions doivent être testées sur des listes de tailles
+raisonnables (par exemple jusqu’à 12 éléments), en vérifiant bien les
+cas particuliers (tailles de 0, 1 et 2 éléments).</p>
+
+</main>
+<div><br></div>
+</body>
+</html>

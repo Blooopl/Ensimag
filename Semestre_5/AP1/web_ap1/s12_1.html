@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap2">Chapitre 2</a> : <a href="index.html#Chap2Seance12">Séance 12</a> : <a href="s12_1.html">Le crible d'Ératosthène</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s12_1.go">s12_1.go</a>
+</div>
+<h2 id="crible-dératosthène">Crible d’Ératosthène</h2>
+<p>On va implanter dans cet exercice le fameux crible d’Ératosthène
+(célèbre informaticien grec du troisième siècle avant notre ère). Le
+crible d’Ératosthène est un algorithme permettant de lister tous les
+nombres premiers inférieurs ou égaux à une valeur maximale donnée.</p>
+<p>Le principe de cet algorithme est très simple :</p>
+<ul>
+<li>on demande à l’utilisateur la valeur maximale <code>valMax</code>
+;</li>
+<li>on alloue un <em>slice</em> (qu’on appellera
+<code>lesPremiers</code>) de <code>valMax</code> booléens, et on
+initialise toutes ses cases à <code>true</code> : ce <em>slice</em> sera
+en pratique utilisé comme un tableau statique (comme on a fait pendant
+la séance sur les tris par exemple) et vous ne devez jamais modifier sa
+taille une fois qu’il est créé ;</li>
+<li>on affecte la première case de ce tableau à <code>false</code>, car
+1 n’est pas un nombre premier ;</li>
+<li>on pose que <code>prem</code> vaut 2 (le premier nombre premier) et
+on parcourt <code>lesPremiers</code> pour mettre à <code>false</code>
+toutes les cases dont le numéro est multiple de <code>prem</code> : 4,
+6, 8, etc. ne sont pas des nombres premiers, on les « barre » dans le
+tableau ;</li>
+<li>on passe <code>prem</code> au plus petit entier supérieur qui n’a
+pas été barré et on répète le processus :
+<ul>
+<li>le plus petit entier supérieur à 2 et non barré est
+<code>prem = 3</code> : on barre tous les multiples de 3 dans le tableau
+;</li>
+<li>le plus petit entier supérieur à 3 et non barré est
+<code>prem = 5</code> (4 est un multiple de 2, il a déjà été barré) : on
+barre tous les multiples de 5 dans le tableau ;</li>
+<li>et ainsi de suite.</li>
+</ul></li>
+<li>on peut s’arrêter dès que <code>prem</code> atteint
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msqrt><mrow><mi>v</mi><mi>a</mi><mi>l</mi><mi>M</mi><mi>a</mi><mi>x</mi></mrow></msqrt><annotation encoding="application/x-tex">\sqrt{valMax}</annotation></semantics></math>,
+car on est alors sûr d’avoir déjà barré tous les nombres composés plus
+grands.</li>
+</ul>
+<p>On détaille ci-dessous les différentes étapes à réaliser pour
+implanter cet algorithme : vous devez travailler dans le sous-répertoire
+<code>exo1</code> en complétant le fichier <code>crible.go</code>
+fourni.</p>
+<p>On rappelle qu’en Go les <em>slices</em> sont forcément indicés à
+partir de 0 : la case numéro 1 (la première) d’un tableau à l’indice 0,
+la case numéro 2 (la deuxième) a l’indice 1, etc.</p>
+<h3 id="initialisation-du-tableau">Initialisation du tableau</h3>
+<p>Commencez par écrire une fonction
+<code>initialiser(taille int) []bool</code> dont le but est d’allouer un
+<em>slice</em> de booléens de la <code>taille</code> voulue,
+d’initialiser ses cases à <code>true</code> (sauf la première qui devra
+être initialisée à <code>false</code>) et de renvoyer ce tableau à la
+fonction principale. Vous aurez vraisemblablement besoin de la fonction
+<code>make</code> (<a
+href="https://pkg.go.dev/builtin#make">documentation</a>) pour répondre
+à cette question.</p>
+<h3 id="filtrage-des-multiples-dun-nombre-donné">Filtrage des multiples
+d’un nombre donné</h3>
+<p>Implantez maintenant une fonction
+<code>filtrer(lesPremiers []bool, prem int)</code> dont le rôle est
+d’affecter à <code>false</code> toutes les cases du tableau
+<code>lesPremiers</code> dont le numéro est un multiple de
+<code>prem</code>.</p>
+<h3 id="affichage-du-résultat">Affichage du résultat</h3>
+<p>Écrivez ensuite une fonction
+<code>afficher(lesPremiers []bool, valMax int)</code> qui affiche les
+numéros des cases contenant <code>true</code>, sous le format suivant
+(en supposant que <code>valMax == 10</code>) :
+<code>Les nombres premiers inférieurs ou égaux à 10 sont : 2 3 5 7</code>.</p>
+<h3 id="programme-principal">Programme principal</h3>
+<p>Implantez enfin la fonction <code>main</code> qui sera le point
+d’entrée du programme et devra donc demander à l’utilisateur la valeur
+maximale, puis utiliser les fonctions précédentes pour implanter
+l’algorithme du crible d’Ératosthène.</p>
+<p>Votre programme devra bien vérifier que la valeur entrée par
+l’utilisateur est un entier supérieur ou égal à 2. Dans le cas
+contraire, on arrêtera immédiatement le programme avec un message
+d’erreur adapté sur <em>stderr</em>, par exemple en appelant
+<code>log.Fatal</code> (<a
+href="https://pkg.go.dev/log#Fatal">documentation</a>) sur une erreur
+pouvant être créée par <code>errors.New</code> (<a
+href="https://pkg.go.dev/errors#New">documentation</a>).</p>
+<p>Vous aurez vraisemblablement besoin de créer un <code>Scanner</code>
+pour lire sur <code>os.Stdin</code>, en utilisant la fonction
+<code>bufio.NewScanner</code> (<a
+href="https://pkg.go.dev/bufio#NewScanner">documentation</a>) et les
+méthodes <code>Scan</code> (<a
+href="https://pkg.go.dev/bufio#Scanner.Scan">documentation</a>) et
+<code>Text</code> (<a
+href="https://pkg.go.dev/bufio#Scanner.Text">documentation</a>) à
+appeler sur le <code>Scanner</code>.</p>
+<p>On rappelle que la fonction <code>strconv.Atoi</code> (<a
+href="https://pkg.go.dev/strconv#Atoi">documentation</a>) permet de
+convertir une chaîne de caractères en entier, si c’est possible (et on
+rappelle aussi qu’elle est susceptible de renvoyer une erreur qui devra
+être gérée proprement).</p>
+<p>Enfin, des fonctions mathématiques intéressantes comme
+<code>math.Floor</code> (<a
+href="https://pkg.go.dev/math#Floor">documentation</a>) et
+<code>math.Sqrt</code> (<a
+href="https://pkg.go.dev/math#Sqrt">documentation</a>) pourront vous
+être utiles.</p>
+
+</main>
+<div><br></div>
+</body>
+</html>

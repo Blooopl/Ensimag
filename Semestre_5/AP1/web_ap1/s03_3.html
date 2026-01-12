@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap1">Chapitre 1</a> : <a href="index.html#Chap1Seance03">Séance 03</a> : <a href="s03_3.html">Affichage</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s03_3.go">s03_3.go</a>
+</div>
+<h2 id="énoncé">Énoncé</h2>
+<p>Dans cet exercice, on va travailler sur les fonctions d’affichage
+fournies par Go. On en a déjà utilisé plusieurs dans les exercices
+précédents.</p>
+<p>Écrire une fonction <code>main</code> qui définit les variables
+suivantes :</p>
+<ul>
+<li>une chaîne de caractères <code>chaine1</code> initialisée avec
+“Orni” ;</li>
+<li>une autre chaîne de caractères <code>chaine2</code> initialisée avec
+“thorynque” ;</li>
+<li>un entier initialisé avec 42 ;</li>
+<li>un booléen initialisé à <code>true</code> ;</li>
+<li>un flottant (sur 64 bits) initialisé à
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics></math>
+: <code>math.Pi</code> (<a
+href="https://pkg.go.dev/math#Pi">documentation</a>) en Go.</li>
+</ul>
+<p>Afficher toutes ces variables en utilisant un seul appel à
+<code>fmt.Println</code> (<a
+href="https://pkg.go.dev/fmt#Println">documentation</a>).</p>
+<p>Afficher toutes ces variables en utilisant un seul appel à
+<code>fmt.Print</code> (<a
+href="https://pkg.go.dev/fmt#Print">documentation</a>), en ajoutant
+explicitement un retour-chariot <code>\n</code> pour aller à la ligne.
+Quelles différences avec la trace précédente remarquez-vous ?</p>
+<p>Afficher toutes ces variables en utilisant un seul appel à
+<code>fmt.Fprintln</code> (<a
+href="https://pkg.go.dev/fmt#Fprintln">documentation</a>), qui devra
+écrire sur <code>os.Stdout</code>.</p>
+<p>Utiliser maintenant la fonction <code>fmt.Sprintln</code> (<a
+href="https://pkg.go.dev/fmt#Sprintln">documentation</a>) pour
+initialiser une variable de type chaîne de caractères avec le résultat
+qui aurait été affiché à l’écran si on avait utilisé directement
+<code>Println</code>, puis afficher le contenu de cette variable (vous
+pouvez aussi afficher directement la chaîne renvoyée par
+<code>Sprintln</code> sans passer par une variable intermédiaire).</p>
+<p>Attention : on doit aller à la ligne, mais pas sauter une ligne
+supplémentaire.</p>
+<p>On note qu’il existe des fonctions <code>fmt.Fprint</code> (<a
+href="https://pkg.go.dev/fmt#Fprint">documentation</a>) et
+<code>fmt.Sprint</code> (<a
+href="https://pkg.go.dev/fmt#Sprint">documentation</a>) qui ont le même
+comportement que <code>Print</code> par rapport à
+<code>Println</code>.</p>
+<p>Toutes les fonctions précédentes sont en fait des raccourcis qui
+utilisent la fonction générale sous-jacente <code>fmt.Printf</code> (<a
+href="https://pkg.go.dev/fmt#Printf">documentation</a>) bien connue des
+programmeurs C. L’avantage de cette fonction générale est qu’elle permet
+de contrôler très précisément l’affichage produit, grâce à des
+directives de formatage listées au début de la documentation du package
+<code>fmt</code> (<a
+href="https://pkg.go.dev/fmt#hdr-Printing">documentation</a>) (Go
+utilise le terme « verbe » pour désigner ces directives).</p>
+<p>Le principe d’utilisation de <code>Printf</code> est simple :</p>
+<ul>
+<li>son premier paramètre est une chaîne de caractères contenant le
+format de la chaîne à produire, décrit notamment à l’aide de verbes
+;</li>
+<li>tous les autres paramètres sont les valeurs (variables, constantes,
+résultats d’appels de fonctions, etc.) qu’on souhaite afficher.</li>
+</ul>
+<p>Par exemple, un appel à
+<code>fmt.Printf("%d est un nombre pair ? %t\n", entier, entier%2 == 0)</code>
+produira l’affichage <code>42 est un nombre pair ? true</code>.</p>
+<p>Utiliser <code>Printf</code> pour produire
+<strong>exactement</strong> l’affichage suivant :</p>
+<pre class="text"><code>  Orni thorynque 042 00101010 true 3.1416</code></pre>
+<p>Plus précisément, on veut :</p>
+<ul>
+<li>que l’affichage de <code>chaine1</code> se fasse sur au moins 6
+caractères, avec complétion par des espaces en tête (et non, écrire les
+deux espaces à la main n’est pas du tout ce qu’on attend…) ;</li>
+<li>la même contrainte pour <code>chaine2</code>, ce qui bien sûr ne se
+verra pas puisque la chaîne contient plus de 6 caractères ;</li>
+<li>que l’affichage de l’entier se fasse sur 3 chiffres au minimum, avec
+complétion par des zéros en tête ;</li>
+<li>afficher l’entier en binaire sur 8 bits ;</li>
+<li>afficher la valeur du booléen avec le format par défaut ;</li>
+<li>que l’affichage de
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics></math>
+soit arrondi au quatrième chiffre après la virgule.</li>
+</ul>
+<p>Enfin, utiliser <code>Printf</code> pour afficher les types de toutes
+les variables définies dans cet exercice : on devrait obtenir ce genre
+de résultat : <code>string string int bool float64</code>.</p>
+<figure>
+<img src="s03_3_ornithorynque.jpg"
+title="L&#39;ornithorynque est la preuve que même l&#39;évolution a le sens de l&#39;humour"
+alt="Ceci est un ornithorynque. Si, ça existe vraiment." />
+<figcaption aria-hidden="true">Ceci est un ornithorynque. Si, ça existe
+vraiment.</figcaption>
+</figure>
+
+</main>
+<div><br></div>
+</body>
+</html>

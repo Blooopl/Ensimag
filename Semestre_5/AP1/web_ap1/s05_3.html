@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap2">Chapitre 2</a> : <a href="index.html#Chap2Seance05">Séance 05</a> : <a href="s05_3.html">Factorisation de code</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s05_3.go">s05_3.go</a>
+</div>
+<h2 id="factorisation-de-code">Factorisation de code</h2>
+<p>Dans cet exercice à l’énoncé très court, vous devez utiliser des
+boucles pour factoriser le code ci-dessus, dont le but est de dessiner
+un échiquier en SVG :</p>
+<figure>
+<img src="s05_3_echiquier.svg" title="Un échiquier"
+alt="Un échiquier" />
+<figcaption aria-hidden="true">Un échiquier</figcaption>
+</figure>
+<p>Vous aurez besoin pour cela du module SVG fourni dans l’exercice sur
+la programmation modulaire de la séance 2 : vous pouvez utiliser un lien
+symbolique pour le rendre accessible dans le répertoire courant
+(commande <code>ln -s</code>).</p>
+<p>Le code à factoriser est le suivant :</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">package</span> main</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="st">&quot;fmt&quot;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> coteCase <span class="op">=</span> <span class="fl">25.0</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> nbrCases <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> echiquier<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>debutImageSVG<span class="op">(</span>coteCase<span class="op">*</span>nbrCases<span class="op">,</span> coteCase<span class="op">*</span>nbrCases<span class="op">))</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Ligne 1</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>rectangleSVG<span class="op">(</span>pointSVG<span class="op">{</span><span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">},</span> coteCase<span class="op">,</span> coteCase<span class="op">,</span> <span class="st">&quot;black&quot;</span><span class="op">))</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>rectangleSVG<span class="op">(</span>pointSVG<span class="op">{</span>coteCase<span class="op">,</span> <span class="dv">0</span><span class="op">},</span> coteCase<span class="op">,</span> coteCase<span class="op">,</span> <span class="st">&quot;white&quot;</span><span class="op">))</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>rectangleSVG<span class="op">(</span>pointSVG<span class="op">{</span>coteCase <span class="op">*</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">0</span><span class="op">},</span> coteCase<span class="op">,</span> coteCase<span class="op">,</span> <span class="st">&quot;black&quot;</span><span class="op">))</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>rectangleSVG<span class="op">(</span>pointSVG<span class="op">{</span>coteCase <span class="op">*</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">0</span><span class="op">},</span> coteCase<span class="op">,</span> coteCase<span class="op">,</span> <span class="st">&quot;white&quot;</span><span class="op">))</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Ligne 2</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>rectangleSVG<span class="op">(</span>pointSVG<span class="op">{</span><span class="dv">0</span><span class="op">,</span> coteCase<span class="op">},</span> coteCase<span class="op">,</span> coteCase<span class="op">,</span> <span class="st">&quot;white&quot;</span><span class="op">))</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>rectangleSVG<span class="op">(</span>pointSVG<span class="op">{</span>coteCase<span class="op">,</span> coteCase<span class="op">},</span> coteCase<span class="op">,</span> coteCase<span class="op">,</span> <span class="st">&quot;black&quot;</span><span class="op">))</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>rectangleSVG<span class="op">(</span>pointSVG<span class="op">{</span>coteCase <span class="op">*</span> <span class="dv">2</span><span class="op">,</span> coteCase<span class="op">},</span> coteCase<span class="op">,</span> coteCase<span class="op">,</span> <span class="st">&quot;white&quot;</span><span class="op">))</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>rectangleSVG<span class="op">(</span>pointSVG<span class="op">{</span>coteCase <span class="op">*</span> <span class="dv">3</span><span class="op">,</span> coteCase<span class="op">},</span> coteCase<span class="op">,</span> coteCase<span class="op">,</span> <span class="st">&quot;black&quot;</span><span class="op">))</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Ligne 3</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>rectangleSVG<span class="op">(</span>pointSVG<span class="op">{</span><span class="dv">0</span><span class="op">,</span> coteCase <span class="op">*</span> <span class="dv">2</span><span class="op">},</span> coteCase<span class="op">,</span> coteCase<span class="op">,</span> <span class="st">&quot;black&quot;</span><span class="op">))</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>rectangleSVG<span class="op">(</span>pointSVG<span class="op">{</span>coteCase<span class="op">,</span> coteCase <span class="op">*</span> <span class="dv">2</span><span class="op">},</span> coteCase<span class="op">,</span> coteCase<span class="op">,</span> <span class="st">&quot;white&quot;</span><span class="op">))</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>rectangleSVG<span class="op">(</span>pointSVG<span class="op">{</span>coteCase <span class="op">*</span> <span class="dv">2</span><span class="op">,</span> coteCase <span class="op">*</span> <span class="dv">2</span><span class="op">},</span> coteCase<span class="op">,</span> coteCase<span class="op">,</span> <span class="st">&quot;black&quot;</span><span class="op">))</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>rectangleSVG<span class="op">(</span>pointSVG<span class="op">{</span>coteCase <span class="op">*</span> <span class="dv">3</span><span class="op">,</span> coteCase <span class="op">*</span> <span class="dv">2</span><span class="op">},</span> coteCase<span class="op">,</span> coteCase<span class="op">,</span> <span class="st">&quot;white&quot;</span><span class="op">))</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Ligne 4</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>rectangleSVG<span class="op">(</span>pointSVG<span class="op">{</span><span class="dv">0</span><span class="op">,</span> coteCase <span class="op">*</span> <span class="dv">3</span><span class="op">},</span> coteCase<span class="op">,</span> coteCase<span class="op">,</span> <span class="st">&quot;white&quot;</span><span class="op">))</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>rectangleSVG<span class="op">(</span>pointSVG<span class="op">{</span>coteCase<span class="op">,</span> coteCase <span class="op">*</span> <span class="dv">3</span><span class="op">},</span> coteCase<span class="op">,</span> coteCase<span class="op">,</span> <span class="st">&quot;black&quot;</span><span class="op">))</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>rectangleSVG<span class="op">(</span>pointSVG<span class="op">{</span>coteCase <span class="op">*</span> <span class="dv">2</span><span class="op">,</span> coteCase <span class="op">*</span> <span class="dv">3</span><span class="op">},</span> coteCase<span class="op">,</span> coteCase<span class="op">,</span> <span class="st">&quot;white&quot;</span><span class="op">))</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>rectangleSVG<span class="op">(</span>pointSVG<span class="op">{</span>coteCase <span class="op">*</span> <span class="dv">3</span><span class="op">,</span> coteCase <span class="op">*</span> <span class="dv">3</span><span class="op">},</span> coteCase<span class="op">,</span> coteCase<span class="op">,</span> <span class="st">&quot;black&quot;</span><span class="op">))</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">.</span>Println<span class="op">(</span>finImageSVG<span class="op">())</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    echiquier<span class="op">()</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+
+</main>
+<div><br></div>
+</body>
+</html>

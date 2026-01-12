@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap2">Chapitre 2</a> : <a href="index.html#Chap2Seance12">Séance 12</a> : <a href="s12_2.html">Le tri du crêpier</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s12_2.go">s12_2.go</a>
+</div>
+<h2 id="tri-de-la-crêpe">Tri de la crêpe</h2>
+<p>Le tri de crêpe est un algorithme de tri de tableaux inventé par un
+informaticien affamé et muni d’une spatule.</p>
+<p>À chaque pas de l’itération, on considère que le tableau est découpé
+en deux parties :</p>
+<ul>
+<li>la partie déjà triée à droite du tableau, entre les indices
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mi>s</mi><mi>u</mi><mi>p</mi><mi>.</mi><mi>.</mi><mi>t</mi><mi>a</mi><mi>i</mi><mi>l</mi><mi>l</mi><mi>e</mi><mo stretchy="false" form="prefix">[</mo></mrow><annotation encoding="application/x-tex">[sup..taille[</annotation></semantics></math>,
+où
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mi>a</mi><mi>i</mi><mi>l</mi><mi>l</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">taille</annotation></semantics></math>
+est le nombre d’éléments du tableau complet ;</li>
+<li>la partie à trier à gauche du tableau, entre les indices
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mi>.</mi><mi>.</mi><mi>s</mi><mi>u</mi><mi>p</mi><mo stretchy="false" form="prefix">[</mo></mrow><annotation encoding="application/x-tex">[0..sup[</annotation></semantics></math>.</li>
+</ul>
+<p>À chaque pas de l’itération, on va chercher la valeur maximale du
+sous-tableau non trié pour la mettre à sa place, c’est-à-dire à l’indice
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>u</mi><mi>p</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">sup-1</annotation></semantics></math>,
+puis déplacer
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>u</mi><mi>p</mi></mrow><annotation encoding="application/x-tex">sup</annotation></semantics></math>
+d’une case vers la gauche.</p>
+<p>Tant que le sous-tableau non trié contient au moins deux éléments, on
+va donc effectuer les actions ci-dessous.</p>
+<p>On commence par rechercher l’indice de la valeur maximale dans le
+sous-tableau non trié.</p>
+<p>Si cet indice est égal à
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>u</mi><mi>p</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">sup-1</annotation></semantics></math>,
+la valeur maximale est en fait déjà à sa place et on passe au pas
+suivant de l’itération.</p>
+<p>Sinon, et uniquement si cet indice est différent de zéro, on
+<em>inverse</em> le sous-sous-tableau correspondant à la partie du
+tableau initial comprise entre les indices zéro et l’indice de la valeur
+maximale inclus.</p>
+<p><em>Inverser</em> une partie de tableau consiste simplement à
+inverser l’ordre de ses éléments : par exemple, si on inverse le tableau
+<code>[1 2 3 4]</code>, on obtient le tableau
+<code>[4 3 2 1]</code>.</p>
+<p>Après cette première inversion, la valeur maximale est donc placée
+dans la case d’indice zéro.</p>
+<p>On <em>inverse</em> ensuite tout le sous-tableau non trié : la valeur
+maximale est donc maintenant dans la case d’indice
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>u</mi><mi>p</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">sup - 1</annotation></semantics></math>
+et on peut passer au pas suivant de l’itération.</p>
+<h3 id="travail-demandé">Travail demandé</h3>
+<p>Vous devez écrire un programme qui va :</p>
+<ul>
+<li>lire un flot d’entiers signés sur <em>stdin</em> ;</li>
+<li>stocker ces entiers dans un tableau dynamique (<em>slice</em>)
+;</li>
+<li>trier ce tableau par ordre croissant en utilisant l’algorithme de la
+crêpe décrit ci-dessus ;</li>
+<li>afficher le tableau trié sur <em>stdout</em>.</li>
+</ul>
+<p>Vous implanterez votre programme dans le fichier
+<code>tri_crepe.go</code> se trouvant dans le sous-répertoire
+<code>exo2</code>.</p>
+<p>On vous recommande de découper votre programme en fonctions, pour
+pouvoir les tester plus facilement et rendre le code plus clair. Par
+exemple, il est plus clair d’écrire une fonction qui lit les entiers
+depuis <em>stdin</em>, une fonction qui inverse une partie de tableau,
+une autre qui recherche l’indice de la valeur maximale dans une partie
+de tableau, et de les appeler dans votre fonction de tri.</p>
+<p>La fonction qui va lire les entiers depuis <em>stdin</em> et renvoyer
+le tableau devra bien gérer les contraintes suivantes et gérer les
+erreurs correctement :</p>
+<ul>
+<li>les entiers dans le flot d’entrée sont séparés par un ou plusieurs
+espaces ;</li>
+<li>les lignes sont séparées par un ou plusieurs retours à la ligne
+(autrement dit, il peut y avoir des lignes vides ou ne contenant que des
+espaces) ;</li>
+<li>les caractères différents d’un chiffre, d’un signe moins, d’un
+espace ou d’un retour chariot provoqueront une erreur que vous devrez
+gérer correctement.</li>
+</ul>
+<p>La fonction <code>strings.Fields</code> (<a
+href="https://pkg.go.dev/strings#Fields">documentation</a>) permet de
+fractionner une chaîne de caractères en un tableau de <em>strings</em>
+correspondant aux sous-chaînes séparés par un ou plusieurs « caractères
+d’espacement » (c’est-à-dire des espaces ou des tabulations <strong>mais
+pas des retours à la ligne</strong>).</p>
+<p>La fonction <code>append</code> (<a
+href="https://pkg.go.dev/builtin#append">documentation</a>) permet
+d’ajouter des éléments à la fin d’un <em>slice</em> créé avec la
+fonction <code>make</code> (<a
+href="https://pkg.go.dev/builtin#make">documentation</a>). Elle
+s’utilise très simplement en écrivant par exemple
+<code>tab = append(tab, val)</code> pour ajouter la valeur
+<code>val</code> à la fin du <em>slice</em> <code>tab</code> qui va
+grandir automatiquement pour permettre cet ajout : vous pouvez donc
+créer le <em>slice</em> initialement avec une taille de 0
+(<code>tab := make([]int, 0)</code>). Si cette idée de tableau pouvant
+changer de taille vous parait mystérieuse, vous pouvez aussi allouer un
+<em>slice</em> de taille 1000 dès le début de la fonction et gérer un
+indice <code>premiereCaseVide</code> que vous incrémenterez à chaque
+ajout d’une valeur dans le tableau.</p>
+<p>Vous pourrez mettre au point votre programme en tapant directement au
+clavier les entiers, ou en utilisant les petits exemples ci-dessous.</p>
+<ul>
+<li>fichier avec zéro entier (<a href="ex_zero.txt">ex_zero.txt</a>) et
+le résultat attendu (<a href="res_zero.txt">res_zero.txt</a>) ;</li>
+<li>fichier avec un entier (<a href="ex_un.txt">ex_un.txt</a>) et le
+résultat attendu (<a href="res_un.txt">res_un.txt</a>) ;</li>
+<li>fichier avec deux entiers (<a href="ex_deux.txt">ex_deux.txt</a>) et
+le résultat attendu (<a href="res_deux.txt">res_deux.txt</a>) ;</li>
+<li>fichier avec trois entiers (<a href="ex_trois.txt">ex_trois.txt</a>)
+et le résultat attendu (<a href="res_trois.txt">res_trois.txt</a>)
+;</li>
+<li>fichier avec quatre entiers (<a
+href="ex_quatre.txt">ex_quatre.txt</a>) et le résultat attendu (<a
+href="res_quatre.txt">res_quatre.txt</a>) ;</li>
+<li>fichier avec cinq entiers (<a href="ex_cinq.txt">ex_cinq.txt</a>) et
+le résultat attendu (<a href="res_cinq.txt">res_cinq.txt</a>) ;</li>
+<li>fichier avec mille entiers (<a href="ex_mille.txt">ex_mille.txt</a>)
+et le résultat attendu (<a href="res_mille.txt">res_mille.txt</a>).</li>
+</ul>
+<p>On rappelle que vous pouvez utiliser des redirections Unix pour lire
+les entiers directement dans un fichier et écrire le résultat dans un
+autre fichier, par exemple :
+<code>go run tri_crepe.go &lt; ex_cinq.txt &gt; sortie.txt</code>, puis
+comparer votre résultat avec celui attendu avec la commande
+<code>diff sortie.txt res_cinq.txt</code>.</p>
+<p>Enfin, s’il vous reste du temps, vous implanterez une fonction de
+test automatique qui effectue beaucoup (100 par exemple) de tris sur des
+tableaux de « grandes » tailles (entre 0 et 500), remplis avec des
+entiers tirés aléatoirement (entre -10 et 10 par exemple, en utilisant
+la fonction <code>rand.Intn</code> (<a
+href="https://pkg.go.dev/math/rand#Intn">documentation</a>), et compare
+le résultat obtenu avec la fonction <code>slices.Sort</code> (<a
+href="https://pkg.go.dev/slices#Sort">documentation</a>) fournie par Go.
+Les fonctions <code>copy</code> (<a
+href="https://pkg.go.dev/builtin#copy">documentation</a>) et
+<code>slices.Equal</code> (<a
+href="https://pkg.go.dev/slices#Equal">documentation</a>) vous seront
+vraisemblablement utiles. Vous pouvez envoyer les sorties de cette
+fonction de test sur <em>stderr</em> si vous ne voulez pas perturber les
+affichages attendus.</p>
+
+</main>
+<div><br></div>
+</body>
+</html>

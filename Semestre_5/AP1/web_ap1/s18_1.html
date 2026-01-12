@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Algorithmique et Programmation 1</title>
+    <link rel="stylesheet" href="./ap1.css">
+    <link rel="stylesheet" href="./atom-one-dark.min.css">
+    <link rel="stylesheet" href="./atom-one-light.min.css">
+    <script src="theme-switcher.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+<header>
+<a id="theme-switcher" href="#dark" aria-label="Switch to Light Mode" class="contrast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z" stroke-width="0" fill="currentColor"></path><path d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z" stroke-width="0" fill="currentColor"></path><path d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z" stroke-width="0" fill="currentColor"></path><path d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor"></path><path d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z" stroke-width="0" fill="currentColor"></path></svg>
+</a>
+<h1><a href="index.html">Algo-Prog 1</a> : <a href="index.html#Chap3">Chapitre 3</a> : <a href="index.html#Chap3Seance18">Séance 18</a> : <a href="s18_1.html">Listes doublement chaînées</a></h1>
+</header>
+<main>
+<div style="font-size: x-large;">
+	&check; Correction : <a href="s18_1.go">s18_1.go</a>
+</div>
+<h2 id="énonce">Énonce</h2>
+<p>Dans cet exercice, on va travailler sur des listes doublement
+chaînées : cela signifie simplement que les <code>cellules</code>
+contiendront non-seulement un champ <code>val</code> et un champ
+<code>suiv</code> comme précédemment, mais aussi un champ
+<code>prec</code> pointant sur la <code>cellule</code> précédente dans
+la liste.</p>
+<p>On équipera ces listes de deux éléments fictifs : un en tête et un en
+queue, ce qui permettra de parcourir facilement la liste du début à la
+fin ou en sens inverse. Le schéma ci-dessous illustre une liste
+doublement chaînée contenant les valeurs <code>3</code>, <code>1</code>,
+<code>4</code>, <code>2</code> et <code>7</code>.</p>
+<figure>
+<img src="s18_1_liste_double.svg" title="Liste doublement chaînée"
+alt="Liste doublement chaînée" />
+<figcaption aria-hidden="true">Liste doublement chaînée</figcaption>
+</figure>
+<p>On devra donc définir les types suivants :</p>
+<ul>
+<li><code>cellule</code> : une structure contenant <code>val</code>,
+<code>prec</code> et <code>suiv</code> ;</li>
+<li><code>desc</code> : une structure contenant les pointeurs vers les
+éléments fictifs <code>tete</code> et <code>queue</code> ;</li>
+<li><code>liste</code> : un pointeur vers une <code>desc</code>.</li>
+</ul>
+<p>Comme d’habitude, les éléments seront des chiffres dans
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mi>.</mi><mn>.9</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[0..9]</annotation></semantics></math>.</p>
+<h3 id="fonctions-de-base">Fonctions de base</h3>
+<p>Écrire une fonction <code>créer() liste</code> qui alloue une
+nouvelle <code>liste</code>, alloue et initialise les éléments fictifs
+puis renvoie la <code>liste</code>.</p>
+<p>Écrire une fonction
+<code>afficher(ldc liste, teteVersQueue bool)</code> qui affiche le
+contenu de la <code>liste</code> sous le format
+<code>T &lt;-&gt; 3 &lt;-&gt; 1 &lt;-&gt; 4 &lt;-&gt; 2 &lt;-&gt; 7 &lt;-&gt; Q</code>.
+Le booléen début indique si on affiche les valeurs en partant de la tête
+vers la queue ou dans le sens inverse.</p>
+<p>Écrire une fonction
+<code>insérer(ldc liste, val int, enTete bool)</code> qui insère une
+valeur dans la <code>liste</code> passée en paramètre : soit en tête de
+<code>liste</code>, c’est-à-dire juste après l’élément fictif en tête,
+soit en queue de <code>liste</code>, donc juste avant l’élément fictif
+en queue.</p>
+<p>Écrire une fonction <code>extraire(ldc liste, enTete bool) int</code>
+qui renvoie une valeur extraite de la <code>liste</code> passée en
+paramètre et qui retire de la liste la cellule contenant cette valeur :
+soit la valeur en tête de <code>liste</code>, soit celle en queue de
+<code>liste</code>, selon la valeur du booléen fourni. Cette fonction a
+comme prérequis que la <code>liste</code> contient au moins un élément
+(inutile de le vérifier dans la fonction).</p>
+<p>Écrire une fonction <code>échanger(ptr *cellule) *cellule</code> qui
+inverse les <code>cellules</code> désignées par <code>ptr</code> et
+<code>ptr.suiv</code>, et renvoie <code>ptr.suiv</code>. Les deux
+schémas ci-dessous illustrent ce qui est attendu. On rappelle que vous
+devez toujours procéder par modification du chaînage, <strong>sans
+échanger directement les valeurs des <code>cellules</code></strong>.
+Cette fonction a comme prérequis (qu’il n’est pas nécessaire de vérifier
+dans la fonction) que <code>ptr</code> n’est ni l’élément fictif en
+tête, ni l’élément fictif en queue, ni la <code>cellule</code> précédent
+l’élément fictif en queue (ce qui implique que la <code>liste</code>
+contient au moins deux valeurs significatives).</p>
+<figure>
+<img src="s18_1_liste_avant_echange.svg" title="Liste avant échange"
+alt="Liste avec échange" />
+<figcaption aria-hidden="true">Liste avec échange</figcaption>
+</figure>
+<figure>
+<img src="s18_1_liste_apres_echange.svg" title="Liste après échange"
+alt="Liste après échange" />
+<figcaption aria-hidden="true">Liste après échange</figcaption>
+</figure>
+<p>Écrire une fonction <code>trierNain(ldc liste)</code> qui trie les
+valeurs de la <code>liste</code> par ordre croissant en utilisant
+l’algorithme du nain de jardin dont on rappelle le principe :</p>
+<ul>
+<li>un nain de jardin doit trier des pots de fleur par taille
+croissante, les pots sont alignés en file de gauche à droite, espacés
+d’un pas les uns des autres ;</li>
+<li>le nain est initialement positionné devant le premier pot de la file
+;</li>
+<li>il compare la taille de ce pot avec celui immédiatement à sa droite
+;</li>
+<li>si le pot de droite est strictement plus petit que celui devant lui,
+le nain échange les deux pots, puis recule d’un pas vers la gauche ssi
+il n’est pas déjà devant le pot le plus à gauche ;</li>
+<li>si le pot de droite est de taille plus grande ou égale que celui
+devant lui, le nain avance d’un pas vers la droite ;</li>
+<li>il s’arrête de travailler quand il se retrouve devant le pot le plus
+à droite de la file.</li>
+</ul>
+<p>Vous devez bien sûr utiliser la fonction <code>échanger</code>
+précédente.</p>
+<p>Toutes ces fonctions doivent être testées sur des listes remplies de
+chiffres tirés aléatoirement et de tailles raisonnables, par exemple
+dans
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mi>.</mi><mn>.5</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[0..5]</annotation></semantics></math>,
+en tenant compte bien sûr des prérequis des fonctions qui en ont.</p>
+<h3 id="piles-et-files-non-bornées">Piles et files non bornées</h3>
+<p>On va maintenant utilise les listes doublement chaînées pour
+implanter des piles et files non bornées, c’est-à-dire sans capacité
+maximale (à part bien sûr la mémoire de la machine).</p>
+<p>On rappelle qu’une pile (<a
+href="https://fr.wikipedia.org/wiki/Pile_(informatique)">page
+Wikipédia</a>) et une file (<a
+href="https://fr.wikipedia.org/wiki/File_(structure_de_données)">page
+Wikipédia</a>) sont des structures de données contenant des valeurs (ici
+des chiffres) et qui implantent respectivement la politique du « dernier
+arrivé, premier sorti » (pile) ou du « premier arrivé, premier sorti »
+(file).</p>
+<p>En plus des types précédents, on va définir un type <code>xile</code>
+contenant :</p>
+<ul>
+<li><code>nbrElem</code> : le nombre de valeurs significatives dans la
+structure de données ;</li>
+<li><code>vals</code> : la <code>liste</code> contenant les
+valeurs.</li>
+</ul>
+<p>Ce type sera utilisé aussi bien pour implanter une pile qu’une file,
+et on vous laisse méditer le choix de son nom.</p>
+<p>Écrire une fonction de test <code>testXile(pile bool)</code> qui va
+permettre de tester une pile ou une file selon le booléen passé en
+paramètre, et qui devra implanter une interface similaire aux traces
+ci-dessous.</p>
+<pre class="text"><code>Pile bornée : entrez les valeur une par une :
+- les chiffres dans [0..9] seront insérés
+- -1 signifie retirer une valeur
+- toutes les autres valeurs seront ignorées
+- ctrl-d pour terminer
+Pile de 0 éléments : T &lt;-&gt; Q
+1
+Pile de 1 éléments : T &lt;-&gt; 1 &lt;-&gt; Q
+2
+Pile de 2 éléments : T &lt;-&gt; 1 &lt;-&gt; 2 &lt;-&gt; Q
+3
+Pile de 3 éléments : T &lt;-&gt; 1 &lt;-&gt; 2 &lt;-&gt; 3 &lt;-&gt; Q
+-1
+-&gt; valeur retirée : 3
+Pile de 2 éléments : T &lt;-&gt; 1 &lt;-&gt; 2 &lt;-&gt; Q
+-1
+-&gt; valeur retirée : 2
+Pile de 1 éléments : T &lt;-&gt; 1 &lt;-&gt; Q
+-1
+-&gt; valeur retirée : 1
+Pile de 0 éléments : T &lt;-&gt; Q
+-1
+Pile vide !</code></pre>
+<pre class="text"><code>File bornée : entrez les valeur une par une :
+- les chiffres dans [0..9] seront insérés
+- -1 signifie retirer une valeur
+- toutes les autres valeurs seront ignorées
+- ctrl-d pour terminer
+File de 0 éléments : T &lt;-&gt; Q
+1
+File de 1 éléments : T &lt;-&gt; 1 &lt;-&gt; Q
+2
+File de 2 éléments : T &lt;-&gt; 1 &lt;-&gt; 2 &lt;-&gt; Q
+3
+File de 3 éléments : T &lt;-&gt; 1 &lt;-&gt; 2 &lt;-&gt; 3 &lt;-&gt; Q
+-1
+-&gt; valeur retirée : 1
+File de 2 éléments : T &lt;-&gt; 2 &lt;-&gt; 3 &lt;-&gt; Q
+-1
+-&gt; valeur retirée : 2
+File de 1 éléments : T &lt;-&gt; 3 &lt;-&gt; Q
+-1
+-&gt; valeur retirée : 3
+File de 0 éléments : T &lt;-&gt; Q
+-1
+File vide !</code></pre>
+
+</main>
+<div><br></div>
+</body>
+</html>
