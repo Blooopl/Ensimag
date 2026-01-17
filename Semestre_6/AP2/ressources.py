@@ -62,73 +62,64 @@ class Ressources:
         """
         enleve le nombre de ressources demandees.
         renvoie les ressources correspondant aux plages reservees.
-        """
 
-        ecarts_dispo = self.ecarts_disponible()
-        somme_ecarts_dispo = 0
-        for ecart in ecarts_dispo:
-            somme_ecarts_dispo+=ecart[0]
-        if somme_ecarts_dispo < ressources_demandees:
-            return None
+
+        On essaye d'allouer les ressources en un minimum de nombres de plages
+        De + on essaye lorsque c'est possible de ne pas utiliser des plages libre plus grandes que nécessaires
+        C'est à dire que si on veut alouer 3 ressources alors que self.intervalles = [[0,4],[5,10]], on va éviter de "gacher" la deuxième plages qui pourrait être utile si on veut de nouveaux allouer un truc de grandes tailles
+        """
+        
+        reste_a_allouer = ressources_demandees
 
         liste_allocation = []
-        reste_a_allouer = ressources_demandees
         while reste_a_allouer != 0 :
 
-            ecarts_dispo = self.ecarts_disponible()
-            print(ecarts_dispo)
-            
-            taille_optimum = ecarts_dispo[1][1]
-            id_optimum = 0
-            for ecart in ecarts_dispo:
+            alloc_opti = [0,0]
+            taille_optimum = 0
+            id_opti = 0
 
-                valeur_ecart = ecart[0]
-                if ressources_demandees - valeur_ecart == 0:
-                    taille_optimum = valeur_ecart
-                    id_optimum = ecart[1]
+            for id_intervalle in range(len(self.intervalles)):
+                intervalle = self.intervalles[id_intervalle]
 
-                elif ressources_demandees - valeur_ecart > 0:
-                    if valeur_ecart > taille_optimum:
-                        taille_optimum = valeur_ecart
-                        id_optimum = ecart[1]
+                debut_intervalle = intervalle[0]
+                fin_intervalle = intervalle[1]
+
+                dispo = fin_intervalle - debut_intervalle
+
+                if dispo == reste_a_allouer:
+                    alloc_opti = [debut_intervalle,fin_intervalle]     
+                    liste_allocation.append([debut_intervalle, fin_intervalle])
+                    taille_optimum = reste_a_allouer
+
+                if dispo > reste_a_allouer:
+
+                    if dispo < taille_optimum:
+                        taille_optimum = dispo
+                        alloc_opti = [debut_intervalle,debut_intervalle+reste_a_allouer]
+
+                    if dispo > taille_optimum:
+                        pass
+
                 
-                else:
-                    if valeur_ecart < taille_optimum:
-                        taille_optimum = valeur_ecart
-                        id_optimum = ecart[1]
+                if dispo < reste_a_allouer:
+
+                    if dispo < taille_optimum :
+                        pass
+                    
+                    if dispo > taille_optimum:
+                        taille_optimum = dispo
+                        alloc_opti = [debut_intervalle,fin_intervalle]
             
-            reste_a_allouer = reste_a_allouer - taille_optimum
+            liste_allocation.append(alloc_opti)
 
-            debut_allocation = self.intervalles[id_optimum-1][1]
-            fin_allocation =self.intervalles[id_optimum-1][1] + id_optimum
-            
-            
-            liste_allocation.append([debut_allocation,fin_allocation])
+            self.intervalles[id_opti] = [self.intervalles[id_opti][0]+taille_optimum
+            reste_a_allouer -= taille_optimum
 
-            self.intervalles.append([debut_allocation,fin_allocation])
 
-        print(liste_allocation)
-        res = Ressources(self.nombre_ressources)
-        for allocation in liste_allocation:
-            res.intervalles.append(allocation)
 
-        
-        return res
-    def ecarts_disponible(self):
-        """
-        Renvoie une liste de l'écart entre chaque intervalle
-        """
-        liste = []
-        
-        liste.append([self.intervalles[0][0],0])
-        
-        for id_intervalle in range(0,len(self.intervalles)-1):
-            fin_premier_intervalle = self.intervalles[id_intervalle][1]
-            debut_second_intervalle = self.intervalles[id_intervalle+1][0]
-            liste.append([debut_second_intervalle - fin_premier_intervalle,id_intervalle+1])
-        
-        liste.append([self.nombre_ressources-self.intervalles[-1][1],len(self.intervalles)])
-        return liste
+
+
+
 
 
     def retourne(self, ressources_rendues):
@@ -191,7 +182,8 @@ if __name__ == "__main__":
     print(Ressources(10,[[1,6],[6,8]]).disponible(8))
 
 
-    print(Ressources(15,[[0,4],[7,10]]).ecarts_disponible())"""
+    """
+    print(Ressources(15,[[0,4],[7,10]]).ecarts_disponible())
 
     res = Ressources(10, [[0, 4]])
     print('debut: res =', str(res))
