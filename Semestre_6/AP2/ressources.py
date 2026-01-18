@@ -179,19 +179,6 @@ def test():
 
 if __name__ == "__main__":
     #test()
-    a = Ressources(10, [[0,6],[6,10]])
-    """
-    print(Ressources(10,[[0, 6], [6, 10]]).verification_invariants())
-    print(Ressources(10,[[0, 7], [6, 10]]).verification_invariants())
-    print(Ressources(10,[[1, 6], [6, 10] , [0,1]]).verification_invariants())
-    print(Ressources(10,[[1, 6], [6, 11]]).verification_invariants())"""
-
-    """print(Ressources(10,[[0,5],[6,10]]).disponible(6))
-    print(Ressources(10,[[0,5],[6,10]]).disponible(5))
-    print(Ressources(10,[[1,6],[6,8]]).disponible(8))
-
-
-    """
 
     res = Ressources(20, [[0,2],[4,9],[11,17]])
     print('debut: res =', str(res))
