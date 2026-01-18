@@ -69,16 +69,17 @@ class Ressources:
         C'est à dire que si on veut alouer 3 ressources alors que self.intervalles = [[0,4],[5,10]], on va éviter de "gacher" la deuxième plages qui pourrait être utile si on veut de nouveaux allouer un truc de grandes tailles
         """
         
+        res = Ressources(self.nombre_ressources,[])
         reste_a_allouer = ressources_demandees
 
         liste_allocation = []
         while reste_a_allouer != 0 :
 
             alloc_opti = [0,0]
-            taille_optimum = 0
-            id_opti = 0
+            taille_optimum = None
 
             for id_intervalle in range(len(self.intervalles)):
+
                 intervalle = self.intervalles[id_intervalle]
 
                 debut_intervalle = intervalle[0]
@@ -87,40 +88,48 @@ class Ressources:
                 dispo = fin_intervalle - debut_intervalle
 
                 if dispo == reste_a_allouer:
-                    alloc_opti = [debut_intervalle,fin_intervalle]     
-                    liste_allocation.append([debut_intervalle, fin_intervalle])
+                    alloc_opti = [debut_intervalle,fin_intervalle-1]     
                     taille_optimum = reste_a_allouer
 
                 if dispo > reste_a_allouer:
 
-                    if dispo < taille_optimum:
+                    if taille_optimum == None or (dispo < taille_optimum or taille_optimum < reste_a_allouer):
                         taille_optimum = dispo
-                        alloc_opti = [debut_intervalle,debut_intervalle+reste_a_allouer]
-
-                    if dispo > taille_optimum:
-                        pass
-
-                
+                        alloc_opti = [debut_intervalle,debut_intervalle+reste_a_allouer-1]
+ 
                 if dispo < reste_a_allouer:
-
-                    if dispo < taille_optimum :
-                        pass
                     
-                    if dispo > taille_optimum:
+                    if taille_optimum == None or dispo > taille_optimum:
                         taille_optimum = dispo
-                        alloc_opti = [debut_intervalle,fin_intervalle]
+                        alloc_opti = [debut_intervalle,fin_intervalle-1]
             
-            liste_allocation.append(alloc_opti)
+            if taille_optimum > reste_a_allouer:
+                taille_optimum = reste_a_allouer
 
-            self.intervalles[id_opti] = [self.intervalles[id_opti][0]+taille_optimum
+
             reste_a_allouer -= taille_optimum
 
+            liste_allocation.append(alloc_opti)
 
+            for id_intervalle in range(len(self.intervalles)):
 
+                intervalle = self.intervalles[id_intervalle]
+                debut_intervalle = intervalle[0]
+                fin_intervalle = intervalle[1]
 
+                if debut_intervalle == alloc_opti[0]:
+                    
+                    if fin_intervalle-1 == alloc_opti[1]:
+                        self.intervalles.pop(id_intervalle)
+                        break
+                    else:
+                        self.intervalles[id_intervalle] = [alloc_opti[1]+1,fin_intervalle]
 
+        for allocation in liste_allocation:
+            res.intervalles.append([allocation[0],allocation[1]+1])
 
-
+        
+        return res
 
     def retourne(self, ressources_rendues):
         """
@@ -183,9 +192,10 @@ if __name__ == "__main__":
 
 
     """
-    print(Ressources(15,[[0,4],[7,10]]).ecarts_disponible())
 
-    res = Ressources(10, [[0, 4]])
+    res = Ressources(20, [[0,2],[4,9],[11,17]])
     print('debut: res =', str(res))
-    R1 = res.reserve(1)
-    print(R1)
+    R1 = res.reserve(3)
+    print("R1 :", str(R1))
+
+
