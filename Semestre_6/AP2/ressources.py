@@ -21,7 +21,7 @@ class Ressources:
         if intervalles is not None:
             self.intervalles = intervalles
         else:
-            self.intervalles = [range(0,nombre_ressources)]
+            self.intervalles = [[0,nombre_ressources]]
         
 
 
@@ -74,7 +74,7 @@ class Ressources:
 
         liste_allocation = []
         while reste_a_allouer != 0 :
-
+            
             alloc_opti = [0,0]
             taille_optimum = None
 
@@ -102,10 +102,9 @@ class Ressources:
                     if taille_optimum == None or dispo > taille_optimum:
                         taille_optimum = dispo
                         alloc_opti = [debut_intervalle,fin_intervalle-1]
-            
+
             if taille_optimum > reste_a_allouer:
                 taille_optimum = reste_a_allouer
-
 
             reste_a_allouer -= taille_optimum
 
@@ -135,7 +134,23 @@ class Ressources:
         """
         remet les plages de ressources donnees dans le systeme.
         """
-        pass
+        self.intervalles = fusion(self.intervalles,ressources_rendues.intervalles)
+
+        self.simplification_intervalles()
+
+    def simplification_intervalles(self):
+
+        id_intervalle = 0
+        while id_intervalle < len(self.intervalles) - 1:
+
+            while id_intervalle < len(self.intervalles) - 1  and self.intervalles[id_intervalle][1] == self.intervalles[id_intervalle+1][0] :
+                print("oui")
+                self.intervalles[id_intervalle] = [self.intervalles[id_intervalle][0],self.intervalles[id_intervalle+1][1]]
+                self.intervalles.pop(id_intervalle+1)
+            id_intervalle +=1
+
+
+
 
     def __str__(self):
         """
@@ -154,6 +169,35 @@ class Ressources:
 
         return chaine
 
+    def trier(self):
+        
+        changement = 1
+        while changement != 0:
+            changement = 0
+
+            for id_intervalle in range(len(self.intervalles)-1):
+                if self.intervalles[id_intervalle][0] > self.intervalles[id_intervalle+1][0]:
+                    self.intervalles[id_intervalle+1],self.intervalles[id_intervalle] = self.intervalles[id_intervalle],self.intervalles[id_intervalle+1]
+                    changement += 1
+
+ 
+       
+def fusion(inter1,inter2):
+
+    liste = []
+
+    liste_1 = inter1.copy()
+    liste_2 = inter2.copy()
+
+    while len(liste_1) != 0 and len(liste_2) != 0:
+        if liste_1[0][0] < liste_2[0][0]:
+            liste.append(liste_1[0])
+            liste_1.pop(0)
+        else:
+            liste.append(liste_2[0])
+            liste_2.pop(0)
+    
+    return liste+liste_1+liste_2
 
 def test():
     """
@@ -178,11 +222,18 @@ def test():
 
 
 if __name__ == "__main__":
-    #test()
-
-    res = Ressources(20, [[0,2],[4,9],[11,17]])
+    test()
+    """
+    res = Ressources(20)
+    res.trier()
+    print(res.intervalles)
     print('debut: res =', str(res))
     R1 = res.reserve(3)
     print("R1 :", str(R1))
 
+    print(fusion([[0, 1], [5, 6]], [[1, 2], [4, 5]]))
+    fusion([[0, 1], [5, 6]], [[1, 2], [4, 5]])
 
+    res = Ressources(20, [[1,2],[2,3],[3,4],[4,5],[7,10],[13,15],[15,16],[17,18],[18,19]])
+    res.simplification_intervalles()
+    print(res.intervalles)"""
